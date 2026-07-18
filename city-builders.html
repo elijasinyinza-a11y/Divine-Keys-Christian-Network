@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – City Builders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09);
+  --teal: #1A7A5E; --teal-bg: rgba(26,122,94,0.09); --teal-border: rgba(26,122,94,0.22);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --border-mid: #F0EDE6; --radius: 10px;
+  --sidebar-w: 240px; --page-bg: #F7F4EF; --bottom-nav-h: 64px;
+}
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+.shell { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: -0.2px; line-height: 1.2; }
+.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+.sidebar-section { padding: 18px 12px 6px; }
+.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
+.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
+.nav-item.active svg { opacity: 1; }
+.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
+.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
+.user-row:hover { background: rgba(27,43,75,0.06); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+/* DRAWER */
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.drawer-close svg { width: 18px; height: 18px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 36px; border-bottom: 1px solid var(--border); background: var(--page-bg); position: sticky; top: 0; z-index: 10; }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.menu-btn { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
+.menu-btn svg { width: 18px; height: 18px; }
+.page-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.topbar-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text-sec); font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; white-space: nowrap; text-decoration: none; }
+.topbar-btn:hover { background: rgba(27,43,75,0.05); color: var(--navy); }
+.topbar-btn svg { width: 14px; height: 14px; }
+.topbar-btn.primary { background: var(--navy); border-color: var(--navy); color: var(--gold-light); font-weight: 500; }
+.topbar-btn.primary:hover { background: var(--navy-deep); }
+
+/* CONTENT */
+.content { padding: 0 0 80px; }
+
+/* HERO BANNER */
+.cb-hero { background: linear-gradient(135deg, var(--teal) 0%, #115246 100%); padding: 44px 36px; }
+.cb-hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 36px; align-items: center; }
+.cb-eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(255,255,255,0.55); font-weight: 600; margin-bottom: 10px; }
+.cb-hero-title { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 10px; letter-spacing: -0.3px; }
+.cb-hero-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 460px; margin-bottom: 24px; }
+.cb-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.cb-cta { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; border: none; transition: opacity 0.15s; }
+.cb-cta.primary { background: var(--gold); color: var(--navy-deep); }
+.cb-cta.primary:hover { background: var(--gold-dim); }
+.cb-cta.outline { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+.cb-cta.outline:hover { background: rgba(255,255,255,0.18); }
+.cb-cta svg { width: 14px; height: 14px; }
+.cb-stats { display: flex; flex-direction: column; gap: 12px; }
+.cb-stat { text-align: right; }
+.cb-stat-value { font-family: 'DM Sans', sans-serif; font-size: 28px; font-weight: 700; color: var(--gold-light); letter-spacing: -0.04em; }
+.cb-stat-label { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+/* MAIN CONTENT */
+.cb-content { max-width: 1100px; margin: 0 auto; padding: 36px 36px 0; }
+
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-title { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--text-sec); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+.section-link { font-size: 12px; color: var(--gold-dim); text-decoration: none; opacity: 0.8; transition: opacity 0.15s; }
+.section-link:hover { opacity: 1; }
+
+/* PILLAR CARDS */
+.pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+.pillar-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s; position: relative; overflow: hidden; }
+.pillar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent, var(--teal)); }
+.pillar-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,43,75,0.09); }
+.pillar-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+.pillar-icon svg { width: 18px; height: 18px; }
+.pillar-card:nth-child(1) .pillar-icon { background: var(--teal-bg); color: var(--teal); --accent: var(--teal); }
+.pillar-card:nth-child(2) .pillar-icon { background: var(--purple-bg); color: var(--purple); }
+.pillar-card:nth-child(2)::before { background: var(--purple); }
+.pillar-card:nth-child(3) .pillar-icon { background: var(--gold-glow); color: var(--gold); }
+.pillar-card:nth-child(3)::before { background: var(--gold); }
+.pillar-name { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+.pillar-desc { font-size: 12.5px; color: var(--text-sec); line-height: 1.65; margin-bottom: 16px; }
+.pillar-action { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; text-decoration: none; border: none; background: transparent; cursor: pointer; font-family: 'Inter', sans-serif; transition: gap 0.15s; padding: 0; }
+.pillar-action:hover { gap: 10px; }
+.pillar-action svg { width: 12px; height: 12px; }
+.pillar-card:nth-child(1) .pillar-action { color: var(--teal); }
+.pillar-card:nth-child(2) .pillar-action { color: var(--purple); }
+.pillar-card:nth-child(3) .pillar-action { color: var(--gold-dim); }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px; }
+
+/* ACCOUNTABILITY CARD */
+.accountability-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); }
+.card-badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-border); }
+.prompt-list { padding: 4px 0; }
+.prompt-item { display: flex; align-items: flex-start; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--border-mid); }
+.prompt-item:last-child { border-bottom: none; }
+.prompt-num { width: 22px; height: 22px; border-radius: 6px; background: var(--teal-bg); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--teal); flex-shrink: 0; margin-top: 2px; border: 1px solid var(--teal-border); }
+.prompt-text { font-size: 13px; color: var(--text-sec); line-height: 1.55; flex: 1; }
+.prompt-action { font-size: 11.5px; color: var(--teal); font-weight: 500; cursor: pointer; margin-top: 5px; display: inline-block; text-decoration: none; }
+.sophia-prompt-btn { display: flex; align-items: center; gap: 8px; margin: 14px 18px; padding: 9px 16px; background: var(--teal-bg); border: 1px solid var(--teal-border); border-radius: var(--radius); color: var(--teal); font-size: 12.5px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: background 0.15s; }
+.sophia-prompt-btn:hover { background: rgba(26,122,94,0.15); }
+.sophia-prompt-btn svg { width: 13px; height: 13px; }
+
+/* LEADERBOARD */
+.leaderboard-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.member-row { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border-mid); transition: background 0.15s; cursor: pointer; }
+.member-row:last-child { border-bottom: none; }
+.member-row:hover { background: rgba(27,43,75,0.02); }
+.member-rank { width: 22px; font-size: 12px; font-weight: 700; color: var(--text-muted); text-align: center; flex-shrink: 0; }
+.member-rank.top { color: var(--gold); }
+.member-av { width: 32px; height: 32px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.member-info { flex: 1; min-width: 0; }
+.member-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.member-streak { font-size: 11px; color: var(--text-muted); }
+.member-score { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); }
+.member-row.self { background: var(--teal-bg); border-color: var(--teal-border); }
+.member-row.self .member-name { color: var(--teal); }
+
+/* COACHING SECTION */
+.coaching-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 36px; }
+.coaching-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; display: block; }
+.coaching-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,43,75,0.09); }
+.coaching-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gold-dim); background: var(--gold-glow); border: 1px solid var(--gold-border); padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+.coaching-title { font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; color: var(--navy); margin-bottom: 6px; line-height: 1.35; }
+.coaching-desc { font-size: 12px; color: var(--text-sec); line-height: 1.6; margin-bottom: 12px; }
+.coaching-footer { display: flex; align-items: center; justify-content: space-between; }
+.coaching-sophia { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--purple); font-weight: 500; }
+.coaching-sophia svg { width: 11px; height: 11px; }
+.coaching-arrow { font-size: 12px; color: var(--text-muted); }
+
+/* PRO BANNER */
+.pro-banner { background: var(--navy); border-radius: 12px; padding: 24px 28px; display: flex; align-items: center; gap: 20px; margin-bottom: 0; }
+.pro-banner-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(245,215,142,0.12); border: 1px solid rgba(245,215,142,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pro-banner-icon svg { width: 18px; height: 18px; color: var(--gold-light); }
+.pro-banner-info { flex: 1; }
+.pro-banner-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--gold-light); margin-bottom: 3px; }
+.pro-banner-sub { font-size: 12.5px; color: rgba(255,255,255,0.45); }
+.pro-banner-btn { font-size: 13px; font-weight: 600; color: var(--navy); background: var(--gold-light); border: none; padding: 10px 22px; border-radius: 9px; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.pro-banner-btn:hover { opacity: 0.88; }
+
+/* MOBILE */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+.bottom-nav-item.active { color: var(--teal); }
+.bottom-nav-item.active svg { stroke: var(--teal); }
+
+@media (max-width: 1100px) {
+  .pillars-grid { grid-template-columns: 1fr 1fr; }
+  .coaching-grid { grid-template-columns: 1fr 1fr; }
+  .topbar { padding: 13px 24px; }
+  .cb-hero { padding: 36px 24px; }
+  .cb-content { padding: 28px 24px 0; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .menu-btn { display: flex; }
+  .drawer-overlay { display: block; }
+  .bottom-nav { display: flex; }
+  .topbar { padding: 12px 16px; }
+  .topbar-btn:not(.primary) { display: none; }
+  .cb-hero-inner { grid-template-columns: 1fr; }
+  .cb-stats { flex-direction: row; gap: 24px; }
+  .cb-stat { text-align: left; }
+  .cb-hero { padding: 28px 16px; }
+  .cb-content { padding: 20px 16px 0; }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .coaching-grid { grid-template-columns: 1fr; }
+  .content { padding-bottom: calc(var(--bottom-nav-h) + 20px); }
+}
+</style>
+</head>
+<body>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark">
+      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Platform</div>
+    <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+    <a class="nav-item active" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+    <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+    <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-avatar">EN</div>
+      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item active" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">EN</div>
+        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="page-title">City Builders</div>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="sophia.html" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Open Sophia
+        </a>
+        <button class="topbar-btn primary">Join the Circle</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- HERO -->
+      <div class="cb-hero">
+        <div class="cb-hero-inner">
+          <div>
+            <div class="cb-eyebrow">City Builders Circle</div>
+            <h1 class="cb-hero-title">Build wealth. Build community.<br>Build the Kingdom.</h1>
+            <p class="cb-hero-desc">One space for growth, accountability, and entrepreneurship — grounded in faith, driven by purpose. Sophia is your guide inside the Circle.</p>
+            <div class="cb-hero-actions">
+              <a class="cb-cta primary" href="sophia.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Start with Sophia
+              </a>
+              <button class="cb-cta outline">Learn more</button>
+            </div>
+          </div>
+          <div class="cb-stats">
+            <div class="cb-stat">
+              <div class="cb-stat-value">2,400+</div>
+              <div class="cb-stat-label">Members</div>
+            </div>
+            <div class="cb-stat">
+              <div class="cb-stat-value">8</div>
+              <div class="cb-stat-label">Check-ins this month</div>
+            </div>
+            <div class="cb-stat">
+              <div class="cb-stat-value">14</div>
+              <div class="cb-stat-label">Day streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cb-content">
+
+        <!-- THREE PILLARS -->
+        <div class="section-header">
+          <div class="section-title">The Three Pillars</div>
+        </div>
+        <div class="pillars-grid">
+          <div class="pillar-card">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div class="pillar-name">Community & Accountability</div>
+            <div class="pillar-desc">Weekly check-ins, peer accountability groups, and AI-generated prompts to keep you growing in faith and purpose.</div>
+            <a class="pillar-action" href="sophia.html">Open Sophia <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div class="pillar-name">Business Coaching</div>
+            <div class="pillar-desc">Kingdom-grounded business frameworks, startup intelligence, and wealth-mindset coaching — all through Sophia.</div>
+            <a class="pillar-action" href="sophia.html">Get coaching <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="pillar-name">Startup Intelligence</div>
+            <div class="pillar-desc">Frameworks for founders at every stage — from vision to launch to scale, all grounded in Kingdom principles.</div>
+            <a class="pillar-action" href="sophia.html">Explore frameworks <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+
+        <!-- ACCOUNTABILITY + LEADERBOARD -->
+        <div class="two-col">
+
+          <div class="accountability-card">
+            <div class="card-header">
+              <div class="card-title">This week's accountability prompts</div>
+              <span class="card-badge">Week 28</span>
+            </div>
+            <div class="prompt-list">
+              <div class="prompt-item">
+                <div class="prompt-num">1</div>
+                <div>
+                  <div class="prompt-text">What one Kingdom assignment have you been delaying, and what specific step will you take this week?</div>
+                  <a class="prompt-action" href="sophia.html">Respond with Sophia →</a>
+                </div>
+              </div>
+              <div class="prompt-item">
+                <div class="prompt-num">2</div>
+                <div>
+                  <div class="prompt-text">How did your business decisions this week reflect your stated values? Where was there a gap?</div>
+                  <a class="prompt-action" href="sophia.html">Respond with Sophia →</a>
+                </div>
+              </div>
+              <div class="prompt-item">
+                <div class="prompt-num">3</div>
+                <div>
+                  <div class="prompt-text">Name one person you will intentionally invest in this week — and how.</div>
+                  <a class="prompt-action" href="sophia.html">Respond with Sophia →</a>
+                </div>
+              </div>
+            </div>
+            <a class="sophia-prompt-btn" href="sophia.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Generate next week's prompts with Sophia
+            </a>
+          </div>
+
+          <div class="leaderboard-card">
+            <div class="card-header">
+              <div class="card-title">Circle leaderboard</div>
+              <span class="card-badge">This month</span>
+            </div>
+            <div class="member-row">
+              <div class="member-rank top">1</div>
+              <div class="member-av">GK</div>
+              <div class="member-info">
+                <div class="member-name">Grace Kimani</div>
+                <div class="member-streak">21-day streak</div>
+              </div>
+              <div class="member-score">340</div>
+            </div>
+            <div class="member-row">
+              <div class="member-rank top">2</div>
+              <div class="member-av">JM</div>
+              <div class="member-info">
+                <div class="member-name">James Mwangi</div>
+                <div class="member-streak">18-day streak</div>
+              </div>
+              <div class="member-score">298</div>
+            </div>
+            <div class="member-row">
+              <div class="member-rank top">3</div>
+              <div class="member-av">FO</div>
+              <div class="member-info">
+                <div class="member-name">Faith Okonkwo</div>
+                <div class="member-streak">14-day streak</div>
+              </div>
+              <div class="member-score">275</div>
+            </div>
+            <div class="member-row">
+              <div class="member-rank">4</div>
+              <div class="member-av">SA</div>
+              <div class="member-info">
+                <div class="member-name">Samuel Adeola</div>
+                <div class="member-streak">10-day streak</div>
+              </div>
+              <div class="member-score">241</div>
+            </div>
+            <div class="member-row self">
+              <div class="member-rank" style="color:var(--teal);font-weight:700;">7</div>
+              <div class="member-av">EN</div>
+              <div class="member-info">
+                <div class="member-name">Elijah Nchelenge (you)</div>
+                <div class="member-streak">14-day streak</div>
+              </div>
+              <div class="member-score" style="color:var(--teal);">183</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COACHING RESOURCES -->
+        <div class="section-header" style="margin-top:8px;">
+          <div class="section-title">Coaching Resources</div>
+          <a class="section-link" href="sophia.html">Open Sophia →</a>
+        </div>
+        <div class="coaching-grid">
+          <a class="coaching-card" href="sophia.html">
+            <div class="coaching-tag">Business</div>
+            <div class="coaching-title">Kingdom Business Model Canvas</div>
+            <div class="coaching-desc">A purpose-first framework for structuring your venture around calling, community, and commerce.</div>
+            <div class="coaching-footer">
+              <div class="coaching-sophia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Work through with Sophia</div>
+              <span class="coaching-arrow">→</span>
+            </div>
+          </a>
+          <a class="coaching-card" href="sophia.html">
+            <div class="coaching-tag">Startup</div>
+            <div class="coaching-title">The Founder's Accountability Framework</div>
+            <div class="coaching-desc">Weekly rhythms, goal-setting structures, and honest review practices for Kingdom entrepreneurs.</div>
+            <div class="coaching-footer">
+              <div class="coaching-sophia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Work through with Sophia</div>
+              <span class="coaching-arrow">→</span>
+            </div>
+          </a>
+          <a class="coaching-card" href="sophia.html">
+            <div class="coaching-tag">Wealth</div>
+            <div class="coaching-title">Biblical Wealth Principles — 10 Sessions</div>
+            <div class="coaching-desc">A scripture-grounded journey through generosity, stewardship, multiplication, and Kingdom economics.</div>
+            <div class="coaching-footer">
+              <div class="coaching-sophia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Work through with Sophia</div>
+              <span class="coaching-arrow">→</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- PRO BANNER -->
+        <div class="pro-banner">
+          <div class="pro-banner-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+          <div class="pro-banner-info">
+            <div class="pro-banner-title">Unlock full business coaching with Pro</div>
+            <div class="pro-banner-sub">Unlimited Sophia sessions, startup intelligence, wealth coaching, and missions briefs — all in one upgrade.</div>
+          </div>
+          <button class="pro-banner-btn" onclick="window.location.href='upgrade.html'">Upgrade to Pro</button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Circle</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+</script>
+</body>
+</html>
