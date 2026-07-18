@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Scribe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:        #1B2B4B;
+  --navy-deep:   #0F1E36;
+  --navy-mid:    #F5F3EE;
+  --card:        #ffffff;
+  --gold:        #C4922A;
+  --gold-dim:    #A8792A;
+  --gold-light:  #F5D78E;
+  --gold-glow:   rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple:      #6155C9;
+  --purple-bg:   rgba(97,85,201,0.09);
+  --amber:       #9A5E18;
+  --amber-bg:    rgba(154,94,24,0.09);
+  --amber-border: rgba(154,94,24,0.22);
+  --text:        #191714;
+  --text-sec:    #5C584F;
+  --text-muted:  #9C9890;
+  --border:      #E8E3DA;
+  --border-mid:  #F0EDE6;
+  --radius:      10px;
+  --sidebar-w:   240px;
+  --panel-w:     300px;
+  --page-bg:     #F7F4EF;
+  --bottom-nav-h: 64px;
+}
+
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow: hidden; }
+
+.shell { display: flex; height: 100vh; overflow: hidden; }
+
+/* SIDEBAR */
+.sidebar { width: var(--sidebar-w); background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: -0.2px; line-height: 1.2; }
+.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+.sidebar-section { padding: 18px 12px 6px; }
+.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
+.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
+.nav-item.active svg { opacity: 1; }
+.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
+.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
+.nav-item.scribe.active svg { stroke: var(--gold-light) !important; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
+.user-row:hover { background: rgba(27,43,75,0.06); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+/* DRAWER */
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.drawer-close svg { width: 18px; height: 18px; }
+
+/* MAIN — chat + manuscript side by side */
+.main-area { flex: 1; display: flex; height: 100vh; overflow: hidden; }
+
+/* CHAT */
+.chat-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--page-bg); min-width: 0; }
+
+.chat-topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--page-bg); flex-shrink: 0; gap: 12px; }
+.chat-topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.menu-btn { display: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
+.menu-btn svg { width: 17px; height: 17px; }
+.agent-chip { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 20px; flex-shrink: 0; }
+.agent-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+.agent-chip-name { font-size: 13px; font-weight: 600; color: var(--amber); font-family: 'DM Sans', sans-serif; }
+.session-name-input { font-size: 14px; font-weight: 500; color: var(--navy); background: transparent; border: none; outline: none; font-family: 'DM Sans', sans-serif; min-width: 0; flex: 1; }
+.session-name-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+.chat-topbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.topbar-icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background 0.15s, color 0.15s; }
+.topbar-icon-btn:hover { background: rgba(27,43,75,0.05); color: var(--navy); }
+.topbar-icon-btn svg { width: 14px; height: 14px; }
+.panel-toggle { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
+.panel-toggle.active { background: var(--amber); color: #fff; border-color: var(--amber); }
+
+/* MESSAGES */
+.messages { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; }
+.messages::-webkit-scrollbar { width: 4px; }
+.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.msg { display: flex; gap: 10px; max-width: 680px; }
+.msg.user { flex-direction: row-reverse; align-self: flex-end; }
+.msg.assistant { align-self: flex-start; }
+.msg-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.msg.assistant .msg-avatar { background: var(--amber-bg); border: 1px solid var(--amber-border); color: var(--amber); }
+.msg.user .msg-avatar { background: var(--navy); color: var(--gold-light); font-family: 'DM Sans', sans-serif; }
+.msg-bubble { padding: 12px 16px; border-radius: 14px; font-size: 13.5px; line-height: 1.7; }
+.msg.assistant .msg-bubble { background: var(--card); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
+.msg.user .msg-bubble { background: var(--navy); color: rgba(255,255,255,0.92); border-bottom-right-radius: 4px; }
+.msg-bubble p { margin-bottom: 10px; }
+.msg-bubble p:last-child { margin-bottom: 0; }
+.msg-bubble strong { font-weight: 600; }
+.msg.assistant .msg-bubble strong { color: var(--amber); }
+
+.msg-actions { display: flex; gap: 6px; margin-top: 6px; opacity: 0; transition: opacity 0.15s; }
+.msg:hover .msg-actions { opacity: 1; }
+.msg-action { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.msg-action:hover { color: var(--navy); }
+.msg-action svg { width: 12px; height: 12px; }
+
+/* CHAPTER PREVIEW CARD */
+.chapter-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 10px; }
+.chapter-card-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border-mid); background: var(--amber-bg); }
+.chapter-card-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.8px; }
+.chapter-card-meta { font-size: 11px; color: var(--text-muted); }
+.chapter-card-body { padding: 14px 16px; font-size: 13px; color: var(--text-sec); line-height: 1.75; }
+.chapter-card-body p { margin-bottom: 10px; }
+.chapter-card-body p:last-child { margin-bottom: 0; }
+.chapter-card-footer { padding: 10px 16px; border-top: 1px solid var(--border-mid); display: flex; align-items: center; justify-content: space-between; }
+.chapter-word-count { font-size: 11px; color: var(--text-muted); }
+.chapter-actions { display: flex; gap: 8px; }
+.chapter-btn { font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text-sec); cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+.chapter-btn:hover { background: var(--page-bg); }
+.chapter-btn.primary { background: var(--amber); border-color: var(--amber); color: #fff; }
+.chapter-btn.primary:hover { background: #7d4c12; }
+
+/* PAYWALL */
+.paywall-card { background: var(--navy); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+.paywall-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(245,215,142,0.12); border: 1px solid rgba(245,215,142,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.paywall-icon svg { width: 15px; height: 15px; color: var(--gold-light); }
+.paywall-info { flex: 1; }
+.paywall-title { font-size: 13px; font-weight: 600; color: var(--gold-light); }
+.paywall-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+.paywall-btn { font-size: 12px; font-weight: 600; color: var(--navy); background: var(--gold-light); border: none; padding: 7px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; font-family: 'Inter', sans-serif; }
+.paywall-btn:hover { opacity: 0.88; }
+
+/* TYPING */
+.typing { display: flex; align-items: center; gap: 4px; padding: 14px 16px; }
+.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); animation: bounce 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+/* INPUT */
+.input-area { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--page-bg); flex-shrink: 0; }
+.input-bar { display: flex; align-items: flex-end; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; transition: border-color 0.2s; box-shadow: 0 1px 4px rgba(27,43,75,0.06); }
+.input-bar:focus-within { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(154,94,24,0.08); }
+.input-tool { width: 30px; height: 30px; border-radius: 7px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background 0.15s; }
+.input-tool:hover { background: var(--page-bg); color: var(--navy); }
+.input-tool svg { width: 15px; height: 15px; }
+.input-field { flex: 1; background: transparent; border: none; outline: none; font-size: 14px; color: var(--text); font-family: 'Inter', sans-serif; resize: none; max-height: 120px; min-height: 24px; line-height: 1.5; padding: 3px 0; }
+.input-field::placeholder { color: var(--text-muted); }
+.send-btn { width: 34px; height: 34px; background: var(--amber); border: none; border-radius: 9px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
+.send-btn:hover { background: #7d4c12; }
+.send-btn svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 2.2; }
+.input-hint { font-size: 11px; color: var(--text-muted); margin-top: 7px; text-align: center; }
+.input-hint span { color: var(--amber); font-weight: 500; cursor: pointer; }
+
+/* MANUSCRIPT PANEL */
+.manuscript-panel { width: var(--panel-w); border-left: 1px solid var(--border); background: var(--navy-mid); display: flex; flex-direction: column; height: 100vh; overflow: hidden; flex-shrink: 0; transition: width 0.25s, opacity 0.25s; }
+.manuscript-panel.collapsed { width: 0; opacity: 0; overflow: hidden; }
+
+.panel-topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.panel-tabs { display: flex; gap: 2px; background: var(--border-mid); border-radius: 8px; padding: 3px; }
+.panel-tab { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: background 0.15s, color 0.15s; font-weight: 500; }
+.panel-tab.active { background: var(--card); color: var(--navy); box-shadow: 0 1px 3px rgba(27,43,75,0.08); }
+.export-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--amber); border: none; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.export-btn:hover { background: #7d4c12; }
+.export-btn svg { width: 12px; height: 12px; }
+
+/* OUTLINE PANEL */
+.outline-panel { flex: 1; overflow-y: auto; padding: 14px 14px; }
+.outline-panel::-webkit-scrollbar { width: 4px; }
+.outline-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.book-meta { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+.book-title-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.book-sub-text { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+.book-progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+.book-progress-fill { height: 100%; background: var(--amber); border-radius: 4px; width: 28%; transition: width 0.3s; }
+.book-progress-label { font-size: 11px; color: var(--text-muted); }
+.book-progress-label strong { color: var(--amber); }
+
+.outline-section-label { font-size: 10px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; padding-left: 2px; }
+
+.chapter-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; cursor: pointer; transition: background 0.15s; margin-bottom: 3px; border: 1px solid transparent; }
+.chapter-item:hover { background: rgba(27,43,75,0.04); }
+.chapter-item.active { background: var(--card); border-color: var(--amber-border); }
+.chapter-item.active .chapter-num { background: var(--amber); color: #fff; }
+.chapter-num { width: 24px; height: 24px; border-radius: 6px; background: var(--border-mid); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+.chapter-info { flex: 1; min-width: 0; }
+.chapter-name { font-size: 12.5px; font-weight: 500; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chapter-status { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.chapter-status.done { color: var(--amber); }
+.chapter-badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+.badge-draft { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge-outline { background: var(--border-mid); color: var(--text-muted); border: 1px solid var(--border); }
+.badge-locked { background: var(--border-mid); color: var(--text-muted); border: 1px solid var(--border); }
+
+.add-chapter-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 10px; border-radius: 9px; border: 1px dashed var(--border); background: transparent; color: var(--text-muted); font-size: 12.5px; cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.15s, color 0.15s; margin-top: 4px; }
+.add-chapter-btn:hover { border-color: var(--amber-border); color: var(--amber); }
+.add-chapter-btn svg { width: 14px; height: 14px; }
+
+/* CHECKLIST PANEL */
+.checklist-panel { flex: 1; overflow-y: auto; padding: 14px; display: none; }
+.checklist-panel::-webkit-scrollbar { width: 4px; }
+.checklist-group { margin-bottom: 20px; }
+.checklist-group-title { font-size: 10px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; padding-left: 2px; }
+.checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; margin-bottom: 2px; }
+.checklist-item:hover { background: rgba(27,43,75,0.04); }
+.check-box { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: background 0.15s, border-color 0.15s; }
+.check-box.checked { background: var(--amber); border-color: var(--amber); }
+.check-box svg { width: 10px; height: 10px; stroke: #fff; display: none; }
+.check-box.checked svg { display: block; }
+.checklist-text { flex: 1; font-size: 12.5px; color: var(--text-sec); line-height: 1.5; }
+.checklist-item.checked-item .checklist-text { text-decoration: line-through; color: var(--text-muted); }
+.checklist-locked { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; background: var(--border-mid); margin-bottom: 2px; }
+.checklist-locked svg { width: 13px; height: 13px; color: var(--text-muted); }
+.checklist-locked-text { font-size: 12px; color: var(--text-muted); }
+
+/* PANEL PROGRESS */
+.panel-progress { padding: 12px 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.progress-label { font-size: 11px; color: var(--text-muted); }
+.progress-val { font-size: 11px; font-weight: 600; color: var(--amber); }
+.progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--amber); border-radius: 4px; }
+
+/* MOBILE */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+.bottom-nav-item.active { color: var(--amber); }
+.bottom-nav-item.active svg { stroke: var(--amber); }
+
+@media (max-width: 1100px) { .manuscript-panel { display: none; } }
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .menu-btn { display: flex; }
+  .drawer-overlay { display: block; }
+  .bottom-nav { display: flex; }
+  .chat-topbar { padding: 10px 14px; }
+  .messages { padding: 16px 14px; }
+  .input-area { padding: 10px 14px; padding-bottom: calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom)); }
+}
+</style>
+</head>
+<body>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark">
+      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item scribe active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-avatar">EN</div>
+      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">EN</div>
+        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN: CHAT + MANUSCRIPT -->
+  <div class="main-area">
+
+    <!-- CHAT -->
+    <div class="chat-area">
+      <div class="chat-topbar">
+        <div class="chat-topbar-left">
+          <button class="menu-btn" onclick="openDrawer()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="agent-chip">
+            <div class="agent-chip-dot"></div>
+            <span class="agent-chip-name">Scribe</span>
+          </div>
+          <input class="session-name-input" type="text" placeholder="Name this session..." value="Divine Keys for Spiritual Exploits">
+        </div>
+        <div class="chat-topbar-right">
+          <button class="topbar-icon-btn" title="Export DOCX" onclick="alert('DOCX export — Pro feature')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="topbar-icon-btn" title="New session" onclick="window.location.href='scribe.html'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()" title="Toggle manuscript panel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="messages" id="messages">
+
+        <div class="msg assistant">
+          <div class="msg-avatar">Sc</div>
+          <div>
+            <div class="msg-bubble">
+              <p>Welcome, Elijah. I've loaded your manuscript for <strong>Divine Keys for Spiritual Exploits</strong>. You have 3 chapters drafted and 9 remaining. Where would you like to work today — continuing Chapter 3, reviewing an earlier draft, or starting the next chapter?</p>
+            </div>
+            <div class="msg-actions">
+              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg user">
+          <div class="msg-avatar">EN</div>
+          <div class="msg-bubble">Let's draft Chapter 3. The topic is "The Key of Intercession — How Prayer Unlocks Spiritual Doors".</div>
+        </div>
+
+        <div class="msg assistant">
+          <div class="msg-avatar">Sc</div>
+          <div>
+            <div class="msg-bubble">
+              <p>Excellent. Here's an opening draft for Chapter 3. I've anchored it in the book's voice and Kingdom mandate — bold, scripture-grounded, and practical.</p>
+            </div>
+            <div class="chapter-card">
+              <div class="chapter-card-header">
+                <span class="chapter-card-title">Chapter 3 — Draft</span>
+                <span class="chapter-card-meta">~320 words · v1</span>
+              </div>
+              <div class="chapter-card-body">
+                <p><strong>The Key of Intercession — How Prayer Unlocks Spiritual Doors</strong></p>
+                <p>Every great move of God in scripture was preceded by a man or woman who would not stop praying. Daniel prayed three times a day and the heavens were moved. Elijah prayed with intensity and the rain came. The early church prayed in one accord and the Spirit fell with power.</p>
+                <p>Intercession is not a religious exercise. It is the mechanism by which heaven's agenda is released on the earth. When you intercede, you are not informing God of what He does not know — you are aligning yourself with what He has already purposed, and in doing so, you become the instrument through which He acts.</p>
+                <p>The divine key of intercession operates on three principles: <strong>persistence</strong>, <strong>authority</strong>, and <strong>agreement</strong>. Each principle unlocks a different dimension of God's power in your situation...</p>
+              </div>
+              <div class="chapter-card-footer">
+                <span class="chapter-word-count">320 words drafted</span>
+                <div class="chapter-actions">
+                  <button class="chapter-btn" onclick="insertPrompt('Continue drafting Chapter 3 from where you left off')">Continue</button>
+                  <button class="chapter-btn" onclick="insertPrompt('Review Chapter 3 for theological consistency and flow')">Review</button>
+                  <button class="chapter-btn primary" onclick="alert('Open in manuscript workspace')">Open in workspace</button>
+                </div>
+              </div>
+            </div>
+            <div class="msg-actions">
+              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg user">
+          <div class="msg-avatar">EN</div>
+          <div class="msg-bubble">Export the full manuscript as a DOCX file.</div>
+        </div>
+
+        <div class="msg assistant">
+          <div class="msg-avatar">Sc</div>
+          <div>
+            <div class="msg-bubble">
+              <p>Manuscript export to DOCX is a Pro feature. Upgrade to unlock full exports, unlimited chapter drafting, review and editing, and direct submission to Divine Keys Publishing.</p>
+            </div>
+            <div class="paywall-card">
+              <div class="paywall-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+              <div class="paywall-info">
+                <div class="paywall-title">Unlock your full calling</div>
+                <div class="paywall-sub">DOCX export, unlimited drafting, publishing integration</div>
+              </div>
+              <button class="paywall-btn" onclick="window.location.href='upgrade.html'">Upgrade to Pro</button>
+            </div>
+            <div class="msg-actions">
+              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="input-area">
+        <div class="input-bar">
+          <button class="input-tool" title="Paste notes">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          </button>
+          <textarea class="input-field" id="inputField" placeholder="Tell Scribe what to write, continue, or review..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+        <div class="input-hint">Scribe handles book publishing only. <span onclick="window.location.href='sophia.html'">Switch to Sophia</span> for scripture, coaching, or missions.</div>
+      </div>
+    </div>
+
+    <!-- MANUSCRIPT PANEL -->
+    <aside class="manuscript-panel" id="manuscriptPanel">
+      <div class="panel-topbar">
+        <div class="panel-tabs">
+          <button class="panel-tab active" onclick="switchTab('outline', this)">Outline</button>
+          <button class="panel-tab" onclick="switchTab('checklist', this)">Checklist</button>
+        </div>
+        <button class="export-btn" onclick="alert('DOCX export — Pro feature. Upgrade to unlock.')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export DOCX
+        </button>
+      </div>
+
+      <!-- OUTLINE -->
+      <div class="outline-panel" id="outlinePanel">
+        <div class="book-meta">
+          <div class="book-title-text">Divine Keys for Spiritual Exploits</div>
+          <div class="book-sub-text">Elijah Nchelenge · 12 chapters planned</div>
+          <div class="book-progress-bar"><div class="book-progress-fill"></div></div>
+          <div class="book-progress-label"><strong>3 of 12 chapters</strong> drafted</div>
+        </div>
+
+        <div class="outline-section-label">Chapters</div>
+
+        <div class="chapter-item" onclick="selectChapter(this)">
+          <div class="chapter-num">1</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of Faith</div>
+            <div class="chapter-status done">Draft complete</div>
+          </div>
+          <span class="chapter-badge badge-draft">Draft</span>
+        </div>
+        <div class="chapter-item" onclick="selectChapter(this)">
+          <div class="chapter-num">2</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of the Word</div>
+            <div class="chapter-status done">Draft complete</div>
+          </div>
+          <span class="chapter-badge badge-draft">Draft</span>
+        </div>
+        <div class="chapter-item active" onclick="selectChapter(this)">
+          <div class="chapter-num">3</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of Intercession</div>
+            <div class="chapter-status">In progress</div>
+          </div>
+          <span class="chapter-badge badge-draft">Draft</span>
+        </div>
+        <div class="chapter-item" onclick="selectChapter(this)">
+          <div class="chapter-num">4</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of Praise</div>
+            <div class="chapter-status">Outline only</div>
+          </div>
+          <span class="chapter-badge badge-outline">Outline</span>
+        </div>
+        <div class="chapter-item" onclick="selectChapter(this)">
+          <div class="chapter-num">5</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of Obedience</div>
+            <div class="chapter-status">Outline only</div>
+          </div>
+          <span class="chapter-badge badge-outline">Outline</span>
+        </div>
+        <div class="chapter-item" onclick="selectChapter(this)">
+          <div class="chapter-num">6</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of Unity</div>
+            <div class="chapter-status" style="color:var(--text-muted)">Not started</div>
+          </div>
+          <span class="chapter-badge badge-locked">–</span>
+        </div>
+        <div class="chapter-item" onclick="selectChapter(this)">
+          <div class="chapter-num">7</div>
+          <div class="chapter-info">
+            <div class="chapter-name">The Key of Giving</div>
+            <div class="chapter-status" style="color:var(--text-muted)">Not started</div>
+          </div>
+          <span class="chapter-badge badge-locked">–</span>
+        </div>
+
+        <button class="add-chapter-btn" onclick="insertPrompt('Add a new chapter to the outline')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add chapter
+        </button>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="checklist-panel" id="checklistPanel">
+        <div class="checklist-group">
+          <div class="checklist-group-title">Manuscript</div>
+          <div class="checklist-item checked-item" onclick="toggleCheck(this)">
+            <div class="check-box checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="checklist-text">Book concept defined</div>
+          </div>
+          <div class="checklist-item checked-item" onclick="toggleCheck(this)">
+            <div class="check-box checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="checklist-text">Chapter outline generated</div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="checklist-text">All chapters drafted</div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="checklist-text">Review and editing complete</div>
+          </div>
+        </div>
+        <div class="checklist-group">
+          <div class="checklist-group-title">Publishing (Pro)</div>
+          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Manuscript exported (DOCX & PDF)</div></div>
+          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Cover brief submitted</div></div>
+          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">ISBN assigned</div></div>
+          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Distribution set up</div></div>
+          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Submitted to Divine Keys Publishing</div></div>
+        </div>
+      </div>
+
+      <div class="panel-progress">
+        <div class="progress-row">
+          <span class="progress-label">Manuscript progress</span>
+          <span class="progress-val">28%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:28%"></div></div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+  let panelOpen = true;
+  let activeTab = 'outline';
+
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function togglePanel() {
+    panelOpen = !panelOpen;
+    document.getElementById('manuscriptPanel').classList.toggle('collapsed', !panelOpen);
+    document.getElementById('panelToggle').classList.toggle('active', panelOpen);
+  }
+
+  function switchTab(tab, btn) {
+    activeTab = tab;
+    document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('outlinePanel').style.display = tab === 'outline' ? 'block' : 'none';
+    document.getElementById('checklistPanel').style.display = tab === 'checklist' ? 'block' : 'none';
+  }
+
+  function selectChapter(el) {
+    document.querySelectorAll('.chapter-item').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleCheck(el) {
+    const box = el.querySelector('.check-box');
+    box.classList.toggle('checked');
+    el.classList.toggle('checked-item');
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function insertPrompt(text) {
+    const field = document.getElementById('inputField');
+    field.value = text;
+    field.focus();
+    autoResize(field);
+  }
+
+  function sendMessage() {
+    const field = document.getElementById('inputField');
+    const text = field.value.trim();
+    if (!text) return;
+
+    const messages = document.getElementById('messages');
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'msg user';
+    userMsg.innerHTML = `<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;
+    messages.appendChild(userMsg);
+    field.value = '';
+    field.style.height = 'auto';
+
+    const typing = document.createElement('div');
+    typing.className = 'msg assistant';
+    typing.id = 'typing';
+    typing.innerHTML = `<div class="msg-avatar">Sc</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      const reply = document.createElement('div');
+      reply.className = 'msg assistant';
+      reply.innerHTML = `
+        <div class="msg-avatar">Sc</div>
+        <div>
+          <div class="msg-bubble">
+            <p>Understood. I'll work on that now and keep the voice consistent with the rest of the manuscript — Kingdom-grounded, scripture-anchored, and written for the reader you've defined.</p>
+          </div>
+          <div class="msg-actions">
+            <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+            <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
+          </div>
+        </div>`;
+      messages.appendChild(reply);
+      messages.scrollTop = messages.scrollHeight;
+    }, 1400);
+  }
+</script>
+</body>
+</html>
