@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Moments of Wisdom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:        #1B2B4B;
+  --navy-deep:   #0F1E36;
+  --navy-mid:    #F5F3EE;
+  --card:        #ffffff;
+  --gold:        #C4922A;
+  --gold-dim:    #A8792A;
+  --gold-light:  #F5D78E;
+  --gold-glow:   rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple:      #6155C9;
+  --purple-bg:   rgba(97,85,201,0.09);
+  --amber:       #9A5E18;
+  --amber-bg:    rgba(154,94,24,0.09);
+  --text:        #191714;
+  --text-sec:    #5C584F;
+  --text-muted:  #9C9890;
+  --border:      #E8E3DA;
+  --border-mid:  #F0EDE6;
+  --radius:      10px;
+  --sidebar-w:   240px;
+  --page-bg:     #F7F4EF;
+  --bottom-nav-h: 64px;
+}
+
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+
+.shell { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: -0.2px; line-height: 1.2; }
+.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+.sidebar-section { padding: 18px 12px 6px; }
+.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
+.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
+.nav-item.active svg { opacity: 1; }
+.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
+.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
+.user-row:hover { background: rgba(27,43,75,0.06); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+/* DRAWER */
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.drawer-close svg { width: 18px; height: 18px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* TOPBAR */
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 36px; border-bottom: 1px solid var(--border); background: var(--page-bg); position: sticky; top: 0; z-index: 10; }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.menu-btn { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
+.menu-btn svg { width: 18px; height: 18px; }
+.page-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.topbar-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text-sec); font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; white-space: nowrap; }
+.topbar-btn:hover { background: rgba(27,43,75,0.05); color: var(--navy); }
+.topbar-btn svg { width: 14px; height: 14px; }
+.topbar-btn.icon-only { padding: 7px; }
+
+/* CONTENT */
+.content { padding: 0 0 80px; max-width: 100%; }
+
+/* HERO — featured video */
+.vod-hero { background: var(--navy-deep); position: relative; overflow: hidden; }
+.vod-hero-inner { max-width: 1100px; margin: 0 auto; padding: 48px 36px; display: grid; grid-template-columns: 1fr 420px; gap: 48px; align-items: center; }
+.vod-hero-body {}
+.vod-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 14px; }
+.vod-eyebrow::before { content: ''; display: block; width: 18px; height: 1px; background: var(--gold); }
+.vod-hero-title { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 12px; letter-spacing: -0.3px; }
+.vod-hero-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.75; margin-bottom: 24px; max-width: 400px; }
+.vod-hero-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.vod-meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.45); }
+.vod-meta-item svg { width: 13px; height: 13px; }
+.vod-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.play-btn { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: var(--gold); border: none; border-radius: var(--radius); color: var(--navy-deep); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+.play-btn:hover { background: var(--gold-dim); }
+.play-btn svg { width: 14px; height: 14px; fill: var(--navy-deep); }
+.sophia-btn { display: flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(97,85,201,0.15); border: 1px solid rgba(97,85,201,0.3); border-radius: var(--radius); color: #a89fe8; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; text-decoration: none; }
+.sophia-btn:hover { background: rgba(97,85,201,0.25); }
+.sophia-btn svg { width: 13px; height: 13px; }
+
+/* VIDEO THUMBNAIL */
+.vod-thumb { border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+.vod-thumb:hover .play-overlay { opacity: 1; }
+.thumb-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #1B2B4B 0%, #0F1E36 100%); display: flex; align-items: center; justify-content: center; }
+.thumb-cross { width: 60px; height: 60px; opacity: 0.12; }
+.play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.2s; border-radius: 12px; }
+.play-circle { width: 56px; height: 56px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; }
+.play-circle svg { width: 20px; height: 20px; fill: white; margin-left: 3px; }
+.thumb-label { position: absolute; bottom: 12px; left: 12px; right: 12px; }
+.thumb-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3; }
+.thumb-duration { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+
+/* CONTENT AREA */
+.vod-content { max-width: 1100px; margin: 0 auto; padding: 36px 36px 0; }
+
+/* FILTER + SEARCH */
+.vod-filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 300px; }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-muted); pointer-events: none; }
+.search-input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; transition: border-color 0.2s; }
+.search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+.search-input::placeholder { color: var(--text-muted); }
+.filter-tabs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 3px; flex-wrap: wrap; }
+.filter-tab { padding: 5px 12px; border-radius: 7px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-sec); transition: background 0.15s, color 0.15s; font-weight: 500; white-space: nowrap; }
+.filter-tab:hover { color: var(--navy); }
+.filter-tab.active { background: var(--navy); color: var(--gold-light); }
+
+/* SECTION HEADER */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-title { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--text-sec); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+.section-link { font-size: 12px; color: var(--gold-dim); cursor: pointer; text-decoration: none; opacity: 0.8; transition: opacity 0.15s; }
+.section-link:hover { opacity: 1; }
+
+/* VIDEO GRID */
+.video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 40px; }
+
+.video-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s; text-decoration: none; display: block; }
+.video-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,43,75,0.09); }
+
+.video-thumb { aspect-ratio: 16/9; background: var(--navy); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.video-thumb-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #1B2B4B 0%, #243d6a 100%); }
+.video-thumb-icon { position: relative; width: 36px; height: 36px; border-radius: 50%; background: rgba(245,215,142,0.15); border: 1px solid rgba(245,215,142,0.25); display: flex; align-items: center; justify-content: center; }
+.video-thumb-icon svg { width: 14px; height: 14px; fill: var(--gold-light); margin-left: 2px; }
+.video-thumb-hover { position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+.video-card:hover .video-thumb-hover { opacity: 1; }
+.video-thumb-hover svg { width: 32px; height: 32px; fill: white; }
+.video-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; }
+.video-series-badge { position: absolute; top: 8px; left: 8px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--gold-glow); border: 1px solid var(--gold-border); color: var(--gold); backdrop-filter: blur(4px); }
+
+.video-body { padding: 14px 16px; }
+.video-title { font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; color: var(--navy); line-height: 1.35; margin-bottom: 6px; }
+.video-meta { display: flex; align-items: center; gap: 10px; }
+.video-series { font-size: 11px; color: var(--text-muted); }
+.video-sophia-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--purple); font-weight: 500; cursor: pointer; text-decoration: none; margin-top: 8px; opacity: 0; transition: opacity 0.15s; }
+.video-card:hover .video-sophia-link { opacity: 1; }
+.video-sophia-link svg { width: 10px; height: 10px; }
+
+/* SERIES ROW */
+.series-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 40px; }
+.series-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; display: block; }
+.series-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,43,75,0.09); }
+.series-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--gold-glow); border: 1px solid var(--gold-border); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.series-icon svg { width: 16px; height: 16px; color: var(--gold); }
+.series-name { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+.series-count { font-size: 11.5px; color: var(--text-muted); }
+
+/* PLAYER MODAL */
+.player-modal { position: fixed; inset: 0; background: rgba(15,30,54,0.9); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.player-modal.open { opacity: 1; pointer-events: all; }
+.player-inner { background: var(--navy-deep); border-radius: 16px; width: 100%; max-width: 820px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+.player-video { aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; position: relative; }
+.player-placeholder { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.player-play { width: 64px; height: 64px; border-radius: 50%; background: var(--gold); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s; }
+.player-play:hover { background: var(--gold-dim); }
+.player-play svg { width: 24px; height: 24px; fill: white; margin-left: 4px; }
+.player-note { font-size: 12px; color: rgba(255,255,255,0.35); }
+.player-controls { padding: 20px 24px; }
+.player-title { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.player-series { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+.player-progress { height: 4px; background: rgba(255,255,255,0.12); border-radius: 4px; margin-bottom: 12px; cursor: pointer; }
+.player-progress-fill { height: 100%; background: var(--gold); border-radius: 4px; width: 35%; }
+.player-row { display: flex; align-items: center; justify-content: space-between; }
+.player-time { font-size: 11px; color: rgba(255,255,255,0.4); }
+.player-actions { display: flex; gap: 8px; }
+.player-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); transition: background 0.15s; }
+.player-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.player-btn svg { width: 13px; height: 13px; }
+.player-sophia { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: rgba(97,85,201,0.15); border: 1px solid rgba(97,85,201,0.25); border-radius: 8px; color: #a89fe8; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; }
+.player-sophia svg { width: 12px; height: 12px; }
+.player-close { position: absolute; top: 16px; right: 16px; width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,0.08); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); }
+.player-close:hover { background: rgba(255,255,255,0.15); }
+.player-close svg { width: 16px; height: 16px; }
+
+/* MOBILE */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+.bottom-nav-item.active { color: var(--gold); }
+.bottom-nav-item.active svg { stroke: var(--gold); }
+
+@media (max-width: 1100px) {
+  .vod-hero-inner { grid-template-columns: 1fr; }
+  .vod-thumb { max-width: 480px; }
+  .video-grid { grid-template-columns: repeat(2, 1fr); }
+  .series-row { grid-template-columns: repeat(2, 1fr); }
+  .topbar { padding: 13px 24px; }
+  .vod-content { padding: 28px 24px 0; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .menu-btn { display: flex; }
+  .drawer-overlay { display: block; }
+  .bottom-nav { display: flex; }
+  .topbar { padding: 12px 16px; }
+  .topbar-btn:not(.icon-only) { display: none; }
+  .vod-hero-inner { padding: 28px 20px; }
+  .vod-content { padding: 20px 16px 0; }
+  .video-grid { grid-template-columns: 1fr; }
+  .series-row { grid-template-columns: repeat(2, 1fr); }
+  .content { padding-bottom: calc(var(--bottom-nav-h) + 20px); }
+}
+</style>
+</head>
+<body>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark">
+      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Platform</div>
+    <a class="nav-item active" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+    <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+    <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+    <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-avatar">EN</div>
+      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYER MODAL -->
+<div class="player-modal" id="playerModal">
+  <div class="player-inner">
+    <div class="player-video">
+      <div class="player-placeholder">
+        <button class="player-play" onclick="alert('Video player — connect your video host (Vimeo, YouTube, Cloudflare Stream) here.')">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div class="player-note">Video player — connect your host here</div>
+      </div>
+      <button class="player-close" onclick="closePlayer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="player-controls">
+      <div class="player-title" id="playerTitle">Walking in the Spirit — Romans 8 Unpacked</div>
+      <div class="player-series">Moments of Wisdom · Series: Romans Deep Dive</div>
+      <div class="player-progress"><div class="player-progress-fill"></div></div>
+      <div class="player-row">
+        <div class="player-time">16:42 / 47:30</div>
+        <div class="player-actions">
+          <a class="player-sophia" href="sophia.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Study this with Sophia
+          </a>
+          <button class="player-btn" title="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item active" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">EN</div>
+        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="page-title">Moments of Wisdom</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn icon-only"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+        <a class="topbar-btn" href="sophia.html" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Study with Sophia
+        </a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- HERO -->
+      <div class="vod-hero">
+        <div class="vod-hero-inner">
+          <div class="vod-hero-body">
+            <div class="vod-eyebrow">Featured Teaching</div>
+            <h1 class="vod-hero-title">Walking in the Spirit — Romans 8 Unpacked</h1>
+            <p class="vod-hero-desc">A verse-by-verse journey through one of the most transformative chapters in scripture. Discover what it means to be led by the Spirit and live free from condemnation.</p>
+            <div class="vod-hero-meta">
+              <span class="vod-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>47 min</span>
+              <span class="vod-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Romans Deep Dive</span>
+              <span class="vod-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Episode 3 of 8</span>
+            </div>
+            <div class="vod-hero-actions">
+              <button class="play-btn" onclick="openPlayer('Walking in the Spirit — Romans 8 Unpacked')">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Watch now
+              </button>
+              <a class="sophia-btn" href="sophia.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Study this with Sophia
+              </a>
+            </div>
+          </div>
+          <div class="vod-thumb" onclick="openPlayer('Walking in the Spirit — Romans 8 Unpacked')">
+            <div class="thumb-bg">
+              <svg class="thumb-cross" viewBox="0 0 60 60" fill="none"><path d="M30 5L30 55M5 30L55 30" stroke="#f5d78e" stroke-width="2"/></svg>
+            </div>
+            <div class="play-overlay">
+              <div class="play-circle"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            </div>
+            <div class="thumb-label">
+              <div class="thumb-title">Walking in the Spirit — Romans 8 Unpacked</div>
+              <div class="thumb-duration">47:30</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vod-content">
+
+        <!-- FILTER -->
+        <div class="vod-filter-bar">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" placeholder="Search teachings...">
+          </div>
+          <div class="filter-tabs">
+            <button class="filter-tab active">All</button>
+            <button class="filter-tab">Scripture</button>
+            <button class="filter-tab">Faith</button>
+            <button class="filter-tab">Business</button>
+            <button class="filter-tab">Missions</button>
+          </div>
+        </div>
+
+        <!-- SERIES -->
+        <div class="section-header">
+          <div class="section-title">Browse by Series</div>
+          <a class="section-link" href="#">View all →</a>
+        </div>
+        <div class="series-row">
+          <a class="series-card" href="#">
+            <div class="series-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+            <div class="series-name">Romans Deep Dive</div>
+            <div class="series-count">8 episodes</div>
+          </a>
+          <a class="series-card" href="#">
+            <div class="series-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div class="series-name">Kingdom Wealth</div>
+            <div class="series-count">6 episodes</div>
+          </a>
+          <a class="series-card" href="#">
+            <div class="series-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+            <div class="series-name">Global Missions</div>
+            <div class="series-count">5 episodes</div>
+          </a>
+          <a class="series-card" href="#">
+            <div class="series-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div class="series-name">City Builders</div>
+            <div class="series-count">7 episodes</div>
+          </a>
+        </div>
+
+        <!-- RECENT -->
+        <div class="section-header">
+          <div class="section-title">Recent Teachings</div>
+          <a class="section-link" href="#">View all →</a>
+        </div>
+        <div class="video-grid">
+
+          <a class="video-card" href="#" onclick="openPlayer('No Condemnation — The Foundation of Grace'); return false;">
+            <div class="video-thumb">
+              <div class="video-thumb-bg"></div>
+              <div class="video-thumb-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-thumb-hover"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-duration">38:14</div>
+              <div class="video-series-badge">Romans Deep Dive</div>
+            </div>
+            <div class="video-body">
+              <div class="video-title">No Condemnation — The Foundation of Grace</div>
+              <div class="video-meta"><span class="video-series">Ep 1 · Romans 8:1–4</span></div>
+              <div class="video-sophia-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Study with Sophia</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="#" onclick="openPlayer('Kingdom Economics — Proverbs on Wealth'); return false;">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#1a3a1a,#2a5a2a)"></div>
+              <div class="video-thumb-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-thumb-hover"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-duration">52:07</div>
+              <div class="video-series-badge">Kingdom Wealth</div>
+            </div>
+            <div class="video-body">
+              <div class="video-title">Kingdom Economics — Proverbs on Wealth</div>
+              <div class="video-meta"><span class="video-series">Ep 2 · Proverbs 10–13</span></div>
+              <div class="video-sophia-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Study with Sophia</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="#" onclick="openPlayer('The Missionary Heart of God'); return false;">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#1a1a3a,#2a2a5a)"></div>
+              <div class="video-thumb-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-thumb-hover"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-duration">44:33</div>
+              <div class="video-series-badge">Global Missions</div>
+            </div>
+            <div class="video-body">
+              <div class="video-title">The Missionary Heart of God</div>
+              <div class="video-meta"><span class="video-series">Ep 1 · Acts 1:8</span></div>
+              <div class="video-sophia-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Study with Sophia</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="#" onclick="openPlayer('Building with Purpose — Faith and Business'); return false;">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#2a1a0a,#4a3010)"></div>
+              <div class="video-thumb-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-thumb-hover"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-duration">41:50</div>
+              <div class="video-series-badge">City Builders</div>
+            </div>
+            <div class="video-body">
+              <div class="video-title">Building with Purpose — Faith and Business</div>
+              <div class="video-meta"><span class="video-series">Ep 3 · Nehemiah 2</span></div>
+              <div class="video-sophia-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Study with Sophia</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="#" onclick="openPlayer('Suffering and Glory — Romans 8:18–27'); return false;">
+            <div class="video-thumb">
+              <div class="video-thumb-bg"></div>
+              <div class="video-thumb-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-thumb-hover"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-duration">50:12</div>
+              <div class="video-series-badge">Romans Deep Dive</div>
+            </div>
+            <div class="video-body">
+              <div class="video-title">Suffering and Glory — Romans 8:18–27</div>
+              <div class="video-meta"><span class="video-series">Ep 4 · Romans 8:18–27</span></div>
+              <div class="video-sophia-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Study with Sophia</div>
+            </div>
+          </a>
+
+          <a class="video-card" href="#" onclick="openPlayer('Accountability in Community'); return false;">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#1a3a1a,#2a5a2a)"></div>
+              <div class="video-thumb-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-thumb-hover"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div class="video-duration">36:44</div>
+              <div class="video-series-badge">City Builders</div>
+            </div>
+            <div class="video-body">
+              <div class="video-title">Accountability in Community</div>
+              <div class="video-meta"><span class="video-series">Ep 5 · Proverbs 27:17</span></div>
+              <div class="video-sophia-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Study with Sophia</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Wisdom</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function openPlayer(title) {
+    document.getElementById('playerTitle').textContent = title;
+    document.getElementById('playerModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePlayer() {
+    document.getElementById('playerModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('playerModal').addEventListener('click', function(e) {
+    if (e.target === this) closePlayer();
+  });
+</script>
+</body>
+</html>
