@@ -7,301 +7,290 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --navy:        #1B2B4B;
-  --navy-deep:   #0F1E36;
-  --navy-mid:    #F5F3EE;
-  --card:        #ffffff;
-  --gold:        #C4922A;
-  --gold-dim:    #A8792A;
-  --gold-light:  #F5D78E;
-  --gold-glow:   rgba(196,146,42,0.10);
-  --gold-border: rgba(196,146,42,0.22);
-  --purple:      #6155C9;
-  --purple-bg:   rgba(97,85,201,0.09);
-  --amber:       #9A5E18;
-  --amber-bg:    rgba(154,94,24,0.09);
-  --amber-border: rgba(154,94,24,0.22);
-  --text:        #191714;
-  --text-sec:    #5C584F;
-  --text-muted:  #9C9890;
-  --border:      #E8E3DA;
-  --border-mid:  #F0EDE6;
-  --radius:      10px;
-  --sidebar-w:   240px;
-  --panel-w:     300px;
-  --page-bg:     #F7F4EF;
-  --bottom-nav-h: 64px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#1B2B4B;--navy-deep:#0F1E36;--navy-mid:#F5F3EE;--card:#ffffff;
+  --gold:#C4922A;--gold-dim:#A8792A;--gold-light:#F5D78E;
+  --gold-glow:rgba(196,146,42,0.10);--gold-border:rgba(196,146,42,0.22);
+  --purple:#6155C9;--purple-bg:rgba(97,85,201,0.09);--purple-border:rgba(97,85,201,0.2);
+  --amber:#9A5E18;--amber-bg:rgba(154,94,24,0.09);--amber-border:rgba(154,94,24,0.22);
+  --teal:#1A7A5E;--teal-bg:rgba(26,122,94,0.09);--teal-border:rgba(26,122,94,0.22);
+  --text:#191714;--text-sec:#5C584F;--text-muted:#9C9890;
+  --border:#E8E3DA;--border-mid:#F0EDE6;--radius:10px;
+  --sidebar-w:240px;--panel-w:340px;--page-bg:#F7F4EF;--bottom-nav-h:64px;
 }
-
-html, body { height: 100%; }
-body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow: hidden; }
-
-.shell { display: flex; height: 100vh; overflow: hidden; }
+html,body{height:100%;}
+body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;overflow:hidden;}
+.shell{display:flex;height:100vh;overflow:hidden;}
 
 /* SIDEBAR */
-.sidebar { width: var(--sidebar-w); background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; overflow-y: auto; z-index: 20; }
-.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
-.logo-mark { display: flex; align-items: center; gap: 10px; }
-.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.logo-icon svg { width: 16px; height: 16px; }
-.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: -0.2px; line-height: 1.2; }
-.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
-.sidebar-section { padding: 18px 12px 6px; }
-.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
-.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
-.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
-.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
-.nav-item.active svg { opacity: 1; }
-.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
-.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
-.nav-item.scribe.active svg { stroke: var(--gold-light) !important; }
-.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
-.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
-.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
-.user-row:hover { background: rgba(27,43,75,0.06); }
-.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
-.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
-.user-role { font-size: 11px; color: var(--text-muted); }
+.sidebar{width:var(--sidebar-w);background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto;z-index:20;}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border);}
+.logo-mark{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-icon svg{width:16px;height:16px;}
+.logo-text{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);letter-spacing:-0.2px;line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-top:2px;font-weight:500;}
+.sidebar-section{padding:18px 12px 6px;}
+.sidebar-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);font-weight:500;padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--text-sec);font-size:13px;font-weight:450;transition:background 0.15s,color 0.15s;text-decoration:none;margin-bottom:1px;border:none;background:transparent;font-family:'Inter',sans-serif;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(27,43,75,0.06);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:var(--gold-light);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:0.65;}
+.nav-item.active svg{opacity:1;}
+.nav-item.sophia svg{stroke:var(--purple)!important;opacity:1;}
+.nav-item.scribe svg{stroke:var(--amber)!important;opacity:1;}
+.nav-item.bible svg{stroke:var(--teal)!important;opacity:1;}
+.sidebar-divider{height:1px;background:var(--border);margin:8px 12px;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;transition:background 0.15s;}
+.user-row:hover{background:rgba(27,43,75,0.06);}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold-light);flex-shrink:0;font-family:'DM Sans',sans-serif;}
+.user-name{font-size:13px;font-weight:500;color:var(--navy);}
+.user-role{font-size:11px;color:var(--text-muted);}
 
 /* DRAWER */
-.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
-.drawer-overlay.open { opacity: 1; pointer-events: all; }
-.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
-.drawer.open { transform: translateX(0); }
-.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
-.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-.drawer-close svg { width: 18px; height: 18px; }
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(27,43,75,0.45);z-index:40;opacity:0;transition:opacity 0.25s;pointer-events:none;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:50;transform:translateX(-100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;}
+.drawer.open{transform:translateX(0);}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 16px;border-bottom:1px solid var(--border);}
+.drawer-close{width:32px;height:32px;border-radius:8px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.drawer-close svg{width:18px;height:18px;}
 
-/* MAIN — chat + manuscript side by side */
-.main-area { flex: 1; display: flex; height: 100vh; overflow: hidden; }
+/* MAIN */
+.main-area{flex:1;display:flex;height:100vh;overflow:hidden;}
 
 /* CHAT */
-.chat-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--page-bg); min-width: 0; }
-
-.chat-topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--page-bg); flex-shrink: 0; gap: 12px; }
-.chat-topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.menu-btn { display: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
-.menu-btn svg { width: 17px; height: 17px; }
-.agent-chip { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 20px; flex-shrink: 0; }
-.agent-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
-.agent-chip-name { font-size: 13px; font-weight: 600; color: var(--amber); font-family: 'DM Sans', sans-serif; }
-.session-name-input { font-size: 14px; font-weight: 500; color: var(--navy); background: transparent; border: none; outline: none; font-family: 'DM Sans', sans-serif; min-width: 0; flex: 1; }
-.session-name-input::placeholder { color: var(--text-muted); font-weight: 400; }
-
-.chat-topbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.topbar-icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background 0.15s, color 0.15s; }
-.topbar-icon-btn:hover { background: rgba(27,43,75,0.05); color: var(--navy); }
-.topbar-icon-btn svg { width: 14px; height: 14px; }
-.panel-toggle { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber); }
-.panel-toggle.active { background: var(--amber); color: #fff; border-color: var(--amber); }
+.chat-area{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--page-bg);min-width:0;}
+.chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--page-bg);flex-shrink:0;gap:12px;}
+.chat-topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.menu-btn{display:none;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;align-items:center;justify-content:center;color:var(--text-sec);flex-shrink:0;}
+.menu-btn svg{width:17px;height:17px;}
+.agent-chip{display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:20px;flex-shrink:0;}
+.agent-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);}
+.agent-chip-name{font-size:12.5px;font-weight:600;color:var(--amber);font-family:'DM Sans',sans-serif;}
+.session-label{font-size:13.5px;font-weight:500;color:var(--navy);font-family:'DM Sans',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chat-topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.topbar-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background 0.15s,color 0.15s;}
+.topbar-icon-btn:hover{background:rgba(27,43,75,0.05);color:var(--navy);}
+.topbar-icon-btn svg{width:14px;height:14px;}
+.panel-toggle{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
+.panel-toggle.active{background:var(--amber);color:#fff;border-color:var(--amber);}
 
 /* MESSAGES */
-.messages { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; }
-.messages::-webkit-scrollbar { width: 4px; }
-.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-.msg { display: flex; gap: 10px; max-width: 680px; }
-.msg.user { flex-direction: row-reverse; align-self: flex-end; }
-.msg.assistant { align-self: flex-start; }
-.msg-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-.msg.assistant .msg-avatar { background: var(--amber-bg); border: 1px solid var(--amber-border); color: var(--amber); }
-.msg.user .msg-avatar { background: var(--navy); color: var(--gold-light); font-family: 'DM Sans', sans-serif; }
-.msg-bubble { padding: 12px 16px; border-radius: 14px; font-size: 13.5px; line-height: 1.7; }
-.msg.assistant .msg-bubble { background: var(--card); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
-.msg.user .msg-bubble { background: var(--navy); color: rgba(255,255,255,0.92); border-bottom-right-radius: 4px; }
-.msg-bubble p { margin-bottom: 10px; }
-.msg-bubble p:last-child { margin-bottom: 0; }
-.msg-bubble strong { font-weight: 600; }
-.msg.assistant .msg-bubble strong { color: var(--amber); }
-
-.msg-actions { display: flex; gap: 6px; margin-top: 6px; opacity: 0; transition: opacity 0.15s; }
-.msg:hover .msg-actions { opacity: 1; }
-.msg-action { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-.msg-action:hover { color: var(--navy); }
-.msg-action svg { width: 12px; height: 12px; }
-
-/* CHAPTER PREVIEW CARD */
-.chapter-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 10px; }
-.chapter-card-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border-mid); background: var(--amber-bg); }
-.chapter-card-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: var(--amber); text-transform: uppercase; letter-spacing: 0.8px; }
-.chapter-card-meta { font-size: 11px; color: var(--text-muted); }
-.chapter-card-body { padding: 14px 16px; font-size: 13px; color: var(--text-sec); line-height: 1.75; }
-.chapter-card-body p { margin-bottom: 10px; }
-.chapter-card-body p:last-child { margin-bottom: 0; }
-.chapter-card-footer { padding: 10px 16px; border-top: 1px solid var(--border-mid); display: flex; align-items: center; justify-content: space-between; }
-.chapter-word-count { font-size: 11px; color: var(--text-muted); }
-.chapter-actions { display: flex; gap: 8px; }
-.chapter-btn { font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text-sec); cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
-.chapter-btn:hover { background: var(--page-bg); }
-.chapter-btn.primary { background: var(--amber); border-color: var(--amber); color: #fff; }
-.chapter-btn.primary:hover { background: #7d4c12; }
-
-/* PAYWALL */
-.paywall-card { background: var(--navy); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; margin-top: 10px; }
-.paywall-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(245,215,142,0.12); border: 1px solid rgba(245,215,142,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.paywall-icon svg { width: 15px; height: 15px; color: var(--gold-light); }
-.paywall-info { flex: 1; }
-.paywall-title { font-size: 13px; font-weight: 600; color: var(--gold-light); }
-.paywall-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); margin-top: 2px; }
-.paywall-btn { font-size: 12px; font-weight: 600; color: var(--navy); background: var(--gold-light); border: none; padding: 7px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; font-family: 'Inter', sans-serif; }
-.paywall-btn:hover { opacity: 0.88; }
-
-/* TYPING */
-.typing { display: flex; align-items: center; gap: 4px; padding: 14px 16px; }
-.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); animation: bounce 1.2s infinite; }
-.typing span:nth-child(2) { animation-delay: 0.2s; }
-.typing span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+.messages{flex:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:16px;}
+.messages::-webkit-scrollbar{width:4px;}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.msg{display:flex;gap:10px;max-width:680px;}
+.msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.msg.assistant{align-self:flex-start;}
+.msg-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.msg.assistant .msg-avatar{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber);}
+.msg.user .msg-avatar{background:var(--navy);color:var(--gold-light);font-family:'DM Sans',sans-serif;}
+.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13.5px;line-height:1.7;}
+.msg.assistant .msg-bubble{background:var(--card);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+.msg.user .msg-bubble{background:var(--navy);color:rgba(255,255,255,0.92);border-bottom-right-radius:4px;}
+.msg-bubble p{margin-bottom:8px;}
+.msg-bubble p:last-child{margin-bottom:0;}
+.typing{display:flex;align-items:center;gap:4px;padding:14px 16px;}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--text-muted);animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
 
 /* INPUT */
-.input-area { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--page-bg); flex-shrink: 0; }
-.input-bar { display: flex; align-items: flex-end; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; transition: border-color 0.2s; box-shadow: 0 1px 4px rgba(27,43,75,0.06); }
-.input-bar:focus-within { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(154,94,24,0.08); }
-.input-tool { width: 30px; height: 30px; border-radius: 7px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background 0.15s; }
-.input-tool:hover { background: var(--page-bg); color: var(--navy); }
-.input-tool svg { width: 15px; height: 15px; }
-.input-field { flex: 1; background: transparent; border: none; outline: none; font-size: 14px; color: var(--text); font-family: 'Inter', sans-serif; resize: none; max-height: 120px; min-height: 24px; line-height: 1.5; padding: 3px 0; }
-.input-field::placeholder { color: var(--text-muted); }
-.send-btn { width: 34px; height: 34px; background: var(--amber); border: none; border-radius: 9px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
-.send-btn:hover { background: #7d4c12; }
-.send-btn svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 2.2; }
-.input-hint { font-size: 11px; color: var(--text-muted); margin-top: 7px; text-align: center; }
-.input-hint span { color: var(--amber); font-weight: 500; cursor: pointer; }
+.input-area{padding:12px 18px;border-top:1px solid var(--border);background:var(--page-bg);flex-shrink:0;}
+.input-bar{display:flex;align-items:flex-end;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 12px;transition:border-color 0.2s;box-shadow:0 1px 4px rgba(27,43,75,0.06);}
+.input-bar:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-bg);}
+.input-field{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;resize:none;max-height:120px;min-height:24px;line-height:1.5;padding:3px 0;}
+.input-field::placeholder{color:var(--text-muted);}
+.send-btn{width:34px;height:34px;background:var(--amber);border:none;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s;}
+.send-btn:hover{background:#7a4a12;}
+.send-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.2;}
+
+/* RIGHT PANEL */
+.right-panel{width:var(--panel-w);border-left:1px solid var(--border);background:var(--navy-mid);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0;transition:width 0.25s,opacity 0.25s;}
+.right-panel.collapsed{width:0;opacity:0;overflow:hidden;}
+
+/* PANEL TAB STRIP */
+.panel-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--navy-mid);flex-shrink:0;}
+.panel-tab{flex:1;padding:11px 6px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;background:transparent;color:var(--text-muted);border-bottom:2px solid transparent;transition:color 0.15s,border-color 0.15s;letter-spacing:0.2px;}
+.panel-tab:hover{color:var(--navy);}
+.panel-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
 
 /* MANUSCRIPT PANEL */
-.manuscript-panel { width: var(--panel-w); border-left: 1px solid var(--border); background: var(--navy-mid); display: flex; flex-direction: column; height: 100vh; overflow: hidden; flex-shrink: 0; transition: width 0.25s, opacity 0.25s; }
-.manuscript-panel.collapsed { width: 0; opacity: 0; overflow: hidden; }
+.manuscript-panel{flex:1;overflow-y:auto;padding:16px;display:none;}
+.manuscript-panel.active{display:block;}
+.manuscript-panel::-webkit-scrollbar{width:3px;}
+.manuscript-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.ms-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ms-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--navy);}
+.ms-progress-wrap{margin-bottom:14px;}
+.ms-progress-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:5px;}
+.ms-progress-fill{height:100%;background:var(--amber);border-radius:4px;}
+.ms-progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);}
+.ms-progress-label strong{color:var(--amber);font-weight:600;}
+.chapter-list{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;}
+.chapter-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--card);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:border-color 0.15s;}
+.chapter-item:hover{border-color:rgba(154,94,24,0.25);}
+.chapter-item.active{border-color:var(--amber-border);background:var(--amber-bg);}
+.chapter-num{font-size:10px;font-weight:700;color:var(--text-muted);width:20px;flex-shrink:0;}
+.chapter-item.active .chapter-num{color:var(--amber);}
+.chapter-name{font-size:12.5px;font-weight:500;color:var(--navy);flex:1;line-height:1.35;}
+.chapter-status{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.chapter-item.done .chapter-status{background:var(--amber);border-color:var(--amber);}
+.chapter-status svg{width:9px;height:9px;stroke:#fff;display:none;}
+.chapter-item.done .chapter-status svg{display:block;}
+.ms-word-count{font-size:11px;color:var(--text-muted);text-align:center;padding:10px;border-top:1px solid var(--border-mid);}
+.ms-word-count strong{color:var(--navy);}
 
-.panel-topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.panel-tabs { display: flex; gap: 2px; background: var(--border-mid); border-radius: 8px; padding: 3px; }
-.panel-tab { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: background 0.15s, color 0.15s; font-weight: 500; }
-.panel-tab.active { background: var(--card); color: var(--navy); box-shadow: 0 1px 3px rgba(27,43,75,0.08); }
-.export-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--amber); border: none; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
-.export-btn:hover { background: #7d4c12; }
-.export-btn svg { width: 12px; height: 12px; }
+/* COVER STUDIO PANEL */
+.cover-panel{flex:1;overflow-y:auto;display:none;flex-direction:column;}
+.cover-panel.active{display:flex;}
+.cover-panel::-webkit-scrollbar{width:3px;}
+.cover-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* OUTLINE PANEL */
-.outline-panel { flex: 1; overflow-y: auto; padding: 14px 14px; }
-.outline-panel::-webkit-scrollbar { width: 4px; }
-.outline-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+/* COVER PREVIEW */
+.cover-preview-area{padding:16px;border-bottom:1px solid var(--border);background:var(--navy);flex-shrink:0;}
+.cover-format-tabs{display:flex;gap:4px;margin-bottom:12px;}
+.cover-format-tab{padding:5px 11px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;border:none;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45);font-family:'Inter',sans-serif;transition:background 0.15s,color 0.15s;}
+.cover-format-tab.active{background:var(--amber);color:#fff;}
+.cover-mock{margin:0 auto;position:relative;display:flex;align-items:center;justify-content:center;}
+/* ebook cover: 6:10 */
+.cover-mock.ebook{width:120px;height:200px;}
+/* paperback front: 6:9 approx */
+.cover-mock.paperback{width:120px;height:180px;}
+/* full wrap: wide */
+.cover-mock.fullwrap{width:260px;height:170px;}
+.cover-face{width:100%;height:100%;border-radius:4px;overflow:hidden;position:relative;box-shadow:4px 6px 20px rgba(0,0,0,0.5);}
+.cover-face.fullwrap-face{border-radius:3px;display:grid;grid-template-columns:1fr 18px 1fr;}
+.cover-front{display:flex;flex-direction:column;justify-content:flex-end;padding:10px 8px;height:100%;}
+.cover-back-wrap{background:linear-gradient(135deg,#0a0f1a,#0d1525);display:flex;flex-direction:column;justify-content:flex-end;padding:8px 6px;}
+.cover-spine{background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:mixed;font-size:6px;font-weight:700;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;letter-spacing:0.5px;}
+.cover-bg{position:absolute;inset:0;background:linear-gradient(160deg,#1a2a4a 0%,#0a1020 60%,#1a0f04 100%);}
+.cover-deco{position:absolute;border-radius:50%;border:1px solid rgba(196,146,42,0.15);}
+.cover-deco-1{width:140px;height:140px;right:-30px;top:-30px;}
+.cover-deco-2{width:80px;height:80px;right:0;top:0;}
+.cover-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;height:100%;padding:10px 8px;}
+.cover-series-badge{font-size:7px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.cover-book-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:3px;}
+.cover-book-subtitle{font-size:7.5px;color:rgba(255,255,255,0.5);line-height:1.4;margin-bottom:6px;}
+.cover-author{font-size:7px;font-weight:600;color:var(--gold-light);letter-spacing:0.5px;}
+.cover-scripture{font-size:6.5px;color:rgba(255,255,255,0.3);font-style:italic;margin-top:4px;}
+.cover-spec-tag{font-size:10px;color:rgba(255,255,255,0.35);text-align:center;margin-top:10px;}
 
-.book-meta { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
-.book-title-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
-.book-sub-text { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
-.book-progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
-.book-progress-fill { height: 100%; background: var(--amber); border-radius: 4px; width: 28%; transition: width 0.3s; }
-.book-progress-label { font-size: 11px; color: var(--text-muted); }
-.book-progress-label strong { color: var(--amber); }
+/* COVER FORM */
+.cover-form{padding:16px;overflow-y:auto;flex:1;}
+.cover-form::-webkit-scrollbar{width:3px;}
+.cover-form::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.form-section{margin-bottom:16px;}
+.form-section-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:var(--text-muted);margin-bottom:10px;}
+.form-group{margin-bottom:10px;}
+.form-label{display:block;font-size:11.5px;font-weight:600;color:var(--text-sec);margin-bottom:4px;}
+.form-input{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--text);background:var(--card);outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--amber);}
+.form-input::placeholder{color:var(--text-muted);}
+.form-select{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--text);background:var(--card);outline:none;cursor:pointer;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 
-.outline-section-label { font-size: 10px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; padding-left: 2px; }
+/* PALETTE SWATCHES */
+.palette-row{display:flex;gap:7px;flex-wrap:wrap;}
+.swatch{width:28px;height:28px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s,transform 0.15s;}
+.swatch:hover{transform:scale(1.1);}
+.swatch.selected{border-color:var(--navy);}
 
-.chapter-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; cursor: pointer; transition: background 0.15s; margin-bottom: 3px; border: 1px solid transparent; }
-.chapter-item:hover { background: rgba(27,43,75,0.04); }
-.chapter-item.active { background: var(--card); border-color: var(--amber-border); }
-.chapter-item.active .chapter-num { background: var(--amber); color: #fff; }
-.chapter-num { width: 24px; height: 24px; border-radius: 6px; background: var(--border-mid); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
-.chapter-info { flex: 1; min-width: 0; }
-.chapter-name { font-size: 12.5px; font-weight: 500; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chapter-status { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-.chapter-status.done { color: var(--amber); }
-.chapter-badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
-.badge-draft { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-.badge-outline { background: var(--border-mid); color: var(--text-muted); border: 1px solid var(--border); }
-.badge-locked { background: var(--border-mid); color: var(--text-muted); border: 1px solid var(--border); }
+/* LAYOUT STYLES */
+.layout-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.layout-opt{padding:7px 4px;border-radius:7px;border:1px solid var(--border);background:var(--card);text-align:center;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+.layout-opt:hover{border-color:rgba(154,94,24,0.3);}
+.layout-opt.selected{border-color:var(--amber);background:var(--amber-bg);}
+.layout-opt-name{font-size:10.5px;font-weight:600;color:var(--text-sec);}
+.layout-opt.selected .layout-opt-name{color:var(--amber);}
 
-.add-chapter-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 10px; border-radius: 9px; border: 1px dashed var(--border); background: transparent; color: var(--text-muted); font-size: 12.5px; cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.15s, color 0.15s; margin-top: 4px; }
-.add-chapter-btn:hover { border-color: var(--amber-border); color: var(--amber); }
-.add-chapter-btn svg { width: 14px; height: 14px; }
+/* GENERATE BTN */
+.generate-btn{width:100%;padding:11px;background:var(--amber);border:none;border-radius:9px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:background 0.15s;}
+.generate-btn:hover{background:#7a4a12;}
+.generate-btn svg{width:14px;height:14px;}
 
-/* CHECKLIST PANEL */
-.checklist-panel { flex: 1; overflow-y: auto; padding: 14px; display: none; }
-.checklist-panel::-webkit-scrollbar { width: 4px; }
-.checklist-group { margin-bottom: 20px; }
-.checklist-group-title { font-size: 10px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; padding-left: 2px; }
-.checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; margin-bottom: 2px; }
-.checklist-item:hover { background: rgba(27,43,75,0.04); }
-.check-box { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; transition: background 0.15s, border-color 0.15s; }
-.check-box.checked { background: var(--amber); border-color: var(--amber); }
-.check-box svg { width: 10px; height: 10px; stroke: #fff; display: none; }
-.check-box.checked svg { display: block; }
-.checklist-text { flex: 1; font-size: 12.5px; color: var(--text-sec); line-height: 1.5; }
-.checklist-item.checked-item .checklist-text { text-decoration: line-through; color: var(--text-muted); }
-.checklist-locked { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; background: var(--border-mid); margin-bottom: 2px; }
-.checklist-locked svg { width: 13px; height: 13px; color: var(--text-muted); }
-.checklist-locked-text { font-size: 12px; color: var(--text-muted); }
+/* EXPORT PANEL */
+.export-panel{flex:1;overflow-y:auto;padding:16px;display:none;}
+.export-panel.active{display:block;}
+.export-panel::-webkit-scrollbar{width:3px;}
+.export-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.export-section{margin-bottom:20px;}
+.export-section-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:var(--text-muted);margin-bottom:10px;}
+.export-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;}
+.export-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.export-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.export-icon svg{width:14px;height:14px;}
+.export-icon.manuscript{background:var(--amber-bg);border:1px solid var(--amber-border);}
+.export-icon.manuscript svg{color:var(--amber);}
+.export-icon.ebook{background:var(--gold-glow);border:1px solid var(--gold-border);}
+.export-icon.ebook svg{color:var(--gold-dim);}
+.export-icon.paperback{background:var(--purple-bg);border:1px solid var(--purple-border);}
+.export-icon.paperback svg{color:var(--purple);}
+.export-icon.fullwrap{background:var(--teal-bg);border:1px solid var(--teal-border);}
+.export-icon.fullwrap svg{color:var(--teal);}
+.export-name{font-size:13px;font-weight:600;color:var(--navy);}
+.export-spec{font-size:11px;color:var(--text-muted);margin-bottom:10px;line-height:1.55;}
+.export-spec strong{color:var(--text-sec);font-weight:600;}
+.export-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;border:none;transition:opacity 0.15s;width:100%;justify-content:center;}
+.export-btn:hover{opacity:0.85;}
+.export-btn.amber{background:var(--amber);color:#fff;}
+.export-btn.gold{background:var(--gold);color:var(--navy-deep);}
+.export-btn.purple{background:var(--purple);color:#fff;}
+.export-btn.teal{background:var(--teal);color:#fff;}
+.export-btn svg{width:12px;height:12px;}
+.kdp-note{background:var(--gold-glow);border:1px solid var(--gold-border);border-radius:9px;padding:12px 14px;font-size:12px;color:var(--text-sec);line-height:1.6;margin-bottom:14px;}
+.kdp-note strong{color:var(--navy);}
 
-/* PANEL PROGRESS */
-.panel-progress { padding: 12px 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
-.progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.progress-label { font-size: 11px; color: var(--text-muted); }
-.progress-val { font-size: 11px; font-weight: 600; color: var(--amber); }
-.progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--amber); border-radius: 4px; }
+/* BOTTOM NAV */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--card);border-top:1px solid var(--border);z-index:30;padding:0 8px;padding-bottom:env(safe-area-inset-bottom);}
+.bottom-nav-inner{display:flex;align-items:center;justify-content:space-around;height:100%;}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;cursor:pointer;text-decoration:none;color:var(--text-muted);font-size:10px;font-weight:500;transition:color 0.15s;flex:1;text-align:center;border:none;background:transparent;font-family:'Inter',sans-serif;}
+.bottom-nav-item svg{width:22px;height:22px;}
+.bottom-nav-item.active{color:var(--amber);}
+.bottom-nav-item.active svg{stroke:var(--amber);}
 
-/* MOBILE */
-.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
-.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
-.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
-.bottom-nav-item svg { width: 22px; height: 22px; }
-.bottom-nav-item.active { color: var(--amber); }
-.bottom-nav-item.active svg { stroke: var(--amber); }
-
-@media (max-width: 1100px) { .manuscript-panel { display: none; } }
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .menu-btn { display: flex; }
-  .drawer-overlay { display: block; }
-  .bottom-nav { display: flex; }
-  .chat-topbar { padding: 10px 14px; }
-  .messages { padding: 16px 14px; }
-  .input-area { padding: 10px 14px; padding-bottom: calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom)); }
+@media(max-width:1100px){.right-panel{display:none;}}
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.drawer-overlay{display:block;}.bottom-nav{display:flex;}
+  .chat-topbar{padding:10px 14px;}.messages{padding:14px;}
+  .input-area{padding:10px 14px;padding-bottom:calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom));}
 }
 </style>
 </head>
 <body>
 
+<!-- DRAWER -->
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
-    <div class="logo-mark">
-      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
-      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
-    </div>
+    <div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div>
     <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
   <div class="sidebar-section">
-    <div class="sidebar-label">Workspace</div>
-    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
-    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item bible" href="bible-study.html"><svg viewBox="0 0 24 24" fill="none" stroke="#1A7A5E" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bible Study Companion</a>
+    <a class="nav-item scribe active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
   </div>
   <div class="sidebar-divider"></div>
   <div class="sidebar-section">
-    <div class="sidebar-label">AI Agents</div>
-    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
-    <a class="nav-item scribe active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    <div class="sidebar-label">Platform</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
   </div>
   <div class="sidebar-footer">
-    <div class="user-row">
-      <div class="user-avatar">EN</div>
-      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
-    </div>
+    <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Pro Member</div></div></div>
   </div>
 </div>
 
 <div class="shell">
-
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-mark">
-        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
-        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
-      </div>
-    </div>
+    <div class="sidebar-logo"><div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div></div>
     <div class="sidebar-section">
       <div class="sidebar-label">Workspace</div>
       <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
@@ -311,7 +300,7 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
     <div class="sidebar-section">
       <div class="sidebar-label">Platform</div>
       <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
-      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>City Builders</a>
       <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
       <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
     </div>
@@ -319,7 +308,8 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
     <div class="sidebar-section">
       <div class="sidebar-label">AI Agents</div>
       <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
-      <a class="nav-item scribe active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+      <a class="nav-item bible" href="bible-study.html"><svg viewBox="0 0 24 24" fill="none" stroke="#1A7A5E" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bible Study Companion</a>
+      <a class="nav-item scribe active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
     </div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-section">
@@ -328,370 +318,420 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
       <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
     </div>
     <div class="sidebar-footer">
-      <div class="user-row">
-        <div class="user-avatar">EN</div>
-        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
-      </div>
+      <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Pro Member</div></div></div>
     </div>
   </aside>
 
-  <!-- MAIN: CHAT + MANUSCRIPT -->
   <div class="main-area">
-
     <!-- CHAT -->
     <div class="chat-area">
       <div class="chat-topbar">
         <div class="chat-topbar-left">
-          <button class="menu-btn" onclick="openDrawer()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <div class="agent-chip">
-            <div class="agent-chip-dot"></div>
-            <span class="agent-chip-name">Scribe</span>
-          </div>
-          <input class="session-name-input" type="text" placeholder="Name this session..." value="Divine Keys for Spiritual Exploits">
+          <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          <div class="agent-chip"><div class="agent-chip-dot"></div><span class="agent-chip-name">Scribe</span></div>
+          <div class="session-label">Kingdom Wealth Principles</div>
         </div>
         <div class="chat-topbar-right">
-          <button class="topbar-icon-btn" title="Export DOCX" onclick="alert('DOCX export — Pro feature')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          </button>
-          <button class="topbar-icon-btn" title="New session" onclick="window.location.href='scribe.html'">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </button>
-          <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()" title="Toggle manuscript panel">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
-          </button>
+          <button class="topbar-icon-btn" title="New session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>
         </div>
       </div>
 
       <div class="messages" id="messages">
-
         <div class="msg assistant">
-          <div class="msg-avatar">Sc</div>
-          <div>
-            <div class="msg-bubble">
-              <p>Welcome, Elijah. I've loaded your manuscript for <strong>Divine Keys for Spiritual Exploits</strong>. You have 3 chapters drafted and 9 remaining. Where would you like to work today — continuing Chapter 3, reviewing an earlier draft, or starting the next chapter?</p>
-            </div>
-            <div class="msg-actions">
-              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-            </div>
+          <div class="msg-avatar">SC</div>
+          <div class="msg-bubble">
+            <p>Welcome back, Elijah. Your manuscript <strong>Kingdom Wealth Principles</strong> is at 6 of 9 chapters — 18,400 words. Chapter 7 is open and ready.</p>
+            <p>Tell me what you want to write next, give me your raw thoughts, or say "continue chapter 7" and I'll pick up from the last paragraph.</p>
           </div>
         </div>
 
         <div class="msg user">
           <div class="msg-avatar">EN</div>
-          <div class="msg-bubble">Let's draft Chapter 3. The topic is "The Key of Intercession — How Prayer Unlocks Spiritual Doors".</div>
+          <div class="msg-bubble">Let's write the opening of chapter 7. It's about the principle of sowing generously — not as a prosperity formula but as a Kingdom posture. I want to open with the story of the widow's offering in Mark 12.</div>
         </div>
 
         <div class="msg assistant">
-          <div class="msg-avatar">Sc</div>
-          <div>
-            <div class="msg-bubble">
-              <p>Excellent. Here's an opening draft for Chapter 3. I've anchored it in the book's voice and Kingdom mandate — bold, scripture-grounded, and practical.</p>
-            </div>
-            <div class="chapter-card">
-              <div class="chapter-card-header">
-                <span class="chapter-card-title">Chapter 3 — Draft</span>
-                <span class="chapter-card-meta">~320 words · v1</span>
-              </div>
-              <div class="chapter-card-body">
-                <p><strong>The Key of Intercession — How Prayer Unlocks Spiritual Doors</strong></p>
-                <p>Every great move of God in scripture was preceded by a man or woman who would not stop praying. Daniel prayed three times a day and the heavens were moved. Elijah prayed with intensity and the rain came. The early church prayed in one accord and the Spirit fell with power.</p>
-                <p>Intercession is not a religious exercise. It is the mechanism by which heaven's agenda is released on the earth. When you intercede, you are not informing God of what He does not know — you are aligning yourself with what He has already purposed, and in doing so, you become the instrument through which He acts.</p>
-                <p>The divine key of intercession operates on three principles: <strong>persistence</strong>, <strong>authority</strong>, and <strong>agreement</strong>. Each principle unlocks a different dimension of God's power in your situation...</p>
-              </div>
-              <div class="chapter-card-footer">
-                <span class="chapter-word-count">320 words drafted</span>
-                <div class="chapter-actions">
-                  <button class="chapter-btn" onclick="insertPrompt('Continue drafting Chapter 3 from where you left off')">Continue</button>
-                  <button class="chapter-btn" onclick="insertPrompt('Review Chapter 3 for theological consistency and flow')">Review</button>
-                  <button class="chapter-btn primary" onclick="alert('Open in manuscript workspace')">Open in workspace</button>
-                </div>
-              </div>
-            </div>
-            <div class="msg-actions">
-              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
-            </div>
+          <div class="msg-avatar">SC</div>
+          <div class="msg-bubble">
+            <p>Strong opening — the widow's offering reframes everything the reader assumes about generosity and wealth. Here's a draft opening for Chapter 7:</p>
+            <p style="background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.75;color:var(--text-sec);">
+              <strong style="color:var(--navy);display:block;margin-bottom:6px;">Chapter 7 — The Generous Posture</strong>
+              She gave everything she had. Not a percentage. Not a tithe calculated to the last coin. Everything. And Jesus, watching the temple treasury from across the courtyard, called His disciples close — not to commend the wealthy donors whose gifts had drawn admiration, but to point to a widow whose two coins barely registered as sound when they hit the bowl.<br><br>
+              This is the economics of the Kingdom. It does not run on surplus. It runs on surrender.
+            </p>
+            <p>Want me to continue this opening, or adjust the tone — more direct, more devotional, more theological?</p>
           </div>
         </div>
 
         <div class="msg user">
           <div class="msg-avatar">EN</div>
-          <div class="msg-bubble">Export the full manuscript as a DOCX file.</div>
+          <div class="msg-bubble">That's exactly the tone. Continue — build into the three principles I outlined: posture over amount, trust over calculation, return as a Kingdom reality not a prosperity promise.</div>
         </div>
 
         <div class="msg assistant">
-          <div class="msg-avatar">Sc</div>
-          <div>
-            <div class="msg-bubble">
-              <p>Manuscript export to DOCX is a Pro feature. Upgrade to unlock full exports, unlimited chapter drafting, review and editing, and direct submission to Divine Keys Publishing.</p>
-            </div>
-            <div class="paywall-card">
-              <div class="paywall-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
-              <div class="paywall-info">
-                <div class="paywall-title">Unlock your full calling</div>
-                <div class="paywall-sub">DOCX export, unlimited drafting, publishing integration</div>
-              </div>
-              <button class="paywall-btn" onclick="window.location.href='upgrade.html'">Upgrade to Pro</button>
-            </div>
-            <div class="msg-actions">
-              <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-            </div>
+          <div class="msg-avatar">SC</div>
+          <div class="msg-bubble">
+            <p>Building all three now — drafting into the manuscript panel. The section structure will be: opening narrative → Principle 1 (posture) → Principle 2 (trust) → Principle 3 (return) → closing application. I'll flag each transition for your review.</p>
+            <p>Also — when you're ready, open the <strong>Cover Studio</strong> tab to start building your eBook and paperback covers. I've pre-filled the title and author from your manuscript.</p>
           </div>
         </div>
-
       </div>
 
       <div class="input-area">
         <div class="input-bar">
-          <button class="input-tool" title="Paste notes">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-          </button>
-          <textarea class="input-field" id="inputField" placeholder="Tell Scribe what to write, continue, or review..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="send-btn" onclick="sendMessage()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
+          <textarea class="input-field" id="inputField" placeholder="Continue writing, give raw notes, or ask Scribe to draft…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
         </div>
-        <div class="input-hint">Scribe handles book publishing only. <span onclick="window.location.href='sophia.html'">Switch to Sophia</span> for scripture, coaching, or missions.</div>
       </div>
     </div>
 
-    <!-- MANUSCRIPT PANEL -->
-    <aside class="manuscript-panel" id="manuscriptPanel">
-      <div class="panel-topbar">
-        <div class="panel-tabs">
-          <button class="panel-tab active" onclick="switchTab('outline', this)">Outline</button>
-          <button class="panel-tab" onclick="switchTab('checklist', this)">Checklist</button>
-        </div>
-        <button class="export-btn" onclick="alert('DOCX export — Pro feature. Upgrade to unlock.')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export DOCX
-        </button>
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel" id="rightPanel">
+      <div class="panel-tabs">
+        <button class="panel-tab active" onclick="switchTab('manuscript', this)">Manuscript</button>
+        <button class="panel-tab" onclick="switchTab('cover', this)">Cover Studio</button>
+        <button class="panel-tab" onclick="switchTab('export', this)">Export</button>
       </div>
 
-      <!-- OUTLINE -->
-      <div class="outline-panel" id="outlinePanel">
-        <div class="book-meta">
-          <div class="book-title-text">Divine Keys for Spiritual Exploits</div>
-          <div class="book-sub-text">Elijah Nchelenge · 12 chapters planned</div>
-          <div class="book-progress-bar"><div class="book-progress-fill"></div></div>
-          <div class="book-progress-label"><strong>3 of 12 chapters</strong> drafted</div>
+      <!-- MANUSCRIPT TAB -->
+      <div class="manuscript-panel active" id="tabManuscript">
+        <div class="ms-header">
+          <div class="ms-title">Kingdom Wealth Principles</div>
         </div>
-
-        <div class="outline-section-label">Chapters</div>
-
-        <div class="chapter-item" onclick="selectChapter(this)">
-          <div class="chapter-num">1</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of Faith</div>
-            <div class="chapter-status done">Draft complete</div>
-          </div>
-          <span class="chapter-badge badge-draft">Draft</span>
+        <div class="ms-progress-wrap">
+          <div class="ms-progress-bar"><div class="ms-progress-fill" style="width:67%"></div></div>
+          <div class="ms-progress-label"><strong>6 of 9 chapters</strong><span>67%</span></div>
         </div>
-        <div class="chapter-item" onclick="selectChapter(this)">
-          <div class="chapter-num">2</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of the Word</div>
-            <div class="chapter-status done">Draft complete</div>
-          </div>
-          <span class="chapter-badge badge-draft">Draft</span>
+        <div class="chapter-list">
+          <div class="chapter-item done"><div class="chapter-num">1</div><div class="chapter-name">The Kingdom Economy — An Introduction</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item done"><div class="chapter-num">2</div><div class="chapter-name">First Fruits — Honouring God with Increase</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item done"><div class="chapter-num">3</div><div class="chapter-name">Joseph Principle — Surplus with Purpose</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item done"><div class="chapter-num">4</div><div class="chapter-name">The Proverbs 31 Business Model</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item done"><div class="chapter-num">5</div><div class="chapter-name">Debt, Margin & the Freedom Principle</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item done"><div class="chapter-num">6</div><div class="chapter-name">Multiplication — Parable of the Talents</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item active"><div class="chapter-num">7</div><div class="chapter-name">The Generous Posture — Sowing as Kingdom Act</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item"><div class="chapter-num">8</div><div class="chapter-name">Generational Wealth — Building for Legacy</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="chapter-item"><div class="chapter-num">9</div><div class="chapter-name">Conclusion — The Faithful Steward</div><div class="chapter-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
         </div>
-        <div class="chapter-item active" onclick="selectChapter(this)">
-          <div class="chapter-num">3</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of Intercession</div>
-            <div class="chapter-status">In progress</div>
-          </div>
-          <span class="chapter-badge badge-draft">Draft</span>
-        </div>
-        <div class="chapter-item" onclick="selectChapter(this)">
-          <div class="chapter-num">4</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of Praise</div>
-            <div class="chapter-status">Outline only</div>
-          </div>
-          <span class="chapter-badge badge-outline">Outline</span>
-        </div>
-        <div class="chapter-item" onclick="selectChapter(this)">
-          <div class="chapter-num">5</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of Obedience</div>
-            <div class="chapter-status">Outline only</div>
-          </div>
-          <span class="chapter-badge badge-outline">Outline</span>
-        </div>
-        <div class="chapter-item" onclick="selectChapter(this)">
-          <div class="chapter-num">6</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of Unity</div>
-            <div class="chapter-status" style="color:var(--text-muted)">Not started</div>
-          </div>
-          <span class="chapter-badge badge-locked">–</span>
-        </div>
-        <div class="chapter-item" onclick="selectChapter(this)">
-          <div class="chapter-num">7</div>
-          <div class="chapter-info">
-            <div class="chapter-name">The Key of Giving</div>
-            <div class="chapter-status" style="color:var(--text-muted)">Not started</div>
-          </div>
-          <span class="chapter-badge badge-locked">–</span>
-        </div>
-
-        <button class="add-chapter-btn" onclick="insertPrompt('Add a new chapter to the outline')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add chapter
-        </button>
+        <div class="ms-word-count"><strong>18,400</strong> words · est. <strong>74 pages</strong></div>
       </div>
 
-      <!-- CHECKLIST -->
-      <div class="checklist-panel" id="checklistPanel">
-        <div class="checklist-group">
-          <div class="checklist-group-title">Manuscript</div>
-          <div class="checklist-item checked-item" onclick="toggleCheck(this)">
-            <div class="check-box checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div class="checklist-text">Book concept defined</div>
+      <!-- COVER STUDIO TAB -->
+      <div class="cover-panel" id="tabCover">
+        <!-- LIVE PREVIEW -->
+        <div class="cover-preview-area">
+          <div class="cover-format-tabs">
+            <button class="cover-format-tab active" onclick="setCoverFormat('ebook',this)">eBook</button>
+            <button class="cover-format-tab" onclick="setCoverFormat('paperback',this)">Paperback</button>
+            <button class="cover-format-tab" onclick="setCoverFormat('fullwrap',this)">Full Wrap</button>
           </div>
-          <div class="checklist-item checked-item" onclick="toggleCheck(this)">
-            <div class="check-box checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div class="checklist-text">Chapter outline generated</div>
+
+          <!-- EBOOK PREVIEW -->
+          <div class="cover-mock ebook" id="previewEbook">
+            <div class="cover-face">
+              <div class="cover-bg"></div>
+              <div class="cover-deco cover-deco-1"></div>
+              <div class="cover-deco cover-deco-2"></div>
+              <div class="cover-content">
+                <div class="cover-series-badge" id="prev-series">Divine Keys Publishing</div>
+                <div class="cover-book-title" id="prev-title">Kingdom Wealth Principles</div>
+                <div class="cover-book-subtitle" id="prev-subtitle">A Biblical Foundation for Financial Stewardship</div>
+                <div class="cover-author" id="prev-author">Elijah Nchelenge</div>
+                <div class="cover-scripture" id="prev-scripture">Proverbs 13:11</div>
+              </div>
+            </div>
           </div>
-          <div class="checklist-item" onclick="toggleCheck(this)">
-            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div class="checklist-text">All chapters drafted</div>
+
+          <!-- PAPERBACK PREVIEW -->
+          <div class="cover-mock paperback" id="previewPaperback" style="display:none;">
+            <div class="cover-face">
+              <div class="cover-bg" style="background:linear-gradient(140deg,#1a2a4a 0%,#0a0f1a 70%,#1a0f04 100%);"></div>
+              <div class="cover-deco cover-deco-1"></div>
+              <div class="cover-content">
+                <div class="cover-series-badge">Divine Keys Publishing</div>
+                <div class="cover-book-title">Kingdom Wealth Principles</div>
+                <div class="cover-book-subtitle">A Biblical Foundation for Financial Stewardship</div>
+                <div class="cover-author">Elijah Nchelenge</div>
+                <div class="cover-scripture">Proverbs 13:11</div>
+              </div>
+            </div>
           </div>
-          <div class="checklist-item" onclick="toggleCheck(this)">
-            <div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div class="checklist-text">Review and editing complete</div>
+
+          <!-- FULL WRAP PREVIEW -->
+          <div class="cover-mock fullwrap" id="previewFullwrap" style="display:none;">
+            <div class="cover-face fullwrap-face">
+              <div class="cover-back-wrap">
+                <div style="font-size:6px;color:rgba(255,255,255,0.35);line-height:1.6;">Wealth built on the Kingdom of God does not diminish — it multiplies with purpose and leaves a legacy that outlasts the builder.</div>
+                <div style="margin-top:8px;font-size:6px;color:rgba(255,255,255,0.2);">ISBN 000-0-000000-00-0</div>
+              </div>
+              <div class="cover-spine">Kingdom Wealth · Nchelenge</div>
+              <div style="position:relative;height:100%;">
+                <div style="position:absolute;inset:0;background:linear-gradient(160deg,#1a2a4a,#0a0f1a,#1a0f04);"></div>
+                <div class="cover-deco cover-deco-1" style="width:100px;height:100px;right:-20px;top:-20px;"></div>
+                <div class="cover-content">
+                  <div class="cover-series-badge">Divine Keys Publishing</div>
+                  <div class="cover-book-title" style="font-size:9px;">Kingdom Wealth Principles</div>
+                  <div class="cover-author" style="font-size:6px;">Elijah Nchelenge</div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div class="cover-spec-tag" id="coverSpecTag">Kindle eBook · 1600×2560px · JPG</div>
         </div>
-        <div class="checklist-group">
-          <div class="checklist-group-title">Publishing (Pro)</div>
-          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Manuscript exported (DOCX & PDF)</div></div>
-          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Cover brief submitted</div></div>
-          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">ISBN assigned</div></div>
-          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Distribution set up</div></div>
-          <div class="checklist-locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="checklist-locked-text">Submitted to Divine Keys Publishing</div></div>
+
+        <!-- COVER FORM -->
+        <div class="cover-form">
+          <div class="form-section">
+            <div class="form-section-title">Book details</div>
+            <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" value="Kingdom Wealth Principles" id="coverTitle" oninput="updatePreview()"></div>
+            <div class="form-group"><label class="form-label">Subtitle</label><input class="form-input" type="text" value="A Biblical Foundation for Financial Stewardship" id="coverSubtitle" oninput="updatePreview()"></div>
+            <div class="form-group"><label class="form-label">Author name</label><input class="form-input" type="text" value="Elijah Nchelenge" id="coverAuthor" oninput="updatePreview()"></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Series name</label><input class="form-input" type="text" placeholder="Optional" id="coverSeries" oninput="updatePreview()"></div>
+              <div class="form-group"><label class="form-label">Volume #</label><input class="form-input" type="text" placeholder="e.g. Vol. 1" id="coverVol"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Scripture on cover</label><input class="form-input" type="text" value="Proverbs 13:11" id="coverScripture" oninput="updatePreview()"></div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Genre / Tone</div>
+            <div class="form-group">
+              <select class="form-select" id="coverGenre" onchange="updatePreview()">
+                <option>Theological</option>
+                <option selected>Business / Kingdom Wealth</option>
+                <option>Devotional</option>
+                <option>Missions</option>
+                <option>Academic</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Trim size (paperback)</div>
+            <div class="form-group">
+              <select class="form-select" id="coverTrim">
+                <option selected>6×9 in — Standard (KDP default)</option>
+                <option>5×8 in — Compact</option>
+                <option>5.5×8.5 in — Trade</option>
+                <option>7×10 in — Large</option>
+                <option>8.5×11 in — Workbook</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Page count (for spine width)</label><input class="form-input" type="number" value="200" id="coverPages" min="24" max="828"></div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Colour palette</div>
+            <div class="palette-row" id="paletteRow">
+              <div class="swatch selected" style="background:linear-gradient(135deg,#1B2B4B,#9A5E18);" onclick="selectSwatch(this,'navy-amber')" title="Navy & Amber"></div>
+              <div class="swatch" style="background:linear-gradient(135deg,#1B2B4B,#C4922A);" onclick="selectSwatch(this,'navy-gold')" title="Navy & Gold"></div>
+              <div class="swatch" style="background:linear-gradient(135deg,#0a1a12,#1A7A5E);" onclick="selectSwatch(this,'deep-teal')" title="Deep Teal"></div>
+              <div class="swatch" style="background:linear-gradient(135deg,#1a1030,#6155C9);" onclick="selectSwatch(this,'deep-purple')" title="Deep Purple"></div>
+              <div class="swatch" style="background:linear-gradient(135deg,#1a0a0a,#8B0000);" onclick="selectSwatch(this,'deep-crimson')" title="Deep Crimson"></div>
+              <div class="swatch" style="background:linear-gradient(135deg,#0a0a0a,#2a2a2a);" onclick="selectSwatch(this,'monochrome')" title="Monochrome"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Layout style</div>
+            <div class="layout-row">
+              <div class="layout-opt selected" onclick="selectLayout(this)"><div class="layout-opt-name">Minimal</div></div>
+              <div class="layout-opt" onclick="selectLayout(this)"><div class="layout-opt-name">Bold</div></div>
+              <div class="layout-opt" onclick="selectLayout(this)"><div class="layout-opt-name">Classic</div></div>
+              <div class="layout-opt" onclick="selectLayout(this)"><div class="layout-opt-name">Modern</div></div>
+            </div>
+          </div>
+
+          <button class="generate-btn" onclick="generateCovers()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Generate covers
+          </button>
+          <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;">Generates all 3 formats: eBook JPG · Paperback PDF · Full Wrap PDF</div>
         </div>
       </div>
 
-      <div class="panel-progress">
-        <div class="progress-row">
-          <span class="progress-label">Manuscript progress</span>
-          <span class="progress-val">28%</span>
+      <!-- EXPORT TAB -->
+      <div class="export-panel" id="tabExport">
+        <div class="kdp-note">
+          <strong>Amazon KDP ready.</strong> All exports below meet current KDP specifications. Cover files are sized to your selected trim size and page count. Upload the manuscript DOCX and cover files directly to KDP.
         </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:28%"></div></div>
+
+        <div class="export-section">
+          <div class="export-section-title">Manuscript</div>
+          <div class="export-card">
+            <div class="export-card-header">
+              <div class="export-icon manuscript"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <div class="export-name">Kingdom Wealth Principles</div>
+            </div>
+            <div class="export-spec"><strong>Format:</strong> Microsoft Word (.docx) · KDP-compatible formatting<br><strong>Status:</strong> 6 of 9 chapters complete · 18,400 words · Chapter 7 in progress<br><strong>Trim size:</strong> 6×9 in (set in Cover Studio)</div>
+            <button class="export-btn amber" onclick="exportFile('manuscript DOCX')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download manuscript .docx</button>
+          </div>
+        </div>
+
+        <div class="export-section">
+          <div class="export-section-title">Cover files</div>
+
+          <div class="export-card">
+            <div class="export-card-header">
+              <div class="export-icon ebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg></div>
+              <div class="export-name">Kindle eBook Cover</div>
+            </div>
+            <div class="export-spec"><strong>Dimensions:</strong> 1600×2560 px (6:10 ratio)<br><strong>Format:</strong> JPG · sRGB colour profile<br><strong>KDP spec:</strong> Meets Kindle Direct Publishing cover image requirements</div>
+            <button class="export-btn gold" onclick="exportFile('eBook cover JPG')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download eBook cover .jpg</button>
+          </div>
+
+          <div class="export-card">
+            <div class="export-card-header">
+              <div class="export-icon paperback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+              <div class="export-name">Paperback Front Cover</div>
+            </div>
+            <div class="export-spec"><strong>Trim size:</strong> 6×9 in · 300 DPI<br><strong>Format:</strong> PDF · CMYK colour profile<br><strong>KDP spec:</strong> Front cover only, bleed included · ready for KDP paperback upload</div>
+            <button class="export-btn purple" onclick="exportFile('paperback cover PDF')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download paperback cover .pdf</button>
+          </div>
+
+          <div class="export-card">
+            <div class="export-card-header">
+              <div class="export-icon fullwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+              <div class="export-name">Full Wrap (Front + Spine + Back)</div>
+            </div>
+            <div class="export-spec"><strong>Spine width:</strong> calculated from 200 pages at 6×9 in · ~0.5 in<br><strong>Format:</strong> PDF · 300 DPI · CMYK · bleed included<br><strong>KDP spec:</strong> Meets POD full wrap template · also suitable for IngramSpark</div>
+            <button class="export-btn teal" onclick="exportFile('full wrap PDF')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download full wrap .pdf</button>
+          </div>
+        </div>
+
+        <div class="export-section">
+          <div class="export-section-title">POD Compatibility</div>
+          <div class="export-card">
+            <div class="export-spec" style="margin-bottom:0;">
+              <strong>Amazon KDP Paperback</strong> — all cover formats compatible ✓<br>
+              <strong>Amazon KDP eBook</strong> — eBook JPG meets spec ✓<br>
+              <strong>IngramSpark</strong> — full wrap PDF meets spec ✓<br>
+              <strong>Lulu</strong> — full wrap PDF compatible (verify bleed) ✓<br>
+              <strong>Draft2Digital</strong> — eBook JPG compatible ✓
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
-
   </div>
 </div>
 
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
-    <a class="bottom-nav-item active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    <a class="bottom-nav-item active" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Scribe</a>
     <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
     <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
   </div>
 </nav>
 
 <script>
-  let panelOpen = true;
-  let activeTab = 'outline';
+let panelOpen = true;
 
-  function openDrawer() {
-    document.getElementById('drawer').classList.add('open');
-    document.getElementById('drawerOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeDrawer() {
-    document.getElementById('drawer').classList.remove('open');
-    document.getElementById('drawerOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
 
-  function togglePanel() {
-    panelOpen = !panelOpen;
-    document.getElementById('manuscriptPanel').classList.toggle('collapsed', !panelOpen);
-    document.getElementById('panelToggle').classList.toggle('active', panelOpen);
-  }
+function togglePanel(){
+  panelOpen=!panelOpen;
+  document.getElementById('rightPanel').classList.toggle('collapsed',!panelOpen);
+  document.getElementById('panelToggle').classList.toggle('active',panelOpen);
+}
 
-  function switchTab(tab, btn) {
-    activeTab = tab;
-    document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('outlinePanel').style.display = tab === 'outline' ? 'block' : 'none';
-    document.getElementById('checklistPanel').style.display = tab === 'checklist' ? 'block' : 'none';
-  }
+function switchTab(tab, btn){
+  document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tabManuscript').classList.toggle('active', tab==='manuscript');
+  document.getElementById('tabCover').style.display = tab==='cover'?'flex':'none';
+  document.getElementById('tabExport').style.display = tab==='export'?'block':'none';
+  // show cover panel using flex
+  if(tab==='cover') document.getElementById('tabCover').classList.add('active');
+  else document.getElementById('tabCover').classList.remove('active');
+}
 
-  function selectChapter(el) {
-    document.querySelectorAll('.chapter-item').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-  }
+function setCoverFormat(fmt, btn){
+  document.querySelectorAll('.cover-format-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('previewEbook').style.display = fmt==='ebook'?'flex':'none';
+  document.getElementById('previewPaperback').style.display = fmt==='paperback'?'flex':'none';
+  document.getElementById('previewFullwrap').style.display = fmt==='fullwrap'?'flex':'none';
+  const specs = {
+    ebook:'Kindle eBook · 1600×2560px · JPG',
+    paperback:'Paperback Front · 6×9 in · 300 DPI · PDF',
+    fullwrap:'Full Wrap (Front + Spine + Back) · 300 DPI · PDF'
+  };
+  document.getElementById('coverSpecTag').textContent = specs[fmt];
+}
 
-  function toggleCheck(el) {
-    const box = el.querySelector('.check-box');
-    box.classList.toggle('checked');
-    el.classList.toggle('checked-item');
-  }
+function updatePreview(){
+  const title = document.getElementById('coverTitle').value || 'Your Title';
+  const subtitle = document.getElementById('coverSubtitle').value || '';
+  const author = document.getElementById('coverAuthor').value || 'Author Name';
+  const scripture = document.getElementById('coverScripture').value || '';
+  document.getElementById('prev-title').textContent = title;
+  document.getElementById('prev-subtitle').textContent = subtitle;
+  document.getElementById('prev-author').textContent = author;
+  document.getElementById('prev-scripture').textContent = scripture;
+}
 
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  }
+function selectSwatch(el, palette){
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  const bgs = {
+    'navy-amber':'linear-gradient(160deg,#1a2a4a 0%,#0a1020 60%,#1a0f04 100%)',
+    'navy-gold':'linear-gradient(160deg,#1B2B4B 0%,#0F1E36 70%,#2a1a04 100%)',
+    'deep-teal':'linear-gradient(160deg,#0a1a12 0%,#0d2318 70%,#041a10 100%)',
+    'deep-purple':'linear-gradient(160deg,#1a1030 0%,#0d0820 70%,#1a0a2a 100%)',
+    'deep-crimson':'linear-gradient(160deg,#1a0a0a 0%,#0a0505 70%,#200505 100%)',
+    'monochrome':'linear-gradient(160deg,#1a1a1a 0%,#0a0a0a 70%,#252525 100%)'
+  };
+  document.querySelectorAll('.cover-bg').forEach(bg=>bg.style.background=bgs[palette]||bgs['navy-amber']);
+}
 
-  function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  }
+function selectLayout(el){
+  document.querySelectorAll('.layout-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
 
-  function insertPrompt(text) {
-    const field = document.getElementById('inputField');
-    field.value = text;
-    field.focus();
-    autoResize(field);
-  }
+function generateCovers(){
+  const btn = document.querySelector('.generate-btn');
+  btn.textContent = 'Generating…';
+  btn.disabled = true;
+  setTimeout(()=>{
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg> Covers ready — go to Export';
+    btn.disabled = false;
+    btn.onclick = () => switchTab('export', document.querySelectorAll('.panel-tab')[2]);
+  }, 1800);
+}
 
-  function sendMessage() {
-    const field = document.getElementById('inputField');
-    const text = field.value.trim();
-    if (!text) return;
+function exportFile(type){
+  alert('Downloading ' + type + '…\n\nIn production this connects to your cover rendering and DOCX export pipeline.');
+}
 
-    const messages = document.getElementById('messages');
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 
-    const userMsg = document.createElement('div');
-    userMsg.className = 'msg user';
-    userMsg.innerHTML = `<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;
-    messages.appendChild(userMsg);
-    field.value = '';
-    field.style.height = 'auto';
-
-    const typing = document.createElement('div');
-    typing.className = 'msg assistant';
-    typing.id = 'typing';
-    typing.innerHTML = `<div class="msg-avatar">Sc</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-    messages.appendChild(typing);
-    messages.scrollTop = messages.scrollHeight;
-
-    setTimeout(() => {
-      typing.remove();
-      const reply = document.createElement('div');
-      reply.className = 'msg assistant';
-      reply.innerHTML = `
-        <div class="msg-avatar">Sc</div>
-        <div>
-          <div class="msg-bubble">
-            <p>Understood. I'll work on that now and keep the voice consistent with the rest of the manuscript — Kingdom-grounded, scripture-anchored, and written for the reader you've defined.</p>
-          </div>
-          <div class="msg-actions">
-            <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-            <button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
-          </div>
-        </div>`;
-      messages.appendChild(reply);
-      messages.scrollTop = messages.scrollHeight;
-    }, 1400);
-  }
+function sendMessage(){
+  const f=document.getElementById('inputField');
+  const text=f.value.trim();
+  if(!text)return;
+  const msgs=document.getElementById('messages');
+  const u=document.createElement('div');
+  u.className='msg user';
+  u.innerHTML=`<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(u);
+  f.value='';f.style.height='auto';
+  const t=document.createElement('div');t.className='msg assistant';t.id='typing-msg';
+  t.innerHTML=`<div class="msg-avatar">SC</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    t.remove();
+    const r=document.createElement('div');r.className='msg assistant';
+    r.innerHTML=`<div class="msg-avatar">SC</div><div class="msg-bubble"><p>Working on that now and adding it to the manuscript. Let me know when you want to review or continue.</p></div>`;
+    msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
+  },1200);
+}
 </script>
 </body>
 </html>
