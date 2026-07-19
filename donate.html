@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Give to Missions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10); --gold-border: rgba(196,146,42,0.22);
+  --coral: #C0392B; --coral-bg: rgba(192,57,43,0.09); --coral-border: rgba(192,57,43,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --border-mid: #F0EDE6; --radius: 10px;
+  --sidebar-w: 240px; --page-bg: #F7F4EF; --bottom-nav-h: 64px;
+}
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+.shell { display: flex; min-height: 100vh; }
+
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); line-height: 1.2; }
+.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+.sidebar-section { padding: 18px 12px 6px; }
+.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
+.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
+.nav-item.active svg { opacity: 1; }
+.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
+.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
+.user-row:hover { background: rgba(27,43,75,0.06); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.drawer-close svg { width: 18px; height: 18px; }
+
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 36px; border-bottom: 1px solid var(--border); background: var(--page-bg); position: sticky; top: 0; z-index: 10; }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.menu-btn { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
+.menu-btn svg { width: 18px; height: 18px; }
+.page-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+.back-link { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+.back-link:hover { color: var(--navy); }
+.back-link svg { width: 14px; height: 14px; }
+
+.content { padding: 40px 36px 80px; max-width: 1100px; margin: 0 auto; }
+
+/* PAGE HEADER */
+.page-header { text-align: center; margin-bottom: 48px; }
+.page-eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--coral); font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.page-eyebrow::before, .page-eyebrow::after { content: ''; display: block; width: 20px; height: 1px; background: var(--coral-border); }
+.page-header-title { font-family: 'DM Sans', sans-serif; font-size: 32px; font-weight: 700; color: var(--navy); margin-bottom: 10px; letter-spacing: -0.3px; }
+.page-header-sub { font-size: 15px; color: var(--text-muted); max-width: 460px; margin: 0 auto; line-height: 1.7; }
+
+/* IMPACT BAR */
+.impact-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
+.impact-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+.impact-item-val { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: var(--navy); letter-spacing: -0.03em; }
+.impact-item-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* SECTION HEADER */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.section-title { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--text-sec); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+
+/* PROGRAM CARDS */
+.programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 48px; }
+
+.program-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.15s, box-shadow 0.2s; }
+.program-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,43,75,0.09); }
+.program-card.selected { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+
+.program-thumb { height: 120px; display: flex; align-items: center; justify-content: center; position: relative; }
+.program-thumb-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.program-thumb-icon svg { width: 22px; height: 22px; }
+.program-region-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+
+.program-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; }
+.program-name { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.program-desc { font-size: 12.5px; color: var(--text-sec); line-height: 1.65; margin-bottom: 14px; flex: 1; }
+.program-progress { height: 4px; background: var(--border); border-radius: 4px; margin-bottom: 6px; }
+.program-progress-fill { height: 100%; border-radius: 4px; }
+.program-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+.program-stats strong { color: var(--navy); font-weight: 600; }
+.program-give-btn { display: block; width: 100%; padding: 10px; border-radius: 9px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-align: center; transition: opacity 0.15s; }
+.program-give-btn:hover { opacity: 0.88; }
+
+/* DONATION FORM */
+.donation-section { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 36px; }
+.donation-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
+.donation-header-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--coral-bg); border: 1px solid var(--coral-border); display: flex; align-items: center; justify-content: center; }
+.donation-header-icon svg { width: 18px; height: 18px; color: var(--coral); }
+.donation-header-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); }
+.donation-header-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.donation-body { padding: 24px; }
+
+.amount-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.amount-pill { padding: 11px; border-radius: 9px; border: 1px solid var(--border); background: var(--page-bg); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); cursor: pointer; text-align: center; transition: all 0.15s; }
+.amount-pill:hover { border-color: var(--coral-border); background: var(--coral-bg); }
+.amount-pill.active { background: var(--coral); border-color: var(--coral); color: #fff; }
+
+.custom-amount-wrap { position: relative; margin-bottom: 20px; }
+.currency-symbol { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 700; color: var(--text-muted); }
+.custom-amount-input { width: 100%; padding: 12px 14px 12px 30px; border: 1px solid var(--border); border-radius: 9px; font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--navy); background: var(--page-bg); outline: none; transition: border-color 0.2s; }
+.custom-amount-input:focus { border-color: var(--coral); box-shadow: 0 0 0 3px var(--coral-bg); }
+.custom-amount-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+.form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; letter-spacing: 0.3px; }
+.form-input { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--navy); background: var(--page-bg); outline: none; transition: border-color 0.2s; margin-bottom: 14px; }
+.form-input:focus { border-color: var(--coral); box-shadow: 0 0 0 3px var(--coral-bg); }
+.form-input::placeholder { color: var(--text-muted); }
+.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-select { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--navy); background: var(--page-bg); outline: none; cursor: pointer; margin-bottom: 14px; }
+
+.recurring-toggle { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding: 12px 16px; background: var(--gold-glow); border: 1px solid var(--gold-border); border-radius: 9px; cursor: pointer; }
+.toggle-sw { width: 36px; height: 20px; border-radius: 10px; background: var(--border); border: none; position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.2s; }
+.toggle-sw.on { background: var(--gold); }
+.toggle-sw::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: #fff; position: absolute; top: 3px; left: 3px; transition: left 0.2s; }
+.toggle-sw.on::after { left: 19px; }
+.recurring-label { font-size: 13px; font-weight: 500; color: var(--navy); flex: 1; }
+.recurring-sub { font-size: 11.5px; color: var(--text-muted); }
+
+.give-submit-btn { width: 100%; padding: 14px; background: var(--coral); border: none; border-radius: 10px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.give-submit-btn:hover { background: #a93226; }
+.give-submit-btn svg { width: 16px; height: 16px; }
+.give-note { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
+/* TOTAL DISPLAY */
+.donation-total { background: var(--navy); border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.donation-total-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+.donation-total-amount { font-family: 'DM Sans', sans-serif; font-size: 24px; font-weight: 700; color: var(--gold-light); letter-spacing: -0.03em; }
+.donation-program-name { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+/* BOTTOM NAV */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+.bottom-nav-item.active { color: var(--coral); }
+.bottom-nav-item.active svg { stroke: var(--coral); }
+
+@media (max-width: 1100px) { .programs-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 768px) {
+  .sidebar { display: none; } .menu-btn { display: flex; } .drawer-overlay { display: block; } .bottom-nav { display: flex; }
+  .topbar { padding: 12px 16px; } .content { padding: 24px 16px 80px; }
+  .programs-grid { grid-template-columns: 1fr; } .impact-bar { grid-template-columns: 1fr 1fr; }
+  .amount-grid { grid-template-columns: repeat(2, 1fr); } .form-row2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Platform</div>
+    <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+    <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>City Builders</a>
+    <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+    <a class="nav-item active" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item active" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <a class="back-link" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Missions</a>
+        <div class="page-title">Give to Missions</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div class="page-eyebrow">Global Giving</div>
+        <h1 class="page-header-title">Give where it matters most</h1>
+        <p class="page-header-sub">Choose a program below. Every gift goes directly to the field. 100% of donations reach the designated program.</p>
+      </div>
+
+      <div class="impact-bar">
+        <div class="impact-item"><div class="impact-item-val">$340K</div><div class="impact-item-label">Raised this year</div></div>
+        <div class="impact-item"><div class="impact-item-val">48</div><div class="impact-item-label">Nations reached</div></div>
+        <div class="impact-item"><div class="impact-item-val">3</div><div class="impact-item-label">Active programs</div></div>
+        <div class="impact-item"><div class="impact-item-val">2,400+</div><div class="impact-item-label">Lives impacted</div></div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Donation Programs</div>
+      </div>
+
+      <div class="programs-grid" id="programsGrid">
+
+        <div class="program-card selected" onclick="selectProgram(this, 'Uganda School Building Project', '#C0392B')">
+          <div class="program-thumb" style="background:linear-gradient(135deg,#1a3a1a,#2a5a2a);">
+            <div class="program-thumb-icon" style="background:rgba(255,255,255,0.1);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="program-region-badge" style="background:rgba(192,57,43,0.85);color:#fff;">East Africa</div>
+          </div>
+          <div class="program-body">
+            <div class="program-name">Uganda School Building Project</div>
+            <div class="program-desc">Foundation complete, walls rising. 68% funded — $7,200 remaining before the rains. Every dollar builds classrooms for 340 children.</div>
+            <div class="program-progress"><div class="program-progress-fill" style="width:68%;background:var(--coral);"></div></div>
+            <div class="program-stats"><strong>$15,300 raised</strong><span>Goal: $22,500</span></div>
+            <button class="program-give-btn" style="background:var(--coral);color:#fff;">Give to this project</button>
+          </div>
+        </div>
+
+        <div class="program-card" onclick="selectProgram(this, 'South Asia Translation Fund', '#6155C9')">
+          <div class="program-thumb" style="background:linear-gradient(135deg,#1a1a3a,#2a2a5a);">
+            <div class="program-thumb-icon" style="background:rgba(255,255,255,0.1);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            </div>
+            <div class="program-region-badge" style="background:rgba(97,85,201,0.85);color:#fff;">South Asia</div>
+          </div>
+          <div class="program-body">
+            <div class="program-name">South Asia Translation Fund</div>
+            <div class="program-desc">New Testament complete in 3 dialects. Phase 2 — Old Testament — begins October 2026. Funding Phase 2 now secures continuity.</div>
+            <div class="program-progress"><div class="program-progress-fill" style="width:91%;background:var(--purple);"></div></div>
+            <div class="program-stats"><strong>$45,500 raised</strong><span>Goal: $50,000</span></div>
+            <button class="program-give-btn" style="background:var(--purple);color:#fff;">Give to this project</button>
+          </div>
+        </div>
+
+        <div class="program-card" onclick="selectProgram(this, 'MENA Access Fund', '#C4922A')">
+          <div class="program-thumb" style="background:linear-gradient(135deg,#1a1030,#2a1a4a);">
+            <div class="program-thumb-icon" style="background:rgba(255,255,255,0.1);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+            <div class="program-region-badge" style="background:rgba(196,146,42,0.85);color:#fff;">MENA</div>
+          </div>
+          <div class="program-body">
+            <div class="program-name">MENA Access Fund</div>
+            <div class="program-desc">Digital discipleship tools deployed to 9 nations. 1,200 new believers enrolled. Funding expands reach to 6 more nations by Q1 2027.</div>
+            <div class="program-progress"><div class="program-progress-fill" style="width:54%;background:var(--gold);"></div></div>
+            <div class="program-stats"><strong>$27,000 raised</strong><span>Goal: $50,000</span></div>
+            <button class="program-give-btn" style="background:var(--gold);color:var(--navy-deep);">Give to this project</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DONATION FORM -->
+      <div class="donation-section">
+        <div class="donation-header">
+          <div class="donation-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+          <div>
+            <div class="donation-header-title">Complete your gift</div>
+            <div class="donation-header-sub" id="formProgramLabel">Giving to: Uganda School Building Project</div>
+          </div>
+        </div>
+        <div class="donation-body">
+          <div class="form-label">Select amount (USD)</div>
+          <div class="amount-grid">
+            <button class="amount-pill" onclick="setAmount(10, this)">$10</button>
+            <button class="amount-pill active" onclick="setAmount(25, this)">$25</button>
+            <button class="amount-pill" onclick="setAmount(50, this)">$50</button>
+            <button class="amount-pill" onclick="setAmount(100, this)">$100</button>
+          </div>
+          <div class="custom-amount-wrap">
+            <span class="currency-symbol">$</span>
+            <input class="custom-amount-input" type="number" id="customAmount" placeholder="Enter custom amount" oninput="updateTotal(this.value)">
+          </div>
+
+          <div class="recurring-toggle" onclick="toggleRecurring()">
+            <button class="toggle-sw" id="recurringToggle"></button>
+            <div>
+              <div class="recurring-label">Make this a monthly gift</div>
+              <div class="recurring-sub">Cancel anytime. Monthly giving sustains long-term programs.</div>
+            </div>
+          </div>
+
+          <div class="donation-total">
+            <div>
+              <div class="donation-total-label">Your gift</div>
+              <div class="donation-program-name" id="totalProgram">Uganda School Building Project</div>
+            </div>
+            <div class="donation-total-amount" id="totalAmount">$25.00</div>
+          </div>
+
+          <div class="form-label">Full name</div>
+          <input class="form-input" type="text" placeholder="Elijah Nchelenge">
+          <div class="form-label">Email address</div>
+          <input class="form-input" type="email" placeholder="you@example.com">
+          <div class="form-label">Card details</div>
+          <input class="form-input" type="text" placeholder="Card number">
+          <div class="form-row2">
+            <input class="form-input" type="text" placeholder="MM / YY" style="margin-bottom:0;">
+            <input class="form-input" type="text" placeholder="CVC" style="margin-bottom:0;">
+          </div>
+          <div style="margin-bottom:20px;"></div>
+
+          <button class="give-submit-btn" onclick="submitGift()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            Give $25 to Uganda School Project
+          </button>
+          <div class="give-note">Secure payment. You'll receive a receipt by email. Gifts are non-refundable once processed.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Missions</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+let currentAmount = 25;
+let currentProgram = 'Uganda School Building Project';
+let isRecurring = false;
+
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
+
+function selectProgram(card, name, color) {
+  document.querySelectorAll('.program-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  currentProgram = name;
+  document.getElementById('formProgramLabel').textContent = 'Giving to: ' + name;
+  document.getElementById('totalProgram').textContent = name;
+  updateSubmitBtn();
+}
+
+function setAmount(val, btn) {
+  document.querySelectorAll('.amount-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  currentAmount = val;
+  document.getElementById('customAmount').value = '';
+  document.getElementById('totalAmount').textContent = '$' + val.toFixed(2);
+  updateSubmitBtn();
+}
+
+function updateTotal(val) {
+  document.querySelectorAll('.amount-pill').forEach(p => p.classList.remove('active'));
+  const num = parseFloat(val) || 0;
+  currentAmount = num;
+  document.getElementById('totalAmount').textContent = '$' + num.toFixed(2);
+  updateSubmitBtn();
+}
+
+function updateSubmitBtn() {
+  const btn = document.querySelector('.give-submit-btn');
+  const recurring = isRecurring ? '/month' : '';
+  const short = currentProgram.length > 28 ? currentProgram.substring(0,28)+'…' : currentProgram;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Give $${currentAmount.toFixed(2)}${recurring} — ${short}`;
+}
+
+function toggleRecurring() {
+  isRecurring = !isRecurring;
+  document.getElementById('recurringToggle').classList.toggle('on', isRecurring);
+  updateSubmitBtn();
+}
+
+function submitGift() {
+  alert('Thank you for your gift of $' + currentAmount.toFixed(2) + (isRecurring ? '/month' : '') + ' to ' + currentProgram + '.\n\nA receipt will be sent to your email.');
+}
+</script>
+</body>
+</html>

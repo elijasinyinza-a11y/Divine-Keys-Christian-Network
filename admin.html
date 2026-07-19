@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10); --gold-border: rgba(196,146,42,0.22);
+  --coral: #C0392B; --coral-bg: rgba(192,57,43,0.09); --coral-border: rgba(192,57,43,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09); --purple-border: rgba(97,85,201,0.22);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09); --amber-border: rgba(154,94,24,0.22);
+  --teal: #1A7A5E; --teal-bg: rgba(26,122,94,0.09); --teal-border: rgba(26,122,94,0.22);
+  --green: #16a34a; --green-bg: rgba(22,163,74,0.09);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --border-mid: #F0EDE6; --radius: 10px;
+  --sidebar-w: 220px; --page-bg: #F7F4EF;
+}
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+.shell { display: flex; min-height: 100vh; }
+
+/* ADMIN SIDEBAR */
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--navy-deep); border-right: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 20px 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 30px; height: 30px; background: rgba(245,215,142,0.1); border: 1px solid rgba(245,215,142,0.2); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 14px; height: 14px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold-light); }
+.admin-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--coral); background: var(--coral-bg); border: 1px solid var(--coral-border); padding: 2px 7px; border-radius: 20px; margin-top: 4px; display: inline-block; }
+
+.sidebar-section { padding: 16px 10px 4px; }
+.sidebar-label { font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.2); font-weight: 600; padding: 0 8px; margin-bottom: 4px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px; cursor: pointer; color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.75); }
+.nav-item.active { background: rgba(255,255,255,0.08); color: #fff; font-weight: 500; }
+.nav-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.6; }
+.nav-item.active svg { opacity: 1; }
+.sidebar-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 6px 10px; }
+.sidebar-footer { margin-top: auto; padding: 12px 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+.admin-user { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; }
+.admin-av { width: 28px; height: 28px; border-radius: 50%; background: var(--coral); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.admin-name { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); }
+.admin-role { font-size: 10px; color: rgba(255,255,255,0.3); }
+.back-to-site { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color 0.15s; margin-top: 4px; }
+.back-to-site:hover { color: rgba(255,255,255,0.6); }
+.back-to-site svg { width: 12px; height: 12px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 32px; border-bottom: 1px solid var(--border); background: var(--page-bg); position: sticky; top: 0; z-index: 10; }
+.page-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+.page-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text-sec); font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; white-space: nowrap; }
+.topbar-btn:hover { background: rgba(27,43,75,0.05); }
+.topbar-btn.primary { background: var(--navy); border-color: var(--navy); color: var(--gold-light); font-weight: 500; }
+.topbar-btn.primary:hover { background: var(--navy-deep); }
+.topbar-btn svg { width: 13px; height: 13px; }
+
+.content { padding: 28px 32px 60px; }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.stat-val { font-family: 'DM Sans', sans-serif; font-size: 24px; font-weight: 700; color: var(--navy); letter-spacing: -0.03em; }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.stat-change { font-size: 11px; margin-top: 4px; font-weight: 500; }
+.stat-change.up { color: var(--green); }
+.stat-change.down { color: var(--coral); }
+
+/* SECTION */
+.admin-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+.admin-section-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-section-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); }
+.admin-section-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
+.add-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; background: var(--navy); border: none; color: var(--gold-light); font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.add-btn:hover { background: var(--navy-deep); }
+.add-btn svg { width: 12px; height: 12px; }
+
+/* TABLE */
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th { padding: 10px 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--text-muted); text-align: left; border-bottom: 1px solid var(--border); text-transform: uppercase; background: rgba(27,43,75,0.02); }
+.admin-table td { padding: 13px 20px; font-size: 13px; color: var(--text-sec); border-bottom: 1px solid var(--border-mid); vertical-align: middle; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: rgba(27,43,75,0.015); }
+
+.badge { font-size: 10.5px; font-weight: 600; padding: 3px 9px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
+.badge-live { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22,163,74,0.2); }
+.badge-draft { background: var(--gold-glow); color: var(--gold-dim); border: 1px solid var(--gold-border); }
+.badge-pro { background: var(--navy); color: var(--gold-light); }
+.badge-free { background: var(--border-mid); color: var(--text-muted); }
+.badge-active { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22,163,74,0.2); }
+.badge-completed { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+
+.table-actions { display: flex; align-items: center; gap: 6px; }
+.table-btn { width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border); background: var(--page-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.15s; }
+.table-btn:hover { background: var(--card); color: var(--navy); border-color: rgba(27,43,75,0.2); }
+.table-btn.danger:hover { color: var(--coral); border-color: var(--coral-border); background: var(--coral-bg); }
+.table-btn svg { width: 12px; height: 12px; }
+
+.progress-cell { display: flex; align-items: center; gap: 8px; }
+.progress-mini { flex: 1; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; min-width: 60px; }
+.progress-mini-fill { height: 100%; border-radius: 4px; }
+.progress-pct { font-size: 11px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,30,54,0.7); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--card); border-radius: 14px; width: 100%; max-width: 520px; overflow: hidden; }
+.modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+.modal-close { width: 30px; height: 30px; border-radius: 7px; background: var(--border-mid); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.modal-close svg { width: 14px; height: 14px; }
+.modal-body { padding: 24px; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; }
+.form-input { width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; background: var(--page-bg); transition: border-color 0.2s; }
+.form-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+.form-input::placeholder { color: var(--text-muted); }
+textarea.form-input { resize: vertical; min-height: 80px; }
+.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-select { width: 100%; padding: 10px 13px; border: 1px solid var(--border); border-radius: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; background: var(--page-bg); cursor: pointer; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+.modal-btn { padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: opacity 0.15s; border: none; }
+.modal-btn.cancel { background: var(--border-mid); color: var(--text-sec); }
+.modal-btn.cancel:hover { opacity: 0.8; }
+.modal-btn.save { background: var(--navy); color: var(--gold-light); }
+.modal-btn.save:hover { background: var(--navy-deep); }
+
+/* UPLOAD ZONE */
+.upload-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 32px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 16px; }
+.upload-zone:hover { border-color: var(--gold-border); background: var(--gold-glow); }
+.upload-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--gold-glow); border: 1px solid var(--gold-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.upload-icon svg { width: 20px; height: 20px; color: var(--gold-dim); }
+.upload-title { font-size: 13.5px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--text-muted); }
+
+@media (max-width: 1100px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr 1fr; } .content { padding: 20px 16px 40px; } .topbar { padding: 12px 16px; } }
+</style>
+</head>
+<body>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Upload Video</div>
+      <button class="modal-close" onclick="closeModal('videoModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-zone" onclick="alert('File picker — connect your video host (Vimeo, Cloudflare Stream, S3) here.')">
+        <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="upload-title">Click to select video file</div>
+        <div class="upload-sub">MP4, MOV — up to 4GB. Or paste a Vimeo / YouTube URL below.</div>
+      </div>
+      <div class="form-group"><label class="form-label">Video URL (optional)</label><input class="form-input" type="text" placeholder="https://vimeo.com/..."></div>
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" placeholder="Walking in the Spirit — Romans 8 Unpacked"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" placeholder="A verse-by-verse journey through..."></textarea></div>
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Series</label>
+          <select class="form-select"><option>Romans Deep Dive</option><option>Kingdom Wealth</option><option>Global Missions</option><option>City Builders</option><option>+ New series</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Scripture reference</label><input class="form-input" type="text" placeholder="Romans 8:1–17"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Duration (min)</label><input class="form-input" type="number" placeholder="47"></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select"><option>Draft</option><option>Published</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('videoModal')">Cancel</button>
+      <button class="modal-btn save" onclick="saveAndClose('videoModal', 'Video uploaded and saved.')">Upload & Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="programModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="programModalTitle">Add Donation Program</div>
+      <button class="modal-close" onclick="closeModal('programModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Program name</label><input class="form-input" type="text" placeholder="Uganda School Building Project"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" placeholder="Brief description shown to donors..."></textarea></div>
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Region</label>
+          <select class="form-select"><option>East Africa</option><option>South Asia</option><option>Middle East & N. Africa</option><option>Latin America</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Goal amount (USD)</label><input class="form-input" type="number" placeholder="22500"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Amount raised (USD)</label><input class="form-input" type="number" placeholder="15300"></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select"><option>Active</option><option>Completed</option><option>Paused</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Suggested donation amounts (comma separated)</label><input class="form-input" type="text" placeholder="10, 25, 50, 100"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('programModal')">Cancel</button>
+      <button class="modal-btn save" onclick="saveAndClose('programModal', 'Program saved.')">Save Program</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Book</div>
+      <button class="modal-close" onclick="closeModal('bookModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" placeholder="The Intercessor's Mandate"></div>
+      <div class="form-group"><label class="form-label">Author</label><input class="form-input" type="text" placeholder="Elijah Nchelenge"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" placeholder="Brief description..."></textarea></div>
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Type</label>
+          <select class="form-select"><option>Standalone book</option><option>Part of a series</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Series name (if series)</label><input class="form-input" type="text" placeholder="Divine Keys for Spiritual Exploits"></div>
+      </div>
+      <div class="form-row2">
+        <div class="form-group"><label class="form-label">Pricing</label>
+          <select class="form-select"><option>Free</option><option>Paid</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Price (USD, if paid)</label><input class="form-input" type="number" placeholder="14.99"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Tags (comma separated)</label><input class="form-input" type="text" placeholder="Scripture, Prayer, Faith"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal('bookModal')">Cancel</button>
+      <button class="modal-btn save" onclick="saveAndClose('bookModal', 'Book added.')">Save Book</button>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-text">Divine Keys</div><div class="admin-badge">Admin</div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <button class="nav-item active" onclick="showSection('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</button>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Content</div>
+      <button class="nav-item" onclick="showSection('videos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>VOD Videos</button>
+      <button class="nav-item" onclick="showSection('books')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</button>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Missions</div>
+      <button class="nav-item" onclick="showSection('programs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Donation Programs</button>
+      <button class="nav-item" onclick="showSection('donations')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Donation Records</button>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <button class="nav-item" onclick="showSection('users')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Users</button>
+      <button class="nav-item" onclick="showSection('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="admin-user">
+        <div class="admin-av">A</div>
+        <div><div class="admin-name">Admin</div><div class="admin-role">Super Admin</div></div>
+      </div>
+      <a class="back-to-site" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back to site</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title" id="sectionTitle">Dashboard</div>
+        <div class="page-sub" id="sectionSub">Platform overview — July 2026</div>
+      </div>
+      <div class="topbar-right" id="topbarActions"></div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div id="section-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-val">2,847</div><div class="stat-label">Total members</div><div class="stat-change up">↑ 12% this month</div></div>
+          <div class="stat-card"><div class="stat-val">341</div><div class="stat-label">Pro subscribers</div><div class="stat-change up">↑ 8% this month</div></div>
+          <div class="stat-card"><div class="stat-val">14,230</div><div class="stat-label">Sessions this month</div><div class="stat-change up">↑ 24% vs last month</div></div>
+          <div class="stat-card"><div class="stat-val">$6,479</div><div class="stat-label">MRR</div><div class="stat-change up">↑ 8% this month</div></div>
+          <div class="stat-card"><div class="stat-val">$87,800</div><div class="stat-label">Donations raised</div><div class="stat-change up">↑ 19% this month</div></div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="stat-card"><div class="stat-val">24</div><div class="stat-label">Published videos</div></div>
+          <div class="stat-card"><div class="stat-val">8</div><div class="stat-label">Books in store</div></div>
+          <div class="stat-card"><div class="stat-val">3</div><div class="stat-label">Active donation programs</div></div>
+          <div class="stat-card"><div class="stat-val">48</div><div class="stat-label">Nations in missions</div></div>
+        </div>
+
+        <div class="admin-section" style="margin-top:24px;">
+          <div class="admin-section-header"><div><div class="admin-section-title">Recent activity</div></div></div>
+          <table class="admin-table">
+            <thead><tr><th>Event</th><th>User</th><th>Detail</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>New Pro subscription</td><td>Grace Kimani</td><td>Monthly · $19</td><td>2m ago</td></tr>
+              <tr><td>Donation received</td><td>James Mwangi</td><td>Uganda School · $50</td><td>14m ago</td></tr>
+              <tr><td>New free member</td><td>Samuel Adeola</td><td>Joined from landing page</td><td>32m ago</td></tr>
+              <tr><td>Video published</td><td>Admin</td><td>Romans 8 — Suffering & Glory</td><td>2h ago</td></tr>
+              <tr><td>Donation received</td><td>Faith Okonkwo</td><td>MENA Access Fund · $100</td><td>3h ago</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VOD VIDEOS -->
+      <div id="section-videos" style="display:none;">
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <div><div class="admin-section-title">VOD Videos</div><div class="admin-section-sub">24 videos · 4 series</div></div>
+            <button class="add-btn" onclick="openModal('videoModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Upload video</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Title</th><th>Series</th><th>Scripture</th><th>Duration</th><th>Status</th><th>Views</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Walking in the Spirit — Romans 8 Unpacked</strong></td><td>Romans Deep Dive</td><td>Romans 8:1–17</td><td>47 min</td><td><span class="badge badge-live">Live</span></td><td>1,240</td><td><div class="table-actions"><button class="table-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" title="Delete" onclick="confirmDelete('video')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>No Condemnation — The Foundation of Grace</strong></td><td>Romans Deep Dive</td><td>Romans 8:1–4</td><td>38 min</td><td><span class="badge badge-live">Live</span></td><td>980</td><td><div class="table-actions"><button class="table-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" title="Delete" onclick="confirmDelete('video')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>Kingdom Economics — Proverbs on Wealth</strong></td><td>Kingdom Wealth</td><td>Proverbs 10–13</td><td>52 min</td><td><span class="badge badge-live">Live</span></td><td>760</td><td><div class="table-actions"><button class="table-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" title="Delete" onclick="confirmDelete('video')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>The Missionary Heart of God</strong></td><td>Global Missions</td><td>Acts 1:8</td><td>44 min</td><td><span class="badge badge-live">Live</span></td><td>620</td><td><div class="table-actions"><button class="table-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" title="Delete" onclick="confirmDelete('video')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>Suffering and Glory (draft)</strong></td><td>Romans Deep Dive</td><td>Romans 8:18–27</td><td>50 min</td><td><span class="badge badge-draft">Draft</span></td><td>—</td><td><div class="table-actions"><button class="table-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" title="Delete" onclick="confirmDelete('video')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DONATION PROGRAMS -->
+      <div id="section-programs" style="display:none;">
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <div><div class="admin-section-title">Donation Programs</div><div class="admin-section-sub">Manage programs visible on the Give page</div></div>
+            <button class="add-btn" onclick="openProgramModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add program</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Program</th><th>Region</th><th>Goal</th><th>Raised</th><th>Progress</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Uganda School Building Project</strong></td>
+                <td>East Africa</td>
+                <td>$22,500</td>
+                <td>$15,300</td>
+                <td><div class="progress-cell"><div class="progress-mini"><div class="progress-mini-fill" style="width:68%;background:var(--coral);"></div></div><span class="progress-pct">68%</span></div></td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td><div class="table-actions">
+                  <button class="table-btn" title="Edit" onclick="openProgramModal('edit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="table-btn" title="Mark completed" onclick="alert('Program marked as completed.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></button>
+                  <button class="table-btn danger" title="Remove" onclick="confirmDelete('program')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><strong>South Asia Translation Fund</strong></td>
+                <td>South Asia</td>
+                <td>$50,000</td>
+                <td>$45,500</td>
+                <td><div class="progress-cell"><div class="progress-mini"><div class="progress-mini-fill" style="width:91%;background:var(--purple);"></div></div><span class="progress-pct">91%</span></div></td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td><div class="table-actions">
+                  <button class="table-btn" title="Edit" onclick="openProgramModal('edit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="table-btn" title="Mark completed" onclick="alert('Program marked as completed.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></button>
+                  <button class="table-btn danger" title="Remove" onclick="confirmDelete('program')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><strong>MENA Access Fund</strong></td>
+                <td>Middle East & N. Africa</td>
+                <td>$50,000</td>
+                <td>$27,000</td>
+                <td><div class="progress-cell"><div class="progress-mini"><div class="progress-mini-fill" style="width:54%;background:var(--gold);"></div></div><span class="progress-pct">54%</span></div></td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td><div class="table-actions">
+                  <button class="table-btn" title="Edit" onclick="openProgramModal('edit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="table-btn" title="Mark completed" onclick="alert('Program marked as completed.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></button>
+                  <button class="table-btn danger" title="Remove" onclick="confirmDelete('program')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DONATION RECORDS -->
+      <div id="section-donations" style="display:none;">
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <div><div class="admin-section-title">Donation Records</div><div class="admin-section-sub">$87,800 raised total</div></div>
+            <button class="topbar-btn" onclick="alert('Export CSV')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Donor</th><th>Program</th><th>Amount</th><th>Type</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Faith Okonkwo</td><td>MENA Access Fund</td><td>$100</td><td>One-off</td><td>19 Jul 2026</td><td><span class="badge badge-active">Completed</span></td></tr>
+              <tr><td>James Mwangi</td><td>Uganda School Building</td><td>$50</td><td>One-off</td><td>19 Jul 2026</td><td><span class="badge badge-active">Completed</span></td></tr>
+              <tr><td>Grace Kimani</td><td>South Asia Translation</td><td>$25/mo</td><td>Monthly</td><td>18 Jul 2026</td><td><span class="badge badge-active">Active</span></td></tr>
+              <tr><td>Elijah Nchelenge</td><td>Uganda School Building</td><td>$75</td><td>One-off</td><td>15 Jul 2026</td><td><span class="badge badge-active">Completed</span></td></tr>
+              <tr><td>Samuel Adeola</td><td>MENA Access Fund</td><td>$200</td><td>One-off</td><td>12 Jul 2026</td><td><span class="badge badge-active">Completed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOOKSTORE -->
+      <div id="section-books" style="display:none;">
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <div><div class="admin-section-title">Bookstore</div><div class="admin-section-sub">8 titles — 1 series, 7 standalone books</div></div>
+            <button class="add-btn" onclick="openModal('bookModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add book</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Title</th><th>Type</th><th>Author</th><th>Pricing</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Divine Keys for Spiritual Exploits</strong></td><td><span class="badge badge-draft" style="background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border);">Series</span></td><td>Elijah Nchelenge</td><td>Free</td><td><span class="badge badge-live">Live</span></td><td><div class="table-actions"><button class="table-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" onclick="confirmDelete('book')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>Kingdom Wealth Principles</strong></td><td>Standalone</td><td>Elijah Nchelenge</td><td>Free</td><td><span class="badge badge-live">Live</span></td><td><div class="table-actions"><button class="table-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" onclick="confirmDelete('book')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>The Intercessor's Mandate</strong></td><td>Standalone</td><td>Elijah Nchelenge</td><td>$14.99</td><td><span class="badge badge-live">Live</span></td><td><div class="table-actions"><button class="table-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" onclick="confirmDelete('book')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>City Builders' Blueprint</strong></td><td>Standalone</td><td>Elijah Nchelenge</td><td>$12.99</td><td><span class="badge badge-live">Live</span></td><td><div class="table-actions"><button class="table-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" onclick="confirmDelete('book')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+              <tr><td><strong>Proverbs for Entrepreneurs</strong></td><td>Standalone</td><td>Elijah Nchelenge</td><td>Free</td><td><span class="badge badge-live">Live</span></td><td><div class="table-actions"><button class="table-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="table-btn danger" onclick="confirmDelete('book')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div id="section-users" style="display:none;">
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <div><div class="admin-section-title">Users</div><div class="admin-section-sub">2,847 members · 341 Pro</div></div>
+            <button class="topbar-btn" onclick="alert('Export CSV')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Plan</th><th>Sessions</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Elijah Nchelenge</strong></td><td>elijah@divinekeys.network</td><td>Zambia</td><td><span class="badge badge-free">Free</span></td><td>47</td><td>Jan 2026</td><td><div class="table-actions"><button class="table-btn" title="Upgrade to Pro" onclick="alert('Upgraded to Pro.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button><button class="table-btn danger" title="Deactivate" onclick="confirmDelete('user account')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7"/><line x1="17" y1="17" x2="22" y2="22"/><line x1="22" y1="17" x2="17" y2="22"/></svg></button></div></td></tr>
+              <tr><td><strong>Grace Kimani</strong></td><td>grace@example.com</td><td>Kenya</td><td><span class="badge badge-pro">Pro</span></td><td>134</td><td>Feb 2026</td><td><div class="table-actions"><button class="table-btn danger" title="Deactivate" onclick="confirmDelete('user account')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7"/><line x1="17" y1="17" x2="22" y2="22"/><line x1="22" y1="17" x2="17" y2="22"/></svg></button></div></td></tr>
+              <tr><td><strong>James Mwangi</strong></td><td>james@example.com</td><td>Uganda</td><td><span class="badge badge-pro">Pro</span></td><td>92</td><td>Mar 2026</td><td><div class="table-actions"><button class="table-btn danger" title="Deactivate" onclick="confirmDelete('user account')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7"/><line x1="17" y1="17" x2="22" y2="22"/><line x1="22" y1="17" x2="17" y2="22"/></svg></button></div></td></tr>
+              <tr><td><strong>Faith Okonkwo</strong></td><td>faith@example.com</td><td>Nigeria</td><td><span class="badge badge-pro">Pro</span></td><td>78</td><td>Apr 2026</td><td><div class="table-actions"><button class="table-btn danger" title="Deactivate" onclick="confirmDelete('user account')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7"/><line x1="17" y1="17" x2="22" y2="22"/><line x1="22" y1="17" x2="17" y2="22"/></svg></button></div></td></tr>
+              <tr><td><strong>Samuel Adeola</strong></td><td>samuel@example.com</td><td>Nigeria</td><td><span class="badge badge-free">Free</span></td><td>23</td><td>May 2026</td><td><div class="table-actions"><button class="table-btn" title="Upgrade to Pro" onclick="alert('Upgraded to Pro.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button><button class="table-btn danger" title="Deactivate" onclick="confirmDelete('user account')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7"/><line x1="17" y1="17" x2="22" y2="22"/><line x1="22" y1="17" x2="17" y2="22"/></svg></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="section-settings" style="display:none;">
+        <div class="admin-section">
+          <div class="admin-section-header"><div><div class="admin-section-title">Platform Settings</div></div></div>
+          <div style="padding:24px;display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--border-mid);">
+              <div><div style="font-size:13px;font-weight:500;color:var(--navy);">Pro monthly price (USD)</div><div style="font-size:11.5px;color:var(--text-muted);">Set by board. Change with care.</div></div>
+              <input style="width:100px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--navy);background:var(--page-bg);outline:none;text-align:right;" type="number" value="19">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--border-mid);">
+              <div><div style="font-size:13px;font-weight:500;color:var(--navy);">Free tier session limit</div><div style="font-size:11.5px;color:var(--text-muted);">Sessions per month for Free members</div></div>
+              <input style="width:80px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--navy);background:var(--page-bg);outline:none;text-align:right;" type="number" value="10">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--border-mid);">
+              <div><div style="font-size:13px;font-weight:500;color:var(--navy);">Maintenance mode</div><div style="font-size:11.5px;color:var(--text-muted);">Take the platform offline for maintenance</div></div>
+              <button class="toggle-sw" id="maintenanceToggle" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div style="display:flex;justify-content:flex-end;">
+              <button class="add-btn" onclick="alert('Settings saved.')">Save settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const sections = ['dashboard','videos','programs','donations','books','users','settings'];
+const titles = {
+  dashboard: ['Dashboard','Platform overview — July 2026'],
+  videos: ['VOD Videos','Upload and manage Moments of Wisdom content'],
+  programs: ['Donation Programs','Add, edit, or remove giving programs'],
+  donations: ['Donation Records','All donations across all programs'],
+  books: ['Bookstore','Manage books and the Divine Keys series'],
+  users: ['Users','Member management and plan controls'],
+  settings: ['Platform Settings','Global platform configuration'],
+};
+
+function showSection(name) {
+  sections.forEach(s => {
+    const el = document.getElementById('section-' + s);
+    if (el) el.style.display = s === name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('sectionTitle').textContent = titles[name][0];
+  document.getElementById('sectionSub').textContent = titles[name][1];
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+
+function openProgramModal(mode) {
+  document.getElementById('programModalTitle').textContent = mode === 'edit' ? 'Edit Donation Program' : 'Add Donation Program';
+  openModal('programModal');
+}
+
+function saveAndClose(modalId, msg) { closeModal(modalId); alert(msg); }
+
+function confirmDelete(type) {
+  if (confirm('Are you sure you want to remove this ' + type + '? This cannot be undone.')) {
+    alert('Removed.');
+  }
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', function(e) { if (e.target === this) closeModal(this.id); });
+});
+</script>
+</body>
+</html>
