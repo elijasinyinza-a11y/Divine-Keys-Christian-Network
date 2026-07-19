@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --border-mid: #F0EDE6; --radius: 10px;
+  --sidebar-w: 240px; --page-bg: #F7F4EF; --bottom-nav-h: 64px;
+}
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+.shell { display: flex; min-height: 100vh; }
+
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); }
+.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+.sidebar-section { padding: 18px 12px 6px; }
+.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
+.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
+.nav-item.active svg { opacity: 1; }
+.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
+.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
+.user-row:hover { background: rgba(27,43,75,0.06); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.drawer-close svg { width: 18px; height: 18px; }
+
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 36px; border-bottom: 1px solid var(--border); background: var(--page-bg); position: sticky; top: 0; z-index: 10; }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.menu-btn { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
+.menu-btn svg { width: 18px; height: 18px; }
+.page-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+
+.content { padding: 36px 36px 80px; max-width: 840px; width: 100%; margin: 0 auto; }
+
+/* PROFILE HEADER */
+.profile-header { background: var(--navy); border-radius: 14px; padding: 28px; display: flex; align-items: center; gap: 24px; margin-bottom: 28px; }
+.profile-av-large { width: 64px; height: 64px; border-radius: 50%; background: rgba(245,215,142,0.12); border: 2px solid rgba(245,215,142,0.25); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--gold-light); font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+.profile-info { flex: 1; }
+.profile-name { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.profile-email { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+.profile-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.profile-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+.badge-free { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.45); }
+.badge-streak { background: var(--gold-glow); border: 1px solid var(--gold-border); color: var(--gold); }
+.profile-upgrade-btn { display: flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--gold); border: none; border-radius: 9px; color: var(--navy-deep); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; text-decoration: none; }
+.profile-upgrade-btn:hover { background: var(--gold-dim); }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.stat-val { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: var(--navy); letter-spacing: -0.03em; }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* SETTINGS SECTIONS */
+.settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.settings-section-title { padding: 14px 20px; border-bottom: 1px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); }
+.settings-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border-mid); gap: 16px; }
+.settings-row:last-child { border-bottom: none; }
+.settings-row-label { font-size: 13px; color: var(--text); font-weight: 500; }
+.settings-row-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.settings-input { padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; background: var(--page-bg); min-width: 220px; transition: border-color 0.2s; }
+.settings-input:focus { border-color: var(--gold); }
+.settings-select { padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; background: var(--page-bg); cursor: pointer; }
+.toggle-switch { width: 38px; height: 22px; border-radius: 11px; background: var(--border); border: none; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+.toggle-switch.on { background: var(--navy); }
+.toggle-switch::after { content: ''; width: 16px; height: 16px; border-radius: 50%; background: #fff; position: absolute; top: 3px; left: 3px; transition: left 0.2s; }
+.toggle-switch.on::after { left: 19px; }
+
+/* DANGER ZONE */
+.danger-section { background: var(--card); border: 1px solid #fecaca; border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.danger-title { padding: 14px 20px; border-bottom: 1px solid #fecaca; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: #c0392b; }
+.danger-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; gap: 16px; border-bottom: 1px solid #fff5f5; }
+.danger-row:last-child { border-bottom: none; }
+.danger-btn { padding: 7px 14px; border-radius: 8px; border: 1px solid #fecaca; background: transparent; color: #c0392b; font-size: 12.5px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+.danger-btn:hover { background: #fff5f5; }
+
+.save-row { display: flex; justify-content: flex-end; margin-top: 4px; }
+.save-btn { padding: 10px 24px; background: var(--navy); border: none; border-radius: var(--radius); color: var(--gold-light); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+.save-btn:hover { background: var(--navy-deep); }
+
+/* MOBILE */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+.bottom-nav-item.active { color: var(--gold); }
+.bottom-nav-item.active svg { stroke: var(--gold); }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .menu-btn { display: flex; }
+  .drawer-overlay { display: block; }
+  .bottom-nav { display: flex; }
+  .topbar { padding: 12px 16px; }
+  .content { padding: 20px 16px 80px; }
+  .profile-header { flex-direction: column; align-items: flex-start; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .settings-input { min-width: 150px; }
+}
+</style>
+</head>
+<body>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark">
+      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Account</div>
+    <a class="nav-item active" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+    <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-avatar">EN</div>
+      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item active" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">EN</div>
+        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="page-title">Profile & Settings</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="profile-header">
+        <div class="profile-av-large">EN</div>
+        <div class="profile-info">
+          <div class="profile-name">Elijah Nchelenge</div>
+          <div class="profile-email">elijah@divinekeys.network</div>
+          <div class="profile-badges">
+            <span class="profile-badge badge-free">Free Member</span>
+            <span class="profile-badge badge-streak">🔥 14-day streak</span>
+          </div>
+        </div>
+        <a class="profile-upgrade-btn" href="upgrade.html">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Upgrade to Pro
+        </a>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val">47</div><div class="stat-label">Sessions this month</div></div>
+        <div class="stat-card"><div class="stat-val">8/10</div><div class="stat-label">Free sessions used</div></div>
+        <div class="stat-card"><div class="stat-val">12</div><div class="stat-label">Book chapters drafted</div></div>
+        <div class="stat-card"><div class="stat-val">14</div><div class="stat-label">Day streak</div></div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Personal details</div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Full name</div></div>
+          <input class="settings-input" type="text" value="Elijah Nchelenge">
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Email address</div></div>
+          <input class="settings-input" type="email" value="elijah@divinekeys.network">
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Country</div></div>
+          <select class="settings-select"><option>Zambia</option><option>Kenya</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option></select>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Preferences</div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Default Bible translation</div></div>
+          <select class="settings-select"><option>ESV</option><option>NIV</option><option>KJV</option><option>NKJV</option><option>NLT</option><option>NASB</option></select>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Email notifications</div>
+            <div class="settings-row-sub">Weekly accountability prompts and platform updates</div>
+          </div>
+          <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Session history</div>
+            <div class="settings-row-sub">Keep a record of all past sessions</div>
+          </div>
+          <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">City Builders leaderboard</div>
+            <div class="settings-row-sub">Show my name and score in the circle leaderboard</div>
+          </div>
+          <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Plan & billing</div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Current plan</div><div class="settings-row-sub">Free — 10 sessions per month</div></div>
+          <a href="upgrade.html" style="font-size:13px;color:var(--gold-dim);font-weight:600;text-decoration:none;">Upgrade to Pro →</a>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Member since</div></div>
+          <div style="font-size:13px;color:var(--text-muted);">January 2026</div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Password</div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Current password</div></div>
+          <input class="settings-input" type="password" placeholder="Enter current password">
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">New password</div></div>
+          <input class="settings-input" type="password" placeholder="Enter new password">
+        </div>
+      </div>
+
+      <div class="save-row">
+        <button class="save-btn" onclick="alert('Changes saved.')">Save changes</button>
+      </div>
+
+      <div class="danger-section" style="margin-top:24px;">
+        <div class="danger-title">Danger zone</div>
+        <div class="danger-row">
+          <div><div class="settings-row-label">Sign out</div><div class="settings-row-sub">Sign out of your account on this device</div></div>
+          <button class="danger-btn" onclick="window.location.href='signin.html'">Sign out</button>
+        </div>
+        <div class="danger-row">
+          <div><div class="settings-row-label">Delete account</div><div class="settings-row-sub">Permanently delete your account and all data</div></div>
+          <button class="danger-btn" onclick="confirm('Are you sure? This cannot be undone.')">Delete account</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Agents</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item active" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+</script>
+</body>
+</html>

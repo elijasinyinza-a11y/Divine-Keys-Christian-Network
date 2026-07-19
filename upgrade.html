@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Upgrade to Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --border-mid: #F0EDE6; --radius: 10px;
+  --page-bg: #F7F4EF;
+}
+html, body { height: 100%; }
+body { background: var(--navy-deep); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; min-height: 100vh; }
+
+/* TOPBAR */
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 36px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.logo-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon { width: 32px; height: 32px; background: rgba(245,215,142,0.12); border: 1px solid rgba(245,215,142,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold-light); }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.4); font-size: 13px; text-decoration: none; transition: color 0.15s; }
+.back-btn:hover { color: rgba(255,255,255,0.7); }
+.back-btn svg { width: 14px; height: 14px; }
+
+/* PAGE */
+.page { max-width: 900px; margin: 0 auto; padding: 60px 36px 80px; }
+
+/* HEADER */
+.upgrade-header { text-align: center; margin-bottom: 56px; }
+.upgrade-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 20px; }
+.upgrade-eyebrow svg { width: 14px; height: 14px; }
+.upgrade-title { font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700; color: #fff; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 14px; }
+.upgrade-title em { color: var(--gold-light); font-style: normal; }
+.upgrade-sub { font-size: 16px; color: rgba(255,255,255,0.45); max-width: 440px; margin: 0 auto; line-height: 1.7; }
+
+/* BILLING TOGGLE */
+.billing-toggle { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 40px; }
+.toggle-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+.toggle-label.active { color: #fff; font-weight: 500; }
+.toggle-pill { width: 44px; height: 24px; border-radius: 12px; background: var(--gold); cursor: pointer; position: relative; border: none; transition: background 0.2s; flex-shrink: 0; }
+.toggle-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; position: absolute; top: 3px; left: 3px; transition: left 0.2s; }
+.toggle-pill.annual .toggle-thumb { left: 23px; }
+.annual-badge { font-size: 10px; font-weight: 700; background: var(--gold); color: var(--navy-deep); padding: 2px 8px; border-radius: 20px; letter-spacing: 0.3px; }
+
+/* PRICING CARDS */
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 48px; }
+
+.pricing-card { border-radius: 16px; padding: 32px; position: relative; overflow: hidden; }
+.pricing-card.free { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+.pricing-card.pro { background: linear-gradient(140deg, #2a3f6f 0%, #1B2B4B 100%); border: 1px solid rgba(245,215,142,0.2); }
+.pro-glow { position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(196,146,42,0.15) 0%, transparent 70%); pointer-events: none; }
+
+.plan-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 20px; }
+.plan-badge.free-badge { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); }
+.plan-badge.pro-badge { background: var(--gold-glow); border: 1px solid var(--gold-border); color: var(--gold); }
+.plan-badge svg { width: 11px; height: 11px; }
+
+.plan-price { margin-bottom: 8px; }
+.plan-amount { font-family: 'DM Sans', sans-serif; font-size: 44px; font-weight: 700; color: #fff; letter-spacing: -0.04em; line-height: 1; }
+.plan-amount.free-amount { color: rgba(255,255,255,0.5); font-size: 36px; }
+.plan-period { font-size: 14px; color: rgba(255,255,255,0.35); margin-left: 4px; }
+.plan-annual-note { font-size: 11.5px; color: rgba(255,255,255,0.3); margin-bottom: 24px; min-height: 18px; }
+.plan-annual-note strong { color: var(--gold); }
+
+.plan-cta { display: block; width: 100%; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-align: center; cursor: pointer; font-family: 'Inter', sans-serif; border: none; transition: opacity 0.15s; margin-bottom: 28px; text-decoration: none; }
+.plan-cta.free-cta { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); cursor: default; }
+.plan-cta.pro-cta { background: var(--gold); color: var(--navy-deep); }
+.plan-cta.pro-cta:hover { background: var(--gold-dim); }
+
+.plan-features { display: flex; flex-direction: column; gap: 11px; }
+.plan-feature { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
+.feature-icon { width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.feature-icon.check { background: rgba(196,146,42,0.15); }
+.feature-icon.check svg { width: 10px; height: 10px; color: var(--gold); }
+.feature-icon.x { background: rgba(255,255,255,0.04); }
+.feature-icon.x svg { width: 10px; height: 10px; color: rgba(255,255,255,0.2); }
+.feature-text { color: rgba(255,255,255,0.7); line-height: 1.5; }
+.feature-text.dim { color: rgba(255,255,255,0.25); }
+.feature-text strong { color: #fff; font-weight: 500; }
+
+/* COMPARISON TABLE */
+.comparison { margin-bottom: 48px; }
+.comparison-title { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 16px; text-align: center; }
+.comparison-table { width: 100%; border-collapse: collapse; }
+.comparison-table th { padding: 10px 16px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.comparison-table th:not(:first-child) { text-align: center; }
+.comparison-table td { padding: 12px 16px; font-size: 13px; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.comparison-table td:not(:first-child) { text-align: center; }
+.comparison-table tr:last-child td { border-bottom: none; }
+.check-mark { color: var(--gold); font-size: 15px; }
+.x-mark { color: rgba(255,255,255,0.15); font-size: 15px; }
+.limit-text { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+/* TESTIMONIALS */
+.testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px; }
+.testimonial { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; }
+.testimonial-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 14px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 10px; }
+.testimonial-av { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--gold-light); font-family: 'DM Sans', sans-serif; }
+.testimonial-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); }
+.testimonial-role { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+/* FAQ */
+.faq { margin-bottom: 48px; }
+.faq-title { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 16px; text-align: center; }
+.faq-item { border-bottom: 1px solid rgba(255,255,255,0.06); }
+.faq-q { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; cursor: pointer; font-size: 13.5px; color: rgba(255,255,255,0.7); font-weight: 500; gap: 16px; }
+.faq-q svg { width: 16px; height: 16px; flex-shrink: 0; color: rgba(255,255,255,0.3); transition: transform 0.2s; }
+.faq-q.open svg { transform: rotate(45deg); }
+.faq-a { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; padding-bottom: 16px; display: none; }
+.faq-a.open { display: block; }
+
+/* FINAL CTA */
+.final-cta { text-align: center; padding: 48px 24px; background: rgba(245,215,142,0.04); border: 1px solid rgba(245,215,142,0.1); border-radius: 16px; }
+.final-cta-title { font-family: 'DM Sans', sans-serif; font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.final-cta-sub { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; }
+.final-cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 36px; background: var(--gold); color: var(--navy-deep); border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: background 0.15s; }
+.final-cta-btn:hover { background: var(--gold-dim); }
+.final-cta-note { font-size: 11.5px; color: rgba(255,255,255,0.25); margin-top: 14px; }
+
+@media (max-width: 768px) {
+  .topbar { padding: 14px 20px; }
+  .page { padding: 40px 20px 60px; }
+  .upgrade-title { font-size: 28px; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .testimonials { grid-template-columns: 1fr; }
+  .comparison-table { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo-mark" href="index.html">
+    <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+    <div class="logo-text">Divine Keys</div>
+  </a>
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to home
+  </a>
+</div>
+
+<div class="page">
+
+  <div class="upgrade-header">
+    <div class="upgrade-eyebrow">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="#C4922A" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      Divine Keys Pro
+    </div>
+    <h1 class="upgrade-title">Unlock your <em>full calling</em></h1>
+    <p class="upgrade-sub">Everything you need to grow in wisdom, write your book, build your business, and reach the nations — without limits.</p>
+  </div>
+
+  <!-- BILLING TOGGLE -->
+  <div class="billing-toggle">
+    <span class="toggle-label active" id="monthlyLabel">Monthly</span>
+    <button class="toggle-pill" id="billingToggle" onclick="toggleBilling()"><div class="toggle-thumb"></div></button>
+    <span class="toggle-label" id="annualLabel">Annual</span>
+    <span class="annual-badge" id="saveBadge" style="display:none;">Save 30%</span>
+  </div>
+
+  <!-- PRICING CARDS -->
+  <div class="pricing-grid">
+    <div class="pricing-card free">
+      <span class="plan-badge free-badge">Free</span>
+      <div class="plan-price">
+        <span class="plan-amount free-amount">$0</span>
+        <span class="plan-period">/ month</span>
+      </div>
+      <div class="plan-annual-note">&nbsp;</div>
+      <span class="plan-cta free-cta">Current plan</span>
+      <div class="plan-features">
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text"><strong>10 sessions</strong> per month</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text"><strong>Sophia</strong> — scripture & Q&A only</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text"><strong>Scribe</strong> — concept & outline only</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <div class="feature-text dim">Devotional generation</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <div class="feature-text dim">Business coaching</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <div class="feature-text dim">Full manuscript drafting & export</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <div class="feature-text dim">Missions briefs & prayer generation</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-card pro">
+      <div class="pro-glow"></div>
+      <span class="plan-badge pro-badge"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Pro</span>
+      <div class="plan-price">
+        <span class="plan-amount" id="proPrice">$19</span>
+        <span class="plan-period">/ month</span>
+      </div>
+      <div class="plan-annual-note" id="annualNote">&nbsp;</div>
+      <a class="plan-cta pro-cta" href="register.html">Unlock your full calling →</a>
+      <div class="plan-features">
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text"><strong>Unlimited</strong> sessions</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text"><strong>Sophia</strong> — all capabilities unlocked</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text"><strong>Scribe</strong> — full drafting, editing & DOCX export</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text">Daily devotional generation</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text">Kingdom business coaching</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text">Publishing checklist & Divine Keys integration</div>
+        </div>
+        <div class="plan-feature">
+          <div class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-text">Missions briefs & prayer generation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="testimonials">
+    <div class="testimonial">
+      <div class="testimonial-text">"Sophia helped me study Romans in a way I never had before. Three chapters in one session, with teaching paths and questions I never thought to ask."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-av">GK</div>
+        <div><div class="testimonial-name">Grace Kimani</div><div class="testimonial-role">Pro member · Nairobi</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-text">"Scribe took my raw notes and helped me structure a full manuscript in two weeks. The DOCX export went straight to my editor."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-av">JM</div>
+        <div><div class="testimonial-name">James Mwangi</div><div class="testimonial-role">Pro member · Author</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-text">"The missions briefs are remarkable. I can pray with precision for specific nations and situations — and share them with my whole church."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-av">FO</div>
+        <div><div class="testimonial-name">Faith Okonkwo</div><div class="testimonial-role">Pro member · Lagos</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <div class="faq-title">Questions</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I cancel anytime?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="faq-a">Yes. You can cancel your Pro subscription at any time from your Profile page. You retain Pro access until the end of your billing period.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What does "unlimited sessions" mean?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="faq-a">Pro members can start as many Sophia and Scribe sessions as they need — no monthly cap. Free members are limited to 10 sessions per month across both agents.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is the price in USD?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="faq-a">Yes, pricing is in USD. The board is reviewing local currency options — check back for updates.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Does Pro include Divine Keys Publishing submission?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="faq-a">Pro includes the full publishing checklist and DOCX export. Formal submission to Divine Keys Publishing is handled through a separate publishing agreement with the editorial team.</div>
+    </div>
+  </div>
+
+  <!-- FINAL CTA -->
+  <div class="final-cta">
+    <div class="final-cta-title">Ready to walk in your full calling?</div>
+    <div class="final-cta-sub">Join thousands of believers building the Kingdom with purpose.</div>
+    <a class="final-cta-btn" href="register.html">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Get started with Pro
+    </a>
+    <div class="final-cta-note">Cancel anytime · No hidden fees · Pricing set by the board</div>
+  </div>
+
+</div>
+
+<script>
+  let isAnnual = false;
+
+  function toggleBilling() {
+    isAnnual = !isAnnual;
+    const btn = document.getElementById('billingToggle');
+    const monthLabel = document.getElementById('monthlyLabel');
+    const annualLabel = document.getElementById('annualLabel');
+    const badge = document.getElementById('saveBadge');
+    const priceEl = document.getElementById('proPrice');
+    const noteEl = document.getElementById('annualNote');
+
+    btn.classList.toggle('annual', isAnnual);
+    monthLabel.classList.toggle('active', !isAnnual);
+    annualLabel.classList.toggle('active', isAnnual);
+    badge.style.display = isAnnual ? 'inline' : 'none';
+
+    if (isAnnual) {
+      priceEl.textContent = '$13';
+      noteEl.innerHTML = 'Billed as <strong>$159/year</strong> — save $69';
+    } else {
+      priceEl.textContent = '$19';
+      noteEl.innerHTML = '&nbsp;';
+    }
+  }
+
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
+    if (!isOpen) { answer.classList.add('open'); el.classList.add('open'); }
+  }
+</script>
+</body>
+</html>

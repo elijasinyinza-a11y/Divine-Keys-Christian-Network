@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divine Keys Christian Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09);
+  --teal: #1A7A5E; --teal-bg: rgba(26,122,94,0.09);
+  --coral: #C0392B; --coral-bg: rgba(192,57,43,0.09);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --page-bg: #F7F4EF; --radius: 10px;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; overflow-x: hidden; }
+
+/* NAV */
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 60px; background: rgba(15,30,54,0.97); backdrop-filter: blur(12px); position: fixed; top: 0; left: 0; right: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.nav-logo-icon { width: 34px; height: 34px; background: rgba(245,215,142,0.1); border: 1px solid rgba(245,215,142,0.2); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.nav-logo-icon svg { width: 16px; height: 16px; }
+.nav-logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold-light); }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-link { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.15s; }
+.nav-link:hover { color: rgba(255,255,255,0.85); }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-signin { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; padding: 7px 14px; border-radius: var(--radius); transition: color 0.15s; }
+.nav-signin:hover { color: rgba(255,255,255,0.85); }
+.nav-cta { display: flex; align-items: center; gap: 6px; padding: 8px 18px; background: var(--gold); border: none; border-radius: var(--radius); color: var(--navy-deep); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: background 0.15s; }
+.nav-cta:hover { background: var(--gold-dim); }
+.nav-mobile-btn { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: transparent; cursor: pointer; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); }
+.nav-mobile-btn svg { width: 18px; height: 18px; }
+
+/* HERO */
+.hero { background: var(--navy-deep); padding: 160px 60px 100px; text-align: center; position: relative; overflow: hidden; }
+.hero-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(196,146,42,0.06); left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.hero-ring-1 { width: 600px; height: 600px; }
+.hero-ring-2 { width: 900px; height: 900px; }
+.hero-ring-3 { width: 1200px; height: 1200px; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 24px; position: relative; }
+.hero-eyebrow::before, .hero-eyebrow::after { content: ''; display: block; width: 28px; height: 1px; background: var(--gold-border); }
+.hero-title { font-family: 'DM Sans', sans-serif; font-size: 62px; font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 22px; position: relative; }
+.hero-title em { color: var(--gold-light); font-style: normal; }
+.hero-sub { font-size: 18px; color: rgba(255,255,255,0.45); max-width: 520px; margin: 0 auto 44px; line-height: 1.7; position: relative; }
+.hero-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 72px; position: relative; }
+.hero-btn { display: flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: opacity 0.15s; border: none; }
+.hero-btn.primary { background: var(--gold); color: var(--navy-deep); }
+.hero-btn.primary:hover { background: var(--gold-dim); }
+.hero-btn.outline { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.75); }
+.hero-btn.outline:hover { background: rgba(255,255,255,0.1); }
+.hero-btn svg { width: 16px; height: 16px; }
+.hero-note { font-size: 12px; color: rgba(255,255,255,0.25); position: relative; }
+.hero-agents { display: flex; align-items: center; justify-content: center; gap: 16px; position: relative; }
+.agent-pill { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.03); }
+.agent-pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.agent-pill-name { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.agent-pill-desc { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+/* SECTION */
+.section { max-width: 1100px; margin: 0 auto; padding: 96px 60px; }
+.section-center { text-align: center; }
+.section-eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gold-dim); font-weight: 600; margin-bottom: 14px; }
+.section-title { font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700; color: var(--navy); line-height: 1.2; letter-spacing: -0.03em; margin-bottom: 14px; }
+.section-title em { color: var(--gold); font-style: normal; }
+.section-sub { font-size: 16px; color: var(--text-muted); max-width: 480px; margin: 0 auto 56px; line-height: 1.7; }
+
+/* PLATFORM GRID */
+.platform-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.platform-feature { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; position: relative; overflow: hidden; }
+.platform-feature::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.platform-feature:nth-child(1)::before { background: var(--purple); }
+.platform-feature:nth-child(2)::before { background: var(--amber); }
+.platform-feature:nth-child(3)::before { background: var(--gold); }
+.platform-feature:nth-child(4)::before { background: var(--teal); }
+.platform-feature:nth-child(5)::before { background: var(--coral); }
+.pf-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+.pf-icon svg { width: 20px; height: 20px; }
+.pf-name { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.pf-desc { font-size: 13.5px; color: var(--text-sec); line-height: 1.7; margin-bottom: 20px; }
+.pf-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: gap 0.15s; }
+.pf-link:hover { gap: 10px; }
+.pf-link svg { width: 12px; height: 12px; }
+
+/* SCRIPTURE SECTION */
+.scripture-section { background: var(--navy); padding: 96px 60px; text-align: center; }
+.scripture-inner { max-width: 700px; margin: 0 auto; }
+.scripture-quote { font-family: 'DM Sans', sans-serif; font-size: 32px; font-weight: 600; color: #fff; font-style: italic; line-height: 1.35; margin-bottom: 12px; letter-spacing: -0.02em; }
+.scripture-quote em { color: var(--gold-light); font-style: italic; }
+.scripture-ref { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 44px; }
+.scripture-cta { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; background: var(--gold); border: none; border-radius: 10px; color: var(--navy-deep); font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none; transition: background 0.15s; }
+.scripture-cta:hover { background: var(--gold-dim); }
+
+/* HOW IT WORKS */
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.step { text-align: center; }
+.step-num { width: 44px; height: 44px; border-radius: 12px; background: var(--gold-glow); border: 1px solid var(--gold-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--gold); }
+.step-title { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+.step-desc { font-size: 13.5px; color: var(--text-sec); line-height: 1.7; }
+
+/* TESTIMONIALS */
+.testimonials-bg { background: var(--navy-mid); }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.t-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.t-stars { color: var(--gold); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+.t-text { font-size: 13.5px; color: var(--text-sec); line-height: 1.75; margin-bottom: 18px; font-style: italic; }
+.t-author { display: flex; align-items: center; gap: 10px; }
+.t-av { width: 36px; height: 36px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--gold-light); font-family: 'DM Sans', sans-serif; }
+.t-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+.t-role { font-size: 11.5px; color: var(--text-muted); }
+
+/* PRICING PREVIEW */
+.pricing-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 680px; margin: 0 auto; }
+.pp-card { border-radius: 14px; padding: 28px; }
+.pp-card.free { background: var(--card); border: 1px solid var(--border); }
+.pp-card.pro { background: var(--navy); border: 1px solid rgba(245,215,142,0.15); }
+.pp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px; }
+.pp-card.free .pp-label { color: var(--text-muted); }
+.pp-card.pro .pp-label { color: var(--gold); }
+.pp-price { font-family: 'DM Sans', sans-serif; font-size: 36px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 4px; }
+.pp-card.free .pp-price { color: var(--navy); }
+.pp-card.pro .pp-price { color: #fff; }
+.pp-period { font-size: 13px; margin-bottom: 20px; }
+.pp-card.free .pp-period { color: var(--text-muted); }
+.pp-card.pro .pp-period { color: rgba(255,255,255,0.4); }
+.pp-features { display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+.pp-feature { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.pp-card.free .pp-feature { color: var(--text-sec); }
+.pp-card.pro .pp-feature { color: rgba(255,255,255,0.6); }
+.pp-feature svg { width: 13px; height: 13px; flex-shrink: 0; }
+.pp-card.free .pp-feature svg { color: var(--gold-dim); }
+.pp-card.pro .pp-feature svg { color: var(--gold); }
+.pp-btn { display: block; width: 100%; padding: 12px; border-radius: 9px; font-size: 13.5px; font-weight: 700; text-align: center; text-decoration: none; font-family: 'Inter', sans-serif; transition: opacity 0.15s; border: none; cursor: pointer; }
+.pp-card.free .pp-btn { background: var(--page-bg); border: 1px solid var(--border); color: var(--navy); }
+.pp-card.free .pp-btn:hover { background: rgba(27,43,75,0.06); }
+.pp-card.pro .pp-btn { background: var(--gold); color: var(--navy-deep); }
+.pp-card.pro .pp-btn:hover { background: var(--gold-dim); }
+
+/* FINAL CTA */
+.final-hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); padding: 100px 60px; text-align: center; }
+.final-hero-title { font-family: 'DM Sans', sans-serif; font-size: 42px; font-weight: 700; color: #fff; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 16px; }
+.final-hero-title em { color: var(--gold-light); font-style: normal; }
+.final-hero-sub { font-size: 16px; color: rgba(255,255,255,0.4); margin-bottom: 40px; }
+.final-hero-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+/* FOOTER */
+.footer { background: var(--navy-deep); padding: 48px 60px; border-top: 1px solid rgba(255,255,255,0.06); }
+.footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr repeat(3, auto); gap: 48px; align-items: start; }
+.footer-brand {}
+.footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.footer-logo-icon { width: 28px; height: 28px; background: rgba(245,215,142,0.08); border: 1px solid rgba(245,215,142,0.15); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+.footer-logo-icon svg { width: 13px; height: 13px; }
+.footer-logo-text { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); }
+.footer-tagline { font-size: 12px; color: rgba(255,255,255,0.25); line-height: 1.6; max-width: 220px; }
+.footer-col-title { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.25); font-weight: 600; margin-bottom: 14px; }
+.footer-link { display: block; font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; margin-bottom: 8px; transition: color 0.15s; }
+.footer-link:hover { color: rgba(255,255,255,0.6); }
+.footer-bottom { max-width: 1100px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.2); }
+
+@media (max-width: 1024px) {
+  .hero-title { font-size: 48px; }
+  .platform-grid { grid-template-columns: 1fr 1fr; }
+  .section { padding: 72px 40px; }
+  .nav { padding: 16px 40px; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-mobile-btn { display: flex; }
+  .nav { padding: 14px 24px; }
+  .hero { padding: 120px 24px 72px; }
+  .hero-title { font-size: 34px; }
+  .hero-sub { font-size: 15px; }
+  .hero-agents { flex-direction: column; gap: 10px; }
+  .section { padding: 56px 24px; }
+  .platform-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; gap: 36px; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .pricing-preview { grid-template-columns: 1fr; max-width: 360px; }
+  .scripture-section { padding: 72px 24px; }
+  .scripture-quote { font-size: 22px; }
+  .final-hero { padding: 72px 24px; }
+  .final-hero-title { font-size: 28px; }
+  .footer { padding: 48px 24px 32px; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="landing.html">
+    <div class="nav-logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+    <div class="nav-logo-text">Divine Keys</div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="#platform">Platform</a>
+    <a class="nav-link" href="#how">How it works</a>
+    <a class="nav-link" href="#pricing">Pricing</a>
+    <a class="nav-link" href="missions.html">Missions</a>
+  </div>
+  <div class="nav-actions">
+    <a class="nav-signin" href="signin.html">Sign in</a>
+    <a class="nav-cta" href="register.html">Get started free</a>
+    <button class="nav-mobile-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-ring hero-ring-1"></div>
+  <div class="hero-ring hero-ring-2"></div>
+  <div class="hero-ring hero-ring-3"></div>
+  <div class="hero-eyebrow">Divine Keys Christian Network</div>
+  <h1 class="hero-title">Your Kingdom calling,<br><em>fully equipped.</em></h1>
+  <p class="hero-sub">AI agents built for believers — study scripture, write your book, grow your business, and reach the nations. All in one platform.</p>
+  <div class="hero-actions">
+    <a class="hero-btn primary" href="register.html">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Create free account
+    </a>
+    <a class="hero-btn outline" href="signin.html">Sign in</a>
+  </div>
+  <p class="hero-note" style="margin-bottom:52px;">Free forever. No credit card required.</p>
+  <div class="hero-agents">
+    <div class="agent-pill">
+      <div class="agent-pill-dot" style="background:#6155C9;"></div>
+      <div>
+        <div class="agent-pill-name">Sophia</div>
+        <div class="agent-pill-desc">Scripture · Coaching · Missions</div>
+      </div>
+    </div>
+    <div class="agent-pill">
+      <div class="agent-pill-dot" style="background:#9A5E18;"></div>
+      <div>
+        <div class="agent-pill-name">Scribe</div>
+        <div class="agent-pill-desc">Book Publishing Agent</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="section" id="platform">
+  <div class="section-center">
+    <div class="section-eyebrow">The Platform</div>
+    <h2 class="section-title">Everything your calling needs,<br><em>in one place.</em></h2>
+    <p class="section-sub">Two AI agents and four platform modules — built specifically for the Kingdom-minded believer.</p>
+  </div>
+  <div class="platform-grid">
+    <div class="platform-feature">
+      <div class="pf-icon" style="background:var(--purple-bg);color:var(--purple);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="pf-name">Sophia — Wisdom Agent</div>
+      <p class="pf-desc">Scripture study, teaching paths, devotionals, business coaching, accountability, and missions briefs. One agent across the entire platform.</p>
+      <a class="pf-link" href="sophia.html" style="color:var(--purple);">Start a Sophia session <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+    <div class="platform-feature">
+      <div class="pf-icon" style="background:var(--amber-bg);color:var(--amber);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="pf-name">Scribe — Publishing Agent</div>
+      <p class="pf-desc">Write, structure, and publish your Kingdom book. From concept to final manuscript — with DOCX export and Divine Keys Publishing integration.</p>
+      <a class="pf-link" href="scribe.html" style="color:var(--amber);">Start writing with Scribe <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+    <div class="platform-feature">
+      <div class="pf-icon" style="background:var(--gold-glow);color:var(--gold);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <div class="pf-name">Moments of Wisdom — VOD</div>
+      <p class="pf-desc">A growing library of video teachings anchored in scripture. Browse by series, topic, or let Sophia guide you to what you need next.</p>
+      <a class="pf-link" href="vod.html" style="color:var(--gold-dim);">Browse the library <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+    <div class="platform-feature">
+      <div class="pf-icon" style="background:var(--teal-bg);color:var(--teal);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="pf-name">City Builders Circle</div>
+      <p class="pf-desc">Community, accountability, and Kingdom business coaching. Sophia generates weekly prompts, tracks your streak, and coaches your entrepreneurial journey.</p>
+      <a class="pf-link" href="city-builders.html" style="color:var(--teal);">Join the Circle <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+    <div class="platform-feature" style="grid-column: span 2;">
+      <div class="pf-icon" style="background:var(--coral-bg);color:var(--coral);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      </div>
+      <div class="pf-name">Global Missions</div>
+      <p class="pf-desc">Prayer briefs, donor narratives, and impact updates across 48 nations. Sophia generates targeted prayer points and scripture anchors so you can pray with precision and give with purpose.</p>
+      <a class="pf-link" href="missions.html" style="color:var(--coral);">View missions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- SCRIPTURE BREAK -->
+<div class="scripture-section">
+  <div class="scripture-inner">
+    <div class="scripture-quote">"Walk with the wise and become wise, for a companion of fools <em>suffers harm."</em></div>
+    <div class="scripture-ref">Proverbs 13:20</div>
+    <a class="scripture-cta" href="register.html">Start walking with wisdom today</a>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-center">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-title">Simple. <em>Powerful.</em> Kingdom-built.</h2>
+    <p class="section-sub" style="margin-bottom:64px;">Three steps to unlocking your calling with AI built for believers.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Create your free account</div>
+      <p class="step-desc">Sign up in under a minute. No credit card needed. Access Sophia, Scribe, the VOD library, City Builders, and Global Missions immediately.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Choose your agent or platform</div>
+      <p class="step-desc">Open Sophia to study scripture, get coaching, or generate a missions brief. Open Scribe to start your book. Browse Moments of Wisdom or join the City Builders Circle.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Go deeper with Pro</div>
+      <p class="step-desc">Unlock unlimited sessions, devotional generation, business coaching, full manuscript drafting and export, and publishing integration — all in one upgrade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials-bg">
+  <div class="section">
+    <div class="section-center">
+      <div class="section-eyebrow">Community</div>
+      <h2 class="section-title">What the <em>Kingdom</em> is saying</h2>
+      <p class="section-sub">From believers who are already walking in their calling.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"Sophia helped me study Romans 8 verse-by-verse with teaching paths I never expected. I've been in scripture every single day since joining."</p>
+        <div class="t-author"><div class="t-av">GK</div><div><div class="t-name">Grace Kimani</div><div class="t-role">Pro member · Nairobi</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"Scribe took me from a blank page to a complete 12-chapter outline in one session. My manuscript is 60% done. I never thought I'd write a book."</p>
+        <div class="t-author"><div class="t-av">JM</div><div><div class="t-name">James Mwangi</div><div class="t-role">Author · Kampala</div></div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"The City Builders accountability prompts have transformed how my team operates. Sophia generates questions that get right to the heart of what matters."</p>
+        <div class="t-author"><div class="t-av">FO</div><div><div class="t-name">Faith Okonkwo</div><div class="t-role">Entrepreneur · Lagos</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<section class="section section-center" id="pricing">
+  <div class="section-eyebrow">Pricing</div>
+  <h2 class="section-title">Start free. Upgrade when <em>you're ready.</em></h2>
+  <p class="section-sub">No pressure. No hidden costs. Pricing set by the board.</p>
+  <div class="pricing-preview">
+    <div class="pp-card free">
+      <div class="pp-label">Free</div>
+      <div class="pp-price">$0</div>
+      <div class="pp-period">Forever free</div>
+      <div class="pp-features">
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>10 sessions per month</div>
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sophia scripture & Q&A</div>
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Scribe concept & outline</div>
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Full platform access</div>
+      </div>
+      <a class="pp-btn" href="register.html">Get started free</a>
+    </div>
+    <div class="pp-card pro">
+      <div class="pp-label">Pro</div>
+      <div class="pp-price">$19</div>
+      <div class="pp-period">per month · cancel anytime</div>
+      <div class="pp-features">
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited sessions</div>
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>All Sophia capabilities</div>
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Full manuscript & DOCX export</div>
+        <div class="pp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Publishing integration</div>
+      </div>
+      <a class="pp-btn" href="upgrade.html">Unlock your full calling</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-hero">
+  <h2 class="final-hero-title">Your calling is waiting.<br><em>Begin today.</em></h2>
+  <p class="final-hero-sub">Free to join. No credit card needed. Your Kingdom journey starts now.</p>
+  <div class="final-hero-actions">
+    <a class="hero-btn primary" href="register.html">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Create free account
+    </a>
+    <a class="hero-btn outline" href="signin.html">Sign in</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div class="footer-logo-text">Divine Keys Christian Network</div>
+      </div>
+      <p class="footer-tagline">AI built for the Kingdom. Wisdom, publishing, community, and missions — in one place.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Platform</div>
+      <a class="footer-link" href="sophia.html">Sophia</a>
+      <a class="footer-link" href="scribe.html">Scribe</a>
+      <a class="footer-link" href="vod.html">Moments of Wisdom</a>
+      <a class="footer-link" href="city-builders.html">City Builders</a>
+      <a class="footer-link" href="missions.html">Global Missions</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Account</div>
+      <a class="footer-link" href="register.html">Create account</a>
+      <a class="footer-link" href="signin.html">Sign in</a>
+      <a class="footer-link" href="upgrade.html">Upgrade to Pro</a>
+      <a class="footer-link" href="bookstore.html">Bookstore</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <a class="footer-link" href="#">Terms of Service</a>
+      <a class="footer-link" href="#">Privacy Policy</a>
+      <a class="footer-link" href="#">Statement of Faith</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Divine Keys Christian Network. All rights reserved.</div>
+    <div class="footer-copy">"Walk with the wise and become wise." — Proverbs 13:20</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Bookstore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1B2B4B; --navy-deep: #0F1E36; --navy-mid: #F5F3EE;
+  --card: #ffffff; --gold: #C4922A; --gold-dim: #A8792A;
+  --gold-light: #F5D78E; --gold-glow: rgba(196,146,42,0.10);
+  --gold-border: rgba(196,146,42,0.22);
+  --purple: #6155C9; --purple-bg: rgba(97,85,201,0.09);
+  --amber: #9A5E18; --amber-bg: rgba(154,94,24,0.09); --amber-border: rgba(154,94,24,0.22);
+  --text: #191714; --text-sec: #5C584F; --text-muted: #9C9890;
+  --border: #E8E3DA; --border-mid: #F0EDE6; --radius: 10px;
+  --sidebar-w: 240px; --page-bg: #F7F4EF; --bottom-nav-h: 64px;
+}
+html, body { height: 100%; }
+body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+.shell { display: flex; min-height: 100vh; }
+
+/* SIDEBAR — reused pattern */
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 20; }
+.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
+.logo-mark { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon svg { width: 16px; height: 16px; }
+.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: -0.2px; line-height: 1.2; }
+.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
+.sidebar-section { padding: 18px 12px 6px; }
+.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
+.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
+.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
+.nav-item.active svg { opacity: 1; }
+.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
+.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
+.user-row:hover { background: rgba(27,43,75,0.06); }
+.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
+.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+.user-role { font-size: 11px; color: var(--text-muted); }
+
+/* DRAWER */
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.drawer-close svg { width: 18px; height: 18px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 13px 36px; border-bottom: 1px solid var(--border); background: var(--page-bg); position: sticky; top: 0; z-index: 10; }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.menu-btn { display: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
+.menu-btn svg { width: 18px; height: 18px; }
+.page-title { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.topbar-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text-sec); font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; white-space: nowrap; text-decoration: none; }
+.topbar-btn:hover { background: rgba(27,43,75,0.05); color: var(--navy); }
+.topbar-btn svg { width: 14px; height: 14px; }
+.topbar-btn.primary { background: var(--navy); border-color: var(--navy); color: var(--gold-light); font-weight: 500; }
+.topbar-btn.primary:hover { background: var(--navy-deep); }
+
+/* CONTENT */
+.content { padding: 0 0 80px; }
+.inner { max-width: 1100px; margin: 0 auto; padding: 36px 36px 0; }
+
+/* FEATURED BOOK */
+.featured { background: var(--navy); border-radius: 0; padding: 44px 36px; }
+.featured-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr; gap: 44px; align-items: center; }
+.book-cover { width: 160px; height: 220px; border-radius: 10px; background: linear-gradient(160deg, #2a3f6f 0%, #1B2B4B 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 8px 12px 32px rgba(0,0,0,0.4); position: relative; flex-shrink: 0; cursor: pointer; transition: transform 0.2s; }
+.book-cover:hover { transform: rotate(-1deg) scale(1.02); }
+.book-cover-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: var(--gold-light); text-align: center; padding: 0 14px; line-height: 1.3; }
+.book-cover-author { font-size: 10px; color: rgba(255,255,255,0.4); text-align: center; }
+.book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 12px; background: rgba(0,0,0,0.25); border-radius: 10px 0 0 10px; }
+.featured-body {}
+.featured-eyebrow { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+.featured-title { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; line-height: 1.25; }
+.featured-author { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 14px; }
+.featured-desc { font-size: 13.5px; color: rgba(255,255,255,0.6); line-height: 1.75; max-width: 500px; margin-bottom: 22px; }
+.featured-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+.featured-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: rgba(245,215,142,0.1); border: 1px solid rgba(245,215,142,0.2); color: var(--gold-light); }
+.featured-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.feat-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; border: none; text-decoration: none; transition: opacity 0.15s; }
+.feat-btn.primary { background: var(--gold); color: var(--navy-deep); }
+.feat-btn.primary:hover { background: var(--gold-dim); }
+.feat-btn.outline { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+.feat-btn.outline:hover { background: rgba(255,255,255,0.14); }
+.feat-btn svg { width: 14px; height: 14px; }
+
+/* FILTER BAR */
+.filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 280px; }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-muted); pointer-events: none; }
+.search-input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text); outline: none; transition: border-color 0.2s; }
+.search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+.search-input::placeholder { color: var(--text-muted); }
+.filter-tabs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 3px; }
+.filter-tab { padding: 5px 12px; border-radius: 7px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-sec); transition: background 0.15s, color 0.15s; font-weight: 500; white-space: nowrap; }
+.filter-tab:hover { color: var(--navy); }
+.filter-tab.active { background: var(--navy); color: var(--gold-light); }
+
+/* SECTION HEADER */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-title { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--text-sec); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+.section-link { font-size: 12px; color: var(--gold-dim); text-decoration: none; opacity: 0.8; transition: opacity 0.15s; }
+.section-link:hover { opacity: 1; }
+
+/* BOOK GRID */
+.book-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 40px; }
+
+.book-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s; display: block; text-decoration: none; }
+.book-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,43,75,0.09); }
+
+.book-card-cover { aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; padding: 16px; position: relative; }
+.book-card-cover-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: #fff; text-align: center; line-height: 1.3; z-index: 1; }
+.book-card-cover-author { font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; z-index: 1; }
+.free-ribbon { position: absolute; top: 10px; right: -8px; background: var(--gold); color: var(--navy-deep); font-size: 9px; font-weight: 800; padding: 3px 14px 3px 10px; letter-spacing: 0.5px; text-transform: uppercase; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 8% 50%); }
+
+.book-card-body { padding: 14px 16px; border-top: 1px solid var(--border-mid); }
+.book-card-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; line-height: 1.3; }
+.book-card-author { font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px; }
+.book-card-footer { display: flex; align-items: center; justify-content: space-between; }
+.book-price { font-size: 13px; font-weight: 700; color: var(--navy); font-family: 'DM Sans', sans-serif; }
+.book-price.free { color: var(--gold-dim); }
+.book-read-btn { font-size: 11.5px; font-weight: 600; padding: 5px 12px; border-radius: 7px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: opacity 0.15s; }
+.book-read-btn.free-btn { background: var(--gold-glow); border: 1px solid var(--gold-border); color: var(--gold-dim); }
+.book-read-btn.paid-btn { background: var(--navy); color: var(--gold-light); }
+.book-read-btn:hover { opacity: 0.85; }
+
+/* BOOK MODAL */
+.book-modal { position: fixed; inset: 0; background: rgba(15,30,54,0.85); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.book-modal.open { opacity: 1; pointer-events: all; }
+.book-modal-inner { background: var(--card); border-radius: 16px; width: 100%; max-width: 600px; overflow: hidden; }
+.book-modal-header { display: grid; grid-template-columns: auto 1fr; gap: 24px; padding: 28px; border-bottom: 1px solid var(--border); }
+.modal-cover { width: 90px; height: 124px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.modal-cover-title { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700; color: #fff; text-align: center; padding: 0 8px; line-height: 1.3; }
+.modal-body {}
+.modal-title { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 4px; line-height: 1.3; }
+.modal-author { font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px; }
+.modal-desc { font-size: 13px; color: var(--text-sec); line-height: 1.7; margin-bottom: 14px; }
+.modal-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.modal-tag { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; background: var(--gold-glow); border: 1px solid var(--gold-border); color: var(--gold-dim); }
+.book-modal-footer { padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.modal-price { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: var(--navy); }
+.modal-price.free { color: var(--gold); font-size: 15px; font-weight: 600; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-btn { display: flex; align-items: center; gap: 7px; padding: 10px 20px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; border: none; text-decoration: none; transition: opacity 0.15s; }
+.modal-btn.primary { background: var(--navy); color: var(--gold-light); }
+.modal-btn.primary:hover { background: var(--navy-deep); }
+.modal-btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text-sec); }
+.modal-btn.outline:hover { background: rgba(27,43,75,0.04); }
+.modal-btn svg { width: 13px; height: 13px; }
+.modal-close-btn { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 8px; background: var(--border-mid); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+.modal-close-btn svg { width: 15px; height: 15px; }
+
+/* PUBLISH CTA */
+.publish-cta { background: linear-gradient(135deg, var(--amber) 0%, #7d4c12 100%); border-radius: 12px; padding: 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; margin-bottom: 0; }
+.publish-cta-title { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.publish-cta-sub { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.65; max-width: 420px; }
+.publish-btn { display: flex; align-items: center; gap: 8px; padding: 11px 22px; background: var(--gold-light); border: none; border-radius: var(--radius); color: var(--navy-deep); font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; text-decoration: none; transition: opacity 0.15s; }
+.publish-btn:hover { opacity: 0.88; }
+.publish-btn svg { width: 14px; height: 14px; }
+
+/* MOBILE */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
+.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+.bottom-nav-item.active { color: var(--amber); }
+.bottom-nav-item.active svg { stroke: var(--amber); }
+
+@media (max-width: 1100px) {
+  .book-grid { grid-template-columns: repeat(3, 1fr); }
+  .topbar { padding: 13px 24px; }
+  .featured { padding: 36px 24px; }
+  .inner { padding: 28px 24px 0; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .menu-btn { display: flex; }
+  .drawer-overlay { display: block; }
+  .bottom-nav { display: flex; }
+  .topbar { padding: 12px 16px; }
+  .topbar-btn:not(.primary) { display: none; }
+  .featured-inner { grid-template-columns: 1fr; }
+  .book-cover { width: 120px; height: 165px; }
+  .featured { padding: 28px 16px; }
+  .inner { padding: 20px 16px 0; }
+  .book-grid { grid-template-columns: repeat(2, 1fr); }
+  .publish-cta { grid-template-columns: 1fr; }
+  .content { padding-bottom: calc(var(--bottom-nav-h) + 20px); }
+}
+</style>
+</head>
+<body>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark">
+      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Platform</div>
+    <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+    <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+    <a class="nav-item active" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+    <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-avatar">EN</div>
+      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK MODAL -->
+<div class="book-modal" id="bookModal" onclick="handleModalClick(event)">
+  <div class="book-modal-inner" style="position:relative;">
+    <button class="modal-close-btn" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="book-modal-header">
+      <div class="modal-cover" id="modalCover" style="background:linear-gradient(160deg,#2a3f6f,#1B2B4B);">
+        <div class="modal-cover-title" id="modalCoverTitle">Divine Keys for Spiritual Exploits</div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-title" id="modalTitle">Divine Keys for Spiritual Exploits</div>
+        <div class="modal-author" id="modalAuthor">Elijah Nchelenge</div>
+        <div class="modal-desc" id="modalDesc">A powerful guide to unlocking the spiritual keys that open doors in the Kingdom of God — faith, intercession, praise, obedience, and more.</div>
+        <div class="modal-tags">
+          <span class="modal-tag">Scripture</span>
+          <span class="modal-tag">Prayer</span>
+          <span class="modal-tag">Faith</span>
+        </div>
+      </div>
+    </div>
+    <div class="book-modal-footer">
+      <div class="modal-price free" id="modalPrice">Free to read</div>
+      <div class="modal-actions">
+        <a class="modal-btn outline" href="sophia.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Study with Sophia
+        </a>
+        <button class="modal-btn primary" id="modalMainBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          Read now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item active" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">EN</div>
+        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="page-title">Divine Keys Publishing</div>
+      </div>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="scribe.html" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Write your book
+        </a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- FEATURED -->
+      <div class="featured">
+        <div class="featured-inner">
+          <div class="book-cover" onclick="openModal('Divine Keys for Spiritual Exploits', 'Elijah Nchelenge', 'The foundational text of the DKCN library. A powerful guide to the spiritual keys that unlock Heaven\'s resources — faith, intercession, praise, obedience, and the key of unity.', 'free', 'linear-gradient(160deg,#2a3f6f,#1B2B4B)')">
+            <div class="book-spine"></div>
+            <div class="book-cover-title">Divine Keys for Spiritual Exploits</div>
+            <div class="book-cover-author">Elijah Nchelenge</div>
+          </div>
+          <div class="featured-body">
+            <div class="featured-eyebrow">Featured Title</div>
+            <div class="featured-title">Divine Keys for Spiritual Exploits</div>
+            <div class="featured-author">Elijah Nchelenge</div>
+            <p class="featured-desc">The foundational text of the DKCN library. A powerful guide to the spiritual keys that unlock Heaven's resources — faith, intercession, praise, obedience, and the key of unity. Available free to all members.</p>
+            <div class="featured-tags">
+              <span class="featured-tag">Scripture</span>
+              <span class="featured-tag">Prayer & Intercession</span>
+              <span class="featured-tag">Spiritual Growth</span>
+              <span class="featured-tag">Free to read</span>
+            </div>
+            <div class="featured-actions">
+              <button class="feat-btn primary" onclick="openModal('Divine Keys for Spiritual Exploits','Elijah Nchelenge','The foundational text of the DKCN library.','free','linear-gradient(160deg,#2a3f6f,#1B2B4B)')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                Read now — free
+              </button>
+              <a class="feat-btn outline" href="sophia.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Study with Sophia
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inner">
+
+        <!-- FILTER -->
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" placeholder="Search titles...">
+          </div>
+          <div class="filter-tabs">
+            <button class="filter-tab active">All</button>
+            <button class="filter-tab">Free</button>
+            <button class="filter-tab">Paid</button>
+            <button class="filter-tab">Scripture</button>
+            <button class="filter-tab">Business</button>
+          </div>
+        </div>
+
+        <!-- ALL TITLES -->
+        <div class="section-header">
+          <div class="section-title">All Titles</div>
+          <span class="section-link">8 books</span>
+        </div>
+        <div class="book-grid">
+
+          <a class="book-card" href="#" onclick="openModal('Divine Keys for Spiritual Exploits','Elijah Nchelenge','The foundational text of the DKCN library. Spiritual keys that unlock Heaven\'s resources.','free','linear-gradient(160deg,#2a3f6f,#1B2B4B)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#2a3f6f,#1B2B4B);">
+              <div class="free-ribbon">Free</div>
+              <div class="book-card-cover-title">Divine Keys for Spiritual Exploits</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">Divine Keys for Spiritual Exploits</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price free">Free</span>
+                <button class="book-read-btn free-btn">Read</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('Kingdom Wealth Principles','Elijah Nchelenge','A scripture-grounded journey through generosity, stewardship, multiplication, and Kingdom economics.','free','linear-gradient(160deg,#1a3a1a,#2a5a2a)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#1a3a1a,#2a5a2a);">
+              <div class="free-ribbon">Free</div>
+              <div class="book-card-cover-title">Kingdom Wealth Principles</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">Kingdom Wealth Principles</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price free">Free</span>
+                <button class="book-read-btn free-btn">Read</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('The Intercessor\'s Mandate','Elijah Nchelenge','A deep call into intercession — understanding the assignment, the posture, and the power of the praying believer.','paid','linear-gradient(160deg,#2a1a3a,#3a2a5a)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#2a1a3a,#3a2a5a);">
+              <div class="book-card-cover-title">The Intercessor's Mandate</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">The Intercessor's Mandate</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price">$14.99</span>
+                <button class="book-read-btn paid-btn">Buy</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('City Builders\' Blueprint','Elijah Nchelenge','Faith-based entrepreneurship from vision to launch — the Kingdom entrepreneur\'s handbook.','paid','linear-gradient(160deg,#1a2a1a,#0f3a2f)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#1a2a1a,#0f3a2f);">
+              <div class="book-card-cover-title">City Builders' Blueprint</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">City Builders' Blueprint</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price">$12.99</span>
+                <button class="book-read-btn paid-btn">Buy</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('Walking in Dominion','Elijah Nchelenge','Understanding Kingdom authority and how believers are called to exercise it in every sphere of life.','paid','linear-gradient(160deg,#2a1a0a,#4a3010)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#2a1a0a,#4a3010);">
+              <div class="book-card-cover-title">Walking in Dominion</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">Walking in Dominion</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price">$11.99</span>
+                <button class="book-read-btn paid-btn">Buy</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('The Missions Heart','Elijah Nchelenge','A biblical theology of missions — why the Church exists to reach the nations and how to play your part.','paid','linear-gradient(160deg,#1a1a3a,#2a2a5a)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#1a1a3a,#2a2a5a);">
+              <div class="book-card-cover-title">The Missions Heart</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">The Missions Heart</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price">$9.99</span>
+                <button class="book-read-btn paid-btn">Buy</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('Proverbs for Entrepreneurs','Elijah Nchelenge','31 wisdom principles from Proverbs applied to modern business — one for every day of the month.','free','linear-gradient(160deg,#2a2a0a,#3a3a10)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#2a2a0a,#3a3a10);">
+              <div class="free-ribbon">Free</div>
+              <div class="book-card-cover-title">Proverbs for Entrepreneurs</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">Proverbs for Entrepreneurs</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price free">Free</span>
+                <button class="book-read-btn free-btn">Read</button>
+              </div>
+            </div>
+          </a>
+
+          <a class="book-card" href="#" onclick="openModal('Raising Kingdom Families','Elijah Nchelenge','A guide for parents building homes where faith, purpose, and godly character are the foundation.','paid','linear-gradient(160deg,#1a0a2a,#2a1a3a)'); return false;">
+            <div class="book-card-cover" style="background:linear-gradient(160deg,#1a0a2a,#2a1a3a);">
+              <div class="book-card-cover-title">Raising Kingdom Families</div>
+              <div class="book-card-cover-author">Elijah Nchelenge</div>
+            </div>
+            <div class="book-card-body">
+              <div class="book-card-title">Raising Kingdom Families</div>
+              <div class="book-card-author">Elijah Nchelenge</div>
+              <div class="book-card-footer">
+                <span class="book-price">$13.99</span>
+                <button class="book-read-btn paid-btn">Buy</button>
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- PUBLISH CTA -->
+        <div class="publish-cta">
+          <div>
+            <div class="publish-cta-title">Ready to publish your book?</div>
+            <div class="publish-cta-sub">Scribe will take you from concept to manuscript. Divine Keys Publishing handles the rest — formatting, ISBN, and distribution. Start writing today.</div>
+          </div>
+          <a class="publish-btn" href="scribe.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Start with Scribe
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Books</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function openModal(title, author, desc, pricing, bg) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalAuthor').textContent = author;
+    document.getElementById('modalDesc').textContent = desc;
+    document.getElementById('modalCoverTitle').textContent = title;
+    document.getElementById('modalCover').style.background = bg;
+    const priceEl = document.getElementById('modalPrice');
+    const btnEl = document.getElementById('modalMainBtn');
+    if (pricing === 'free') {
+      priceEl.textContent = 'Free to read';
+      priceEl.className = 'modal-price free';
+      btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Read now';
+    } else {
+      priceEl.textContent = pricing;
+      priceEl.className = 'modal-price';
+      btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Buy now';
+    }
+    document.getElementById('bookModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('bookModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleModalClick(e) {
+    if (e.target === document.getElementById('bookModal')) closeModal();
+  }
+</script>
+</body>
+</html>
