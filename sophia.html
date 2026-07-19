@@ -8,257 +8,189 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --navy:        #1B2B4B;
-  --navy-deep:   #0F1E36;
-  --navy-mid:    #F5F3EE;
-  --card:        #ffffff;
-  --gold:        #C4922A;
-  --gold-dim:    #A8792A;
-  --gold-light:  #F5D78E;
-  --gold-glow:   rgba(196,146,42,0.10);
-  --gold-border: rgba(196,146,42,0.22);
-  --purple:      #6155C9;
-  --purple-bg:   rgba(97,85,201,0.09);
-  --purple-border: rgba(97,85,201,0.2);
-  --amber:       #9A5E18;
-  --amber-bg:    rgba(154,94,24,0.09);
-  --text:        #191714;
-  --text-sec:    #5C584F;
-  --text-muted:  #9C9890;
-  --border:      #E8E3DA;
-  --border-mid:  #F0EDE6;
-  --radius:      10px;
-  --sidebar-w:   240px;
-  --panel-w:     280px;
-  --page-bg:     #F7F4EF;
-  --bottom-nav-h: 64px;
-  --input-h:     72px;
+  --navy:#1B2B4B; --navy-deep:#0F1E36; --navy-mid:#F5F3EE; --card:#ffffff;
+  --gold:#C4922A; --gold-dim:#A8792A; --gold-light:#F5D78E; --gold-glow:rgba(196,146,42,0.10); --gold-border:rgba(196,146,42,0.22);
+  --purple:#6155C9; --purple-bg:rgba(97,85,201,0.09); --purple-border:rgba(97,85,201,0.2);
+  --amber:#9A5E18; --amber-bg:rgba(154,94,24,0.09);
+  --text:#191714; --text-sec:#5C584F; --text-muted:#9C9890;
+  --border:#E8E3DA; --border-mid:#F0EDE6; --radius:10px;
+  --sidebar-w:240px; --panel-w:280px; --page-bg:#F7F4EF; --bottom-nav-h:64px;
 }
+html,body{height:100%;}
+body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;overflow:hidden;}
+.shell{display:flex;height:100vh;overflow:hidden;}
 
-html, body { height: 100%; }
-body { background: var(--page-bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; overflow: hidden; }
+.sidebar{width:var(--sidebar-w);background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto;z-index:20;}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border);}
+.logo-mark{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-icon svg{width:16px;height:16px;}
+.logo-text{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);letter-spacing:-0.2px;line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-top:2px;font-weight:500;}
+.sidebar-section{padding:18px 12px 6px;}
+.sidebar-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);font-weight:500;padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--text-sec);font-size:13px;font-weight:450;transition:background 0.15s,color 0.15s;text-decoration:none;margin-bottom:1px;border:none;background:transparent;font-family:'Inter',sans-serif;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(27,43,75,0.06);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:var(--gold-light);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:0.65;}
+.nav-item.active svg{opacity:1;}
+.nav-item.sophia svg{stroke:var(--purple)!important;opacity:1;}
+.nav-item.sophia.active svg{stroke:var(--gold-light)!important;}
+.nav-item.scribe svg{stroke:var(--amber)!important;opacity:1;}
+.sidebar-divider{height:1px;background:var(--border);margin:8px 12px;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;transition:background 0.15s;}
+.user-row:hover{background:rgba(27,43,75,0.06);}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold-light);flex-shrink:0;font-family:'DM Sans',sans-serif;}
+.user-name{font-size:13px;font-weight:500;color:var(--navy);}
+.user-role{font-size:11px;color:var(--text-muted);}
 
-/* SHELL — three columns: sidebar | chat | panel */
-.shell { display: flex; height: 100vh; overflow: hidden; }
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(27,43,75,0.45);z-index:40;opacity:0;transition:opacity 0.25s;pointer-events:none;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:50;transform:translateX(-100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;}
+.drawer.open{transform:translateX(0);}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 16px;border-bottom:1px solid var(--border);}
+.drawer-close{width:32px;height:32px;border-radius:8px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.drawer-close svg{width:18px;height:18px;}
 
-/* SIDEBAR */
-.sidebar { width: var(--sidebar-w); background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; overflow-y: auto; z-index: 20; }
-.sidebar-logo { padding: 22px 18px 18px; border-bottom: 1px solid var(--border); }
-.logo-mark { display: flex; align-items: center; gap: 10px; }
-.logo-icon { width: 32px; height: 32px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.logo-icon svg { width: 16px; height: 16px; }
-.logo-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: -0.2px; line-height: 1.2; }
-.logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-top: 2px; font-weight: 500; }
-.sidebar-section { padding: 18px 12px 6px; }
-.sidebar-label { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0 8px; margin-bottom: 6px; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-sec); font-size: 13px; font-weight: 450; transition: background 0.15s, color 0.15s; text-decoration: none; margin-bottom: 1px; border: none; background: transparent; font-family: 'Inter', sans-serif; width: 100%; text-align: left; }
-.nav-item:hover { background: rgba(27,43,75,0.06); color: var(--navy); }
-.nav-item.active { background: var(--navy); color: var(--gold-light); font-weight: 500; }
-.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.65; }
-.nav-item.active svg { opacity: 1; }
-.nav-item.sophia svg { stroke: var(--purple) !important; opacity: 1; }
-.nav-item.sophia.active svg { stroke: var(--gold-light) !important; }
-.nav-item.scribe svg { stroke: var(--amber) !important; opacity: 1; }
-.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
-.sidebar-footer { margin-top: auto; padding: 14px 12px; border-top: 1px solid var(--border); }
-.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; transition: background 0.15s; }
-.user-row:hover { background: rgba(27,43,75,0.06); }
-.user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-light); flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
-.user-name { font-size: 13px; font-weight: 500; color: var(--navy); }
-.user-role { font-size: 11px; color: var(--text-muted); }
+.chat-area{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--page-bg);}
+.chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--page-bg);flex-shrink:0;gap:12px;}
+.chat-topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.menu-btn{display:none;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;align-items:center;justify-content:center;color:var(--text-sec);flex-shrink:0;}
+.menu-btn svg{width:17px;height:17px;}
+.agent-chip{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;flex-shrink:0;}
+.agent-chip-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);}
+.agent-chip-name{font-size:13px;font-weight:600;color:var(--purple);font-family:'DM Sans',sans-serif;}
+.session-name-input{font-size:14px;font-weight:500;color:var(--navy);background:transparent;border:none;outline:none;font-family:'DM Sans',sans-serif;min-width:0;flex:1;}
+.session-name-input::placeholder{color:var(--text-muted);font-weight:400;}
+.chat-topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.topbar-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background 0.15s,color 0.15s;}
+.topbar-icon-btn:hover{background:rgba(27,43,75,0.05);color:var(--navy);}
+.topbar-icon-btn svg{width:14px;height:14px;}
+.panel-toggle{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple);}
+.panel-toggle.active{background:var(--purple);color:#fff;border-color:var(--purple);}
 
-/* DRAWER */
-.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(27,43,75,0.45); z-index: 40; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
-.drawer-overlay.open { opacity: 1; pointer-events: all; }
-.drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; transform: translateX(-100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; }
-.drawer.open { transform: translateX(0); }
-.drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
-.drawer-close { width: 32px; height: 32px; border-radius: 8px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-.drawer-close svg { width: 18px; height: 18px; }
+.messages{flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:20px;}
+.messages::-webkit-scrollbar{width:4px;}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-/* CHAT AREA */
-.chat-area { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: var(--page-bg); }
+.msg{display:flex;gap:10px;max-width:720px;}
+.msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.msg.assistant{align-self:flex-start;}
+.msg-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.msg.assistant .msg-avatar{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple);}
+.msg.user .msg-avatar{background:var(--navy);color:var(--gold-light);font-family:'DM Sans',sans-serif;}
+.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13.5px;line-height:1.7;max-width:100%;}
+.msg.assistant .msg-bubble{background:var(--card);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+.msg.user .msg-bubble{background:var(--navy);color:rgba(255,255,255,0.92);border-bottom-right-radius:4px;}
+.msg-bubble p{margin-bottom:10px;}
+.msg-bubble p:last-child{margin-bottom:0;}
+.msg-bubble strong{font-weight:600;color:var(--navy);}
+.msg.user .msg-bubble strong{color:var(--gold-light);}
+.msg-bubble em{color:var(--purple);font-style:italic;}
 
-/* CHAT TOPBAR */
-.chat-topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--page-bg); flex-shrink: 0; gap: 12px; }
-.chat-topbar-left { display: flex; align-items: center; gap: 10px; }
-.menu-btn { display: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); cursor: pointer; align-items: center; justify-content: center; color: var(--text-sec); flex-shrink: 0; }
-.menu-btn svg { width: 17px; height: 17px; }
-.agent-chip { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--purple-bg); border: 1px solid var(--purple-border); border-radius: 20px; }
-.agent-chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); flex-shrink: 0; }
-.agent-chip-name { font-size: 13px; font-weight: 600; color: var(--purple); font-family: 'DM Sans', sans-serif; }
-.session-name-input { font-size: 14px; font-weight: 500; color: var(--navy); background: transparent; border: none; outline: none; font-family: 'DM Sans', sans-serif; min-width: 0; flex: 1; }
-.session-name-input::placeholder { color: var(--text-muted); font-weight: 400; }
+.verse-block{background:var(--purple-bg);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-style:italic;color:var(--text-sec);font-size:13px;}
+.verse-ref{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--purple);margin-top:6px;font-style:normal;}
 
-.chat-topbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.topbar-icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background 0.15s, color 0.15s; }
-.topbar-icon-btn:hover { background: rgba(27,43,75,0.05); color: var(--navy); }
-.topbar-icon-btn svg { width: 14px; height: 14px; }
-.panel-toggle { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
-.panel-toggle.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+.msg-actions{display:flex;gap:6px;margin-top:6px;opacity:0;transition:opacity 0.15s;}
+.msg:hover .msg-actions{opacity:1;}
+.msg-action{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.msg-action:hover{color:var(--navy);}
+.msg-action svg{width:12px;height:12px;}
 
-/* MESSAGES */
-.messages { flex: 1; overflow-y: auto; padding: 28px 24px; display: flex; flex-direction: column; gap: 20px; }
-.messages::-webkit-scrollbar { width: 4px; }
-.messages::-webkit-scrollbar-track { background: transparent; }
-.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.output-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:10px;}
+.output-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.output-card-title{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;}
+.output-card-action{font-size:11.5px;color:var(--gold-dim);cursor:pointer;text-decoration:none;}
 
-/* WELCOME STATE */
-.welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; padding: 40px 24px; }
-.welcome-icon { width: 56px; height: 56px; border-radius: 16px; background: var(--purple-bg); border: 1px solid var(--purple-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
-.welcome-icon svg { width: 24px; height: 24px; color: var(--purple); }
-.welcome-title { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
-.welcome-sub { font-size: 13px; color: var(--text-muted); max-width: 340px; margin: 0 auto 28px; line-height: 1.7; }
-.welcome-prompts { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; }
-.welcome-prompt { padding: 11px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); text-align: left; font-size: 13px; color: var(--text-sec); cursor: pointer; font-family: 'Inter', sans-serif; transition: border-color 0.15s, background 0.15s; }
-.welcome-prompt:hover { border-color: var(--purple-border); background: var(--purple-bg); color: var(--navy); }
+.teaching-path{display:flex;flex-direction:column;gap:8px;}
+.path-step{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--page-bg);border:1px solid var(--border-mid);}
+.path-step.done{background:var(--purple-bg);border-color:var(--purple-border);}
+.path-step.active{background:var(--purple-bg);border-color:var(--purple);}
+.path-num{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-muted);flex-shrink:0;}
+.path-step.done .path-num,.path-step.active .path-num{background:var(--purple);color:#fff;}
+.path-text{font-size:12.5px;color:var(--text-sec);flex:1;}
+.path-step.done .path-text{color:var(--purple);}
+.path-step.active .path-text{color:var(--navy);font-weight:500;}
 
-/* MESSAGE BUBBLES */
-.msg { display: flex; gap: 10px; max-width: 720px; }
-.msg.user { flex-direction: row-reverse; align-self: flex-end; }
-.msg.assistant { align-self: flex-start; }
+.paywall-card{background:var(--navy);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-top:10px;}
+.paywall-icon{width:36px;height:36px;border-radius:8px;background:rgba(245,215,142,0.12);border:1px solid rgba(245,215,142,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.paywall-icon svg{width:15px;height:15px;color:var(--gold-light);}
+.paywall-info{flex:1;}
+.paywall-title{font-size:13px;font-weight:600;color:var(--gold-light);}
+.paywall-sub{font-size:11.5px;color:rgba(255,255,255,0.45);margin-top:2px;}
+.paywall-btn{font-size:12px;font-weight:600;color:var(--navy);background:var(--gold-light);border:none;padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}
+.paywall-btn:hover{opacity:0.88;}
 
-.msg-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-.msg.assistant .msg-avatar { background: var(--purple-bg); border: 1px solid var(--purple-border); color: var(--purple); }
-.msg.user .msg-avatar { background: var(--navy); color: var(--gold-light); font-family: 'DM Sans', sans-serif; }
+.typing{display:flex;align-items:center;gap:4px;padding:14px 16px;}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--text-muted);animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
 
-.msg-bubble { padding: 12px 16px; border-radius: 14px; font-size: 13.5px; line-height: 1.7; max-width: 100%; }
-.msg.assistant .msg-bubble { background: var(--card); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
-.msg.user .msg-bubble { background: var(--navy); color: rgba(255,255,255,0.92); border-bottom-right-radius: 4px; }
+.input-area{padding:14px 20px;border-top:1px solid var(--border);background:var(--page-bg);flex-shrink:0;}
+.input-bar{display:flex;align-items:flex-end;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 12px;transition:border-color 0.2s;box-shadow:0 1px 4px rgba(27,43,75,0.06);}
+.input-bar:focus-within{border-color:var(--purple);box-shadow:0 0 0 3px rgba(97,85,201,0.08);}
+.input-tool{width:30px;height:30px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background 0.15s;}
+.input-tool:hover{background:var(--page-bg);color:var(--navy);}
+.input-tool svg{width:15px;height:15px;}
+.input-field{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;resize:none;max-height:120px;min-height:24px;line-height:1.5;padding:3px 0;}
+.input-field::placeholder{color:var(--text-muted);}
+.send-btn{width:34px;height:34px;background:var(--purple);border:none;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s;}
+.send-btn:hover{background:#4f44b3;}
+.send-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.2;}
+.input-hint{font-size:11px;color:var(--text-muted);margin-top:7px;text-align:center;}
+.input-hint span{color:var(--amber);font-weight:500;cursor:pointer;}
 
-.msg-bubble p { margin-bottom: 10px; }
-.msg-bubble p:last-child { margin-bottom: 0; }
-.msg-bubble strong { font-weight: 600; color: var(--navy); }
-.msg.user .msg-bubble strong { color: var(--gold-light); }
-.msg-bubble em { color: var(--purple); font-style: italic; }
+.right-panel{width:var(--panel-w);border-left:1px solid var(--border);background:var(--navy-mid);display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0;transition:width 0.25s,opacity 0.25s;}
+.right-panel.collapsed{width:0;opacity:0;overflow:hidden;}
+.panel-header{padding:16px 16px 12px;border-bottom:1px solid var(--border);}
+.panel-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.panel-sub{font-size:11px;color:var(--text-muted);}
+.panel-section{padding:14px 16px;border-bottom:1px solid var(--border-mid);}
+.panel-section-title{font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:10px;}
 
-.verse-block { background: var(--purple-bg); border-left: 3px solid var(--purple); border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 10px 0; font-style: italic; color: var(--text-sec); font-size: 13px; }
-.verse-ref { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--purple); margin-top: 6px; font-style: normal; }
+.cap-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.cap-chip{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple);cursor:pointer;transition:background 0.15s;font-family:'Inter',sans-serif;}
+.cap-chip:hover{background:rgba(97,85,201,0.15);}
+.cap-chip.locked{background:var(--border-mid);border-color:var(--border);color:var(--text-muted);cursor:default;}
+.cap-chip.locked::after{content:' 🔒';font-size:9px;}
 
-.msg-actions { display: flex; gap: 6px; margin-top: 6px; opacity: 0; transition: opacity 0.15s; }
-.msg:hover .msg-actions { opacity: 1; }
-.msg-action { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-.msg-action:hover { color: var(--navy); }
-.msg-action svg { width: 12px; height: 12px; }
+.episode-card{display:flex;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s;text-decoration:none;}
+.episode-card:hover{border-color:rgba(27,43,75,0.15);}
+.episode-thumb{width:44px;height:44px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.episode-thumb svg{width:16px;height:16px;color:var(--gold-light);}
+.episode-body{flex:1;min-width:0;}
+.episode-title{font-size:12px;font-weight:600;color:var(--navy);line-height:1.3;margin-bottom:3px;}
+.episode-meta{font-size:11px;color:var(--text-muted);}
 
-/* OUTPUT CARDS */
-.output-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 10px; }
-.output-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.output-card-title { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--purple); text-transform: uppercase; letter-spacing: 0.8px; }
-.output-card-action { font-size: 11.5px; color: var(--gold-dim); cursor: pointer; text-decoration: none; }
-.output-card-action:hover { color: var(--gold); }
+.history-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:background 0.15s;text-decoration:none;}
+.history-item:hover{background:rgba(27,43,75,0.05);}
+.history-dot{width:7px;height:7px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+.history-title{font-size:12px;color:var(--text-sec);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.history-time{font-size:11px;color:var(--text-muted);white-space:nowrap;}
 
-.teaching-path { display: flex; flex-direction: column; gap: 8px; }
-.path-step { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: var(--page-bg); border: 1px solid var(--border-mid); }
-.path-step.done { background: var(--purple-bg); border-color: var(--purple-border); }
-.path-step.active { background: var(--purple-bg); border-color: var(--purple); }
-.path-num { width: 22px; height: 22px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
-.path-step.done .path-num { background: var(--purple); color: #fff; }
-.path-step.active .path-num { background: var(--purple); color: #fff; }
-.path-text { font-size: 12.5px; color: var(--text-sec); flex: 1; }
-.path-step.done .path-text { color: var(--purple); }
-.path-step.active .path-text { color: var(--navy); font-weight: 500; }
-.path-check { width: 14px; height: 14px; color: var(--purple); }
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--card);border-top:1px solid var(--border);z-index:30;padding:0 8px;padding-bottom:env(safe-area-inset-bottom);}
+.bottom-nav-inner{display:flex;align-items:center;justify-content:space-around;height:100%;}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;cursor:pointer;text-decoration:none;color:var(--text-muted);font-size:10px;font-weight:500;transition:color 0.15s;flex:1;text-align:center;border:none;background:transparent;font-family:'Inter',sans-serif;}
+.bottom-nav-item svg{width:22px;height:22px;}
+.bottom-nav-item.active{color:var(--purple);}
+.bottom-nav-item.active svg{stroke:var(--purple);}
 
-/* PAYWALL */
-.paywall-card { background: var(--navy); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; margin-top: 10px; }
-.paywall-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(245,215,142,0.12); border: 1px solid rgba(245,215,142,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.paywall-icon svg { width: 15px; height: 15px; color: var(--gold-light); }
-.paywall-info { flex: 1; }
-.paywall-title { font-size: 13px; font-weight: 600; color: var(--gold-light); }
-.paywall-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); margin-top: 2px; }
-.paywall-btn { font-size: 12px; font-weight: 600; color: var(--navy); background: var(--gold-light); border: none; padding: 7px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; font-family: 'Inter', sans-serif; }
-.paywall-btn:hover { opacity: 0.88; }
-
-/* TYPING INDICATOR */
-.typing { display: flex; align-items: center; gap: 4px; padding: 14px 16px; }
-.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); animation: bounce 1.2s infinite; }
-.typing span:nth-child(2) { animation-delay: 0.2s; }
-.typing span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
-
-/* INPUT BAR */
-.input-area { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--page-bg); flex-shrink: 0; }
-.input-bar { display: flex; align-items: flex-end; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; transition: border-color 0.2s; box-shadow: 0 1px 4px rgba(27,43,75,0.06); }
-.input-bar:focus-within { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(97,85,201,0.08); }
-.input-tools { display: flex; gap: 4px; }
-.input-tool { width: 30px; height: 30px; border-radius: 7px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: background 0.15s, color 0.15s; }
-.input-tool:hover { background: var(--page-bg); color: var(--navy); }
-.input-tool svg { width: 15px; height: 15px; }
-.input-field { flex: 1; background: transparent; border: none; outline: none; font-size: 14px; color: var(--text); font-family: 'Inter', sans-serif; resize: none; max-height: 120px; min-height: 24px; line-height: 1.5; padding: 3px 0; }
-.input-field::placeholder { color: var(--text-muted); }
-.send-btn { width: 34px; height: 34px; background: var(--purple); border: none; border-radius: 9px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
-.send-btn:hover { background: #4f44b3; }
-.send-btn:disabled { background: var(--border); cursor: not-allowed; }
-.send-btn svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 2.2; }
-
-.input-hint { font-size: 11px; color: var(--text-muted); margin-top: 7px; text-align: center; }
-.input-hint span { color: var(--gold-dim); font-weight: 500; }
-
-/* RIGHT PANEL */
-.right-panel { width: var(--panel-w); border-left: 1px solid var(--border); background: var(--navy-mid); display: flex; flex-direction: column; height: 100vh; overflow-y: auto; flex-shrink: 0; transition: width 0.25s, opacity 0.25s; }
-.right-panel.collapsed { width: 0; opacity: 0; overflow: hidden; }
-.panel-header { padding: 16px 16px 12px; border-bottom: 1px solid var(--border); }
-.panel-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
-.panel-sub { font-size: 11px; color: var(--text-muted); }
-
-.panel-section { padding: 14px 16px; border-bottom: 1px solid var(--border-mid); }
-.panel-section-title { font-size: 10px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
-
-/* CAPABILITY CHIPS */
-.cap-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.cap-chip { font-size: 11px; padding: 4px 10px; border-radius: 20px; background: var(--purple-bg); border: 1px solid var(--purple-border); color: var(--purple); cursor: pointer; transition: background 0.15s; font-family: 'Inter', sans-serif; }
-.cap-chip:hover { background: rgba(97,85,201,0.15); }
-.cap-chip.locked { background: var(--border-mid); border-color: var(--border); color: var(--text-muted); cursor: default; }
-.cap-chip.locked::after { content: ' 🔒'; font-size: 9px; }
-
-/* EPISODE CARDS */
-.episode-card { display: flex; gap: 10px; padding: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 9px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s; text-decoration: none; }
-.episode-card:hover { border-color: rgba(27,43,75,0.15); }
-.episode-thumb { width: 44px; height: 44px; border-radius: 7px; background: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.episode-thumb svg { width: 16px; height: 16px; color: var(--gold-light); }
-.episode-body { flex: 1; min-width: 0; }
-.episode-title { font-size: 12px; font-weight: 600; color: var(--navy); line-height: 1.3; margin-bottom: 3px; }
-.episode-meta { font-size: 11px; color: var(--text-muted); }
-
-/* SESSION HISTORY */
-.history-item { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; cursor: pointer; transition: background 0.15s; text-decoration: none; }
-.history-item:hover { background: rgba(27,43,75,0.05); }
-.history-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--purple); flex-shrink: 0; }
-.history-title { font-size: 12px; color: var(--text-sec); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.history-time { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
-
-/* MOBILE BOTTOM NAV */
-.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-h); background: var(--card); border-top: 1px solid var(--border); z-index: 30; padding: 0 8px; padding-bottom: env(safe-area-inset-bottom); }
-.bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; height: 100%; }
-.bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 12px; cursor: pointer; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.15s; flex: 1; text-align: center; border: none; background: transparent; font-family: 'Inter', sans-serif; }
-.bottom-nav-item svg { width: 22px; height: 22px; }
-.bottom-nav-item.active { color: var(--purple); }
-.bottom-nav-item.active svg { stroke: var(--purple); }
-
-@media (max-width: 1024px) { .right-panel { display: none; } }
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .menu-btn { display: flex; }
-  .drawer-overlay { display: block; }
-  .bottom-nav { display: flex; }
-  .chat-topbar { padding: 10px 14px; }
-  .messages { padding: 16px 14px; }
-  .input-area { padding: 10px 14px; padding-bottom: calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom)); }
+@media(max-width:1024px){.right-panel{display:none;}}
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.drawer-overlay{display:block;}.bottom-nav{display:flex;}
+  .chat-topbar{padding:10px 14px;}.messages{padding:16px 14px;}
+  .input-area{padding:10px 14px;padding-bottom:calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom));}
 }
 </style>
 </head>
 <body>
-
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
-    <div class="logo-mark">
-      <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
-      <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
-    </div>
+    <div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div>
     <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
   <div class="sidebar-section">
@@ -273,23 +205,13 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
     <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
   </div>
   <div class="sidebar-footer">
-    <div class="user-row">
-      <div class="user-avatar">EN</div>
-      <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
-    </div>
+    <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
   </div>
 </div>
 
 <div class="shell">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-mark">
-        <div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
-        <div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div>
-      </div>
-    </div>
+    <div class="sidebar-logo"><div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div></div>
     <div class="sidebar-section">
       <div class="sidebar-label">Workspace</div>
       <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
@@ -316,42 +238,25 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
       <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
     </div>
     <div class="sidebar-footer">
-      <div class="user-row">
-        <div class="user-avatar">EN</div>
-        <div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div>
-      </div>
+      <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
     </div>
   </aside>
 
-  <!-- CHAT AREA -->
   <div class="chat-area">
     <div class="chat-topbar">
       <div class="chat-topbar-left">
-        <button class="menu-btn" onclick="openDrawer()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div class="agent-chip">
-          <div class="agent-chip-dot"></div>
-          <span class="agent-chip-name">Sophia</span>
-        </div>
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="agent-chip"><div class="agent-chip-dot"></div><span class="agent-chip-name">Sophia</span></div>
         <input class="session-name-input" type="text" placeholder="Name this session..." value="Romans 8 — deep-dive study">
       </div>
       <div class="chat-topbar-right">
-        <button class="topbar-icon-btn" title="Export session">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </button>
-        <button class="topbar-icon-btn" title="New session" onclick="window.location.href='sophia.html'">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </button>
-        <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()" title="Toggle panel">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
-        </button>
+        <button class="topbar-icon-btn" title="Export session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <button class="topbar-icon-btn" title="New session" onclick="window.location.href='sophia.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()" title="Toggle panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg></button>
       </div>
     </div>
 
-    <!-- MESSAGES -->
     <div class="messages" id="messages">
-
       <div class="msg assistant">
         <div class="msg-avatar">S</div>
         <div>
@@ -375,12 +280,8 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
         <div>
           <div class="msg-bubble">
             <p><strong>Romans 8:1 — No condemnation.</strong> This is Paul's great declaration after the struggle of chapter 7. The person who is in Christ Jesus is no longer under the verdict of the law.</p>
-            <div class="verse-block">
-              "There is therefore now no condemnation for those who are in Christ Jesus."
-              <div class="verse-ref">Romans 8:1 (ESV)</div>
-            </div>
-            <p>The phrase <em>"in Christ Jesus"</em> is key. It's a positional truth — your standing before God is determined not by your performance but by your union with Christ. This sets the stage for the rest of the chapter.</p>
-            <p>Moving to verses 2–4, Paul introduces <strong>the law of the Spirit of life</strong> — a higher principle that liberates us from the law of sin and death. The Spirit does what the law could never do: it works from the inside out.</p>
+            <div class="verse-block">"There is therefore now no condemnation for those who are in Christ Jesus."<div class="verse-ref">Romans 8:1 (ESV)</div></div>
+            <p>The phrase <em>"in Christ Jesus"</em> is key — it's a positional truth. Your standing before God is determined not by your performance but by your union with Christ. Moving to verses 2–4, Paul introduces <strong>the law of the Spirit of life</strong> — a higher principle that liberates us from the law of sin and death.</p>
           </div>
           <div class="output-card">
             <div class="output-card-header">
@@ -388,26 +289,11 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
               <a class="output-card-action" href="upgrade.html">Unlock full path →</a>
             </div>
             <div class="teaching-path">
-              <div class="path-step done">
-                <div class="path-num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="path-check"><polyline points="20 6 9 17 4 12"/></svg></div>
-                <div class="path-text">Session 1 — Introduction & context</div>
-              </div>
-              <div class="path-step active">
-                <div class="path-num">2</div>
-                <div class="path-text">Session 2 — The law of the Spirit (vv. 1–17)</div>
-              </div>
-              <div class="path-step">
-                <div class="path-num">3</div>
-                <div class="path-text">Session 3 — Suffering and glory (vv. 18–27)</div>
-              </div>
-              <div class="path-step">
-                <div class="path-num">4</div>
-                <div class="path-text">Session 4 — God's sovereign purpose (vv. 28–39)</div>
-              </div>
-              <div class="path-step">
-                <div class="path-num">5</div>
-                <div class="path-text">Session 5 — Nothing can separate us</div>
-              </div>
+              <div class="path-step done"><div class="path-num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg></div><div class="path-text">Session 1 — Introduction & context</div></div>
+              <div class="path-step active"><div class="path-num">2</div><div class="path-text">Session 2 — The law of the Spirit (vv. 1–17)</div></div>
+              <div class="path-step"><div class="path-num">3</div><div class="path-text">Session 3 — Suffering and glory (vv. 18–27)</div></div>
+              <div class="path-step"><div class="path-num">4</div><div class="path-text">Session 4 — God's sovereign purpose (vv. 28–39)</div></div>
+              <div class="path-step"><div class="path-num">5</div><div class="path-text">Session 5 — Nothing can separate us</div></div>
             </div>
           </div>
           <div class="msg-actions">
@@ -426,13 +312,13 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
         <div class="msg-avatar">S</div>
         <div>
           <div class="msg-bubble">
-            <p>Devotional generation is a Pro feature. Upgrade to unlock daily devotionals, full teaching paths, personalised book sessions, and more.</p>
+            <p>Devotional generation is a Pro feature. Upgrade to unlock daily devotionals, full teaching paths, business coaching, missions intelligence, and more.</p>
           </div>
           <div class="paywall-card">
             <div class="paywall-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
             <div class="paywall-info">
               <div class="paywall-title">Unlock your full calling</div>
-              <div class="paywall-sub">Devotionals, teaching paths, business coaching & more</div>
+              <div class="paywall-sub">Teaching paths, devotionals, business coaching & missions intelligence</div>
             </div>
             <button class="paywall-btn" onclick="window.location.href='upgrade.html'">Upgrade to Pro</button>
           </div>
@@ -441,88 +327,55 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- INPUT -->
     <div class="input-area">
       <div class="input-bar">
-        <div class="input-tools">
-          <button class="input-tool" title="Attach">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
-          </button>
-        </div>
-        <textarea class="input-field" id="inputField" placeholder="Ask Sophia anything — scripture, prayer, business, missions..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
+        <button class="input-tool" title="Attach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
+        <textarea class="input-field" id="inputField" placeholder="Ask Sophia about scripture, teaching, business, or missions…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </div>
-      <div class="input-hint">Sophia covers scripture, community, business coaching, and missions. <span>Switch to Scribe</span> for book publishing.</div>
+      <div class="input-hint">Sophia covers scripture, teaching, community, business & missions. <span onclick="window.location.href='scribe.html'">Switch to Scribe</span> for book publishing.</div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <aside class="right-panel" id="rightPanel">
     <div class="panel-header">
       <div class="panel-title">Session tools</div>
       <div class="panel-sub">Sophia · Romans 8 study</div>
     </div>
-
     <div class="panel-section">
       <div class="panel-section-title">Capabilities</div>
       <div class="cap-chips">
-        <button class="cap-chip" onclick="insertPrompt('Give me a verse-by-verse breakdown')">Scripture study</button>
-        <button class="cap-chip" onclick="insertPrompt('Create a teaching path for this topic')">Teaching path</button>
-        <button class="cap-chip" onclick="insertPrompt('Answer this doctrinal question:')">Q & A</button>
+        <button class="cap-chip" onclick="insertPrompt('Give me a verse-by-verse breakdown of ')">Scripture study</button>
+        <button class="cap-chip" onclick="insertPrompt('Create a teaching path for this topic: ')">Teaching path</button>
+        <button class="cap-chip" onclick="insertPrompt('Explain the theological significance of ')">Q & A</button>
+        <button class="cap-chip" onclick="insertPrompt('Give me the historical and cultural context of ')">Context</button>
         <button class="cap-chip locked">Devotional</button>
         <button class="cap-chip locked">Business coaching</button>
-        <button class="cap-chip locked">Missions brief</button>
+        <button class="cap-chip locked">Missions intel</button>
+        <button class="cap-chip locked">Accountability prompts</button>
       </div>
     </div>
-
     <div class="panel-section">
       <div class="panel-section-title">Related episodes</div>
       <a class="episode-card" href="vod.html">
         <div class="episode-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="episode-body">
-          <div class="episode-title">Walking in the Spirit — Romans 8 Unpacked</div>
-          <div class="episode-meta">Moments of Wisdom · 42 min</div>
-        </div>
+        <div class="episode-body"><div class="episode-title">Walking in the Spirit — Romans 8 Unpacked</div><div class="episode-meta">Moments of Wisdom · 42 min</div></div>
       </a>
       <a class="episode-card" href="vod.html">
         <div class="episode-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div class="episode-body">
-          <div class="episode-title">No Condemnation — The Foundation of Grace</div>
-          <div class="episode-meta">Moments of Wisdom · 38 min</div>
-        </div>
+        <div class="episode-body"><div class="episode-title">No Condemnation — The Foundation of Grace</div><div class="episode-meta">Moments of Wisdom · 38 min</div></div>
       </a>
     </div>
-
     <div class="panel-section">
       <div class="panel-section-title">Session history</div>
-      <a class="history-item" href="sessions.html">
-        <div class="history-dot"></div>
-        <div class="history-title">Romans 8 — deep-dive study</div>
-        <div class="history-time">Now</div>
-      </a>
-      <a class="history-item" href="sessions.html">
-        <div class="history-dot" style="background:var(--border)"></div>
-        <div class="history-title">City Builders accountability check-in</div>
-        <div class="history-time">Today</div>
-      </a>
-      <a class="history-item" href="sessions.html">
-        <div class="history-dot" style="background:var(--border)"></div>
-        <div class="history-title">Global Missions prayer brief</div>
-        <div class="history-time">Yesterday</div>
-      </a>
-      <a class="history-item" href="sessions.html">
-        <div class="history-dot" style="background:var(--border)"></div>
-        <div class="history-title">The Bible on wealth</div>
-        <div class="history-time">Thu</div>
-      </a>
+      <a class="history-item" href="sessions.html"><div class="history-dot"></div><div class="history-title">Romans 8 — deep-dive study</div><div class="history-time">Now</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">City Builders accountability</div><div class="history-time">Today</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">Missions intel — East Africa</div><div class="history-time">Yesterday</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">The Bible on wealth</div><div class="history-time">Thu</div></a>
     </div>
   </aside>
-
 </div>
 
 <nav class="bottom-nav">
@@ -535,87 +388,22 @@ body { background: var(--page-bg); color: var(--text); font-family: 'Inter', san
 </nav>
 
 <script>
-  let panelOpen = true;
-
-  function openDrawer() {
-    document.getElementById('drawer').classList.add('open');
-    document.getElementById('drawerOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeDrawer() {
-    document.getElementById('drawer').classList.remove('open');
-    document.getElementById('drawerOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function togglePanel() {
-    panelOpen = !panelOpen;
-    const panel = document.getElementById('rightPanel');
-    const btn = document.getElementById('panelToggle');
-    panel.classList.toggle('collapsed', !panelOpen);
-    btn.classList.toggle('active', panelOpen);
-  }
-
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  }
-
-  function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  }
-
-  function insertPrompt(text) {
-    const field = document.getElementById('inputField');
-    field.value = text;
-    field.focus();
-    autoResize(field);
-  }
-
-  function sendMessage() {
-    const field = document.getElementById('inputField');
-    const text = field.value.trim();
-    if (!text) return;
-
-    const messages = document.getElementById('messages');
-
-    // User message
-    const userMsg = document.createElement('div');
-    userMsg.className = 'msg user';
-    userMsg.innerHTML = `<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;
-    messages.appendChild(userMsg);
-
-    field.value = '';
-    field.style.height = 'auto';
-
-    // Typing indicator
-    const typing = document.createElement('div');
-    typing.className = 'msg assistant';
-    typing.id = 'typing';
-    typing.innerHTML = `<div class="msg-avatar">S</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-    messages.appendChild(typing);
-    messages.scrollTop = messages.scrollHeight;
-
-    // Simulated response
-    setTimeout(() => {
-      typing.remove();
-      const reply = document.createElement('div');
-      reply.className = 'msg assistant';
-      reply.innerHTML = `
-        <div class="msg-avatar">S</div>
-        <div>
-          <div class="msg-bubble">
-            <p>That's a rich question. Let me walk you through what scripture says on that — rooted in context and cross-referenced with the broader counsel of God's word.</p>
-          </div>
-          <div class="msg-actions">
-            <button class="msg-action" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-            <button class="msg-action" title="Regenerate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg></button>
-          </div>
-        </div>`;
-      messages.appendChild(reply);
-      messages.scrollTop = messages.scrollHeight;
-    }, 1400);
-  }
+let panelOpen=true;
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
+function togglePanel(){panelOpen=!panelOpen;document.getElementById('rightPanel').classList.toggle('collapsed',!panelOpen);document.getElementById('panelToggle').classList.toggle('active',panelOpen);}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function insertPrompt(text){const f=document.getElementById('inputField');f.value=text;f.focus();autoResize(f);}
+function sendMessage(){
+  const f=document.getElementById('inputField');const text=f.value.trim();if(!text)return;
+  const msgs=document.getElementById('messages');
+  const u=document.createElement('div');u.className='msg user';u.innerHTML=`<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;msgs.appendChild(u);
+  f.value='';f.style.height='auto';
+  const t=document.createElement('div');t.className='msg assistant';t.id='typing';t.innerHTML=`<div class="msg-avatar">S</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;msgs.appendChild(t);
+  msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{t.remove();const r=document.createElement('div');r.className='msg assistant';r.innerHTML=`<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>That's a rich question. Let me walk you through what scripture says — rooted in context and cross-referenced with the broader counsel of God's word.</p></div><div class="msg-actions"><button class="msg-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div>`;msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;},1400);
+}
 </script>
 </body>
 </html>

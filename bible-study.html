@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Bible Study Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#1B2B4B; --navy-deep:#0F1E36; --navy-mid:#F5F3EE; --card:#ffffff;
+  --gold:#C4922A; --gold-dim:#A8792A; --gold-light:#F5D78E;
+  --gold-glow:rgba(196,146,42,0.10); --gold-border:rgba(196,146,42,0.22);
+  --purple:#6155C9; --purple-bg:rgba(97,85,201,0.09); --purple-border:rgba(97,85,201,0.2);
+  --amber:#9A5E18; --amber-bg:rgba(154,94,24,0.09);
+  --teal:#1A7A5E; --teal-bg:rgba(26,122,94,0.09); --teal-border:rgba(26,122,94,0.22);
+  --text:#191714; --text-sec:#5C584F; --text-muted:#9C9890;
+  --border:#E8E3DA; --border-mid:#F0EDE6; --radius:10px;
+  --sidebar-w:240px; --schedule-w:260px; --journal-w:320px;
+  --page-bg:#F7F4EF; --bottom-nav-h:64px;
+}
+html,body{height:100%;}
+body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;overflow:hidden;}
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto;z-index:20;}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border);}
+.logo-mark{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-icon svg{width:16px;height:16px;}
+.logo-text{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);letter-spacing:-0.2px;line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-top:2px;font-weight:500;}
+.sidebar-section{padding:18px 12px 6px;}
+.sidebar-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);font-weight:500;padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--text-sec);font-size:13px;font-weight:450;transition:background 0.15s,color 0.15s;text-decoration:none;margin-bottom:1px;border:none;background:transparent;font-family:'Inter',sans-serif;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(27,43,75,0.06);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:var(--gold-light);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:0.65;}
+.nav-item.active svg{opacity:1;}
+.nav-item.sophia svg{stroke:var(--purple)!important;opacity:1;}
+.nav-item.scribe svg{stroke:var(--amber)!important;opacity:1;}
+.nav-item.bible svg{stroke:var(--teal)!important;opacity:1;}
+.nav-item.bible.active svg{stroke:var(--gold-light)!important;}
+.sidebar-divider{height:1px;background:var(--border);margin:8px 12px;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;transition:background 0.15s;}
+.user-row:hover{background:rgba(27,43,75,0.06);}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold-light);flex-shrink:0;font-family:'DM Sans',sans-serif;}
+.user-name{font-size:13px;font-weight:500;color:var(--navy);}
+.user-role{font-size:11px;color:var(--text-muted);}
+
+/* DRAWER */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(27,43,75,0.45);z-index:40;opacity:0;transition:opacity 0.25s;pointer-events:none;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:50;transform:translateX(-100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;}
+.drawer.open{transform:translateX(0);}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 16px;border-bottom:1px solid var(--border);}
+.drawer-close{width:32px;height:32px;border-radius:8px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.drawer-close svg{width:18px;height:18px;}
+
+/* MAIN AREA — schedule | chat | journal */
+.main-area{flex:1;display:flex;height:100vh;overflow:hidden;}
+
+/* SCHEDULE PANEL (LEFT) */
+.schedule-panel{width:var(--schedule-w);border-right:1px solid var(--border);background:var(--navy-mid);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0;}
+.schedule-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.schedule-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--navy);}
+.setup-btn{font-size:11.5px;color:var(--teal);font-weight:600;cursor:pointer;border:none;background:transparent;font-family:'Inter',sans-serif;padding:0;}
+.setup-btn:hover{opacity:0.8;}
+.schedule-body{flex:1;overflow-y:auto;padding:14px;}
+.schedule-body::-webkit-scrollbar{width:3px;}
+.schedule-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* PLAN SUMMARY */
+.plan-summary{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;}
+.plan-book{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.plan-meta{font-size:11px;color:var(--text-muted);margin-bottom:10px;}
+.plan-progress-bar{height:5px;background:var(--border);border-radius:4px;margin-bottom:6px;overflow:hidden;}
+.plan-progress-fill{height:100%;background:var(--teal);border-radius:4px;transition:width 0.3s;}
+.plan-progress-label{display:flex;justify-content:space-between;font-size:11px;}
+.plan-progress-label strong{color:var(--teal);font-weight:600;}
+.plan-progress-label span{color:var(--text-muted);}
+
+/* TODAY'S READING */
+.today-label{font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:8px;}
+.today-chapter{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;cursor:pointer;transition:border-color 0.15s;}
+.today-chapter:hover{border-color:rgba(26,122,94,0.3);}
+.today-chapter.read{background:var(--teal-bg);border-color:var(--teal-border);}
+.chapter-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s,border-color 0.15s;}
+.today-chapter.read .chapter-check{background:var(--teal);border-color:var(--teal);}
+.chapter-check svg{width:10px;height:10px;stroke:#fff;display:none;}
+.today-chapter.read .chapter-check svg{display:block;}
+.chapter-name{font-size:13px;font-weight:500;color:var(--navy);flex:1;}
+.today-chapter.read .chapter-name{color:var(--teal);}
+.chapter-verse-count{font-size:11px;color:var(--text-muted);}
+
+/* UPCOMING */
+.upcoming-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;margin-bottom:3px;}
+.upcoming-day{font-size:10px;font-weight:700;color:var(--text-muted);width:28px;flex-shrink:0;}
+.upcoming-chapters{font-size:12px;color:var(--text-sec);}
+
+/* PLAN SETUP SECTION */
+.plan-version-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--teal-bg);border:1px solid var(--teal-border);color:var(--teal);margin-bottom:12px;}
+
+/* CHAT AREA */
+.chat-area{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--page-bg);min-width:0;}
+.chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--page-bg);flex-shrink:0;gap:12px;}
+.chat-topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.menu-btn{display:none;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;align-items:center;justify-content:center;color:var(--text-sec);flex-shrink:0;}
+.menu-btn svg{width:17px;height:17px;}
+.agent-chip{display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:20px;flex-shrink:0;}
+.agent-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);}
+.agent-chip-name{font-size:12.5px;font-weight:600;color:var(--teal);font-family:'DM Sans',sans-serif;}
+.session-label{font-size:13.5px;font-weight:500;color:var(--navy);font-family:'DM Sans',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chat-topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.topbar-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background 0.15s,color 0.15s;}
+.topbar-icon-btn:hover{background:rgba(27,43,75,0.05);color:var(--navy);}
+.topbar-icon-btn svg{width:14px;height:14px;}
+.journal-toggle{background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal);}
+.journal-toggle.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:18px;}
+.messages::-webkit-scrollbar{width:4px;}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+/* PRINCIPLE BANNER */
+.principle-banner{background:var(--gold-glow);border:1px solid var(--gold-border);border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px;flex-shrink:0;}
+.principle-banner svg{width:15px;height:15px;color:var(--gold-dim);flex-shrink:0;margin-top:2px;}
+.principle-text{font-size:12.5px;color:var(--text-sec);line-height:1.6;}
+.principle-text strong{color:var(--navy);font-weight:600;}
+
+.msg{display:flex;gap:10px;max-width:680px;}
+.msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.msg.assistant{align-self:flex-start;}
+.msg-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.msg.assistant .msg-avatar{background:var(--teal-bg);border:1px solid var(--teal-border);color:var(--teal);}
+.msg.user .msg-avatar{background:var(--navy);color:var(--gold-light);font-family:'DM Sans',sans-serif;}
+.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13.5px;line-height:1.7;}
+.msg.assistant .msg-bubble{background:var(--card);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+.msg.user .msg-bubble{background:var(--navy);color:rgba(255,255,255,0.92);border-bottom-right-radius:4px;}
+.msg-bubble p{margin-bottom:8px;}
+.msg-bubble p:last-child{margin-bottom:0;}
+.msg-bubble strong{font-weight:600;color:var(--teal);}
+
+/* PERMISSION CARD — Sophia asks before any action */
+.permission-card{background:var(--card);border:1px solid var(--teal-border);border-radius:12px;padding:16px;margin-top:8px;}
+.permission-card-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.permission-icon{width:28px;height:28px;border-radius:7px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.permission-icon svg{width:13px;height:13px;color:var(--teal);}
+.permission-title{font-size:12.5px;font-weight:600;color:var(--teal);}
+.permission-body{font-size:13px;color:var(--text-sec);line-height:1.65;margin-bottom:14px;}
+.permission-preview{background:var(--page-bg);border:1px solid var(--border);border-radius:8px;padding:10px 13px;font-size:12.5px;color:var(--text-sec);line-height:1.6;margin-bottom:12px;font-style:italic;}
+.permission-actions{display:flex;gap:8px;}
+.perm-btn{padding:7px 16px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;border:none;transition:opacity 0.15s;}
+.perm-btn.approve{background:var(--teal);color:#fff;}
+.perm-btn.approve:hover{opacity:0.88;}
+.perm-btn.dismiss{background:var(--border-mid);color:var(--text-sec);}
+.perm-btn.dismiss:hover{opacity:0.8;}
+
+/* SCRIPTURE CONFIRM CARD */
+.scripture-confirm-card{background:var(--card);border:1px solid var(--gold-border);border-radius:12px;padding:16px;margin-top:8px;}
+.scripture-confirm-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.scripture-confirm-icon{width:28px;height:28px;border-radius:7px;background:var(--gold-glow);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.scripture-confirm-icon svg{width:13px;height:13px;color:var(--gold-dim);}
+.scripture-confirm-title{font-size:12.5px;font-weight:600;color:var(--gold-dim);}
+.scripture-confirm-body{font-size:13px;color:var(--text-sec);line-height:1.65;margin-bottom:12px;}
+.scripture-input-row{display:flex;gap:8px;margin-bottom:12px;}
+.scripture-ref-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--page-bg);outline:none;transition:border-color 0.2s;}
+.scripture-ref-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
+.scripture-ref-input::placeholder{color:var(--text-muted);}
+.scripture-confirm-btn{padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;background:var(--gold);color:var(--navy-deep);border:none;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;}
+.scripture-confirm-btn:hover{background:var(--gold-dim);}
+
+/* GRAMMAR CORRECTION CARD */
+.grammar-card{background:var(--card);border:1px solid var(--purple-border);border-radius:12px;padding:16px;margin-top:8px;}
+.grammar-card-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.grammar-icon{width:28px;height:28px;border-radius:7px;background:var(--purple-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.grammar-icon svg{width:13px;height:13px;color:var(--purple);}
+.grammar-title{font-size:12.5px;font-weight:600;color:var(--purple);}
+.grammar-body{font-size:12.5px;color:var(--text-sec);line-height:1.6;margin-bottom:10px;}
+.grammar-diff{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.grammar-before{background:rgba(192,57,43,0.05);border:1px solid rgba(192,57,43,0.15);border-radius:7px;padding:8px 12px;font-size:12.5px;color:var(--text-muted);}
+.grammar-after{background:rgba(26,122,94,0.05);border:1px solid var(--teal-border);border-radius:7px;padding:8px 12px;font-size:12.5px;color:var(--navy);}
+.grammar-label{font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;}
+.grammar-label.before{color:rgba(192,57,43,0.6);}
+.grammar-label.after{color:var(--teal);}
+.grammar-note{font-size:11.5px;color:var(--text-muted);font-style:italic;margin-bottom:12px;}
+
+/* TYPING */
+.typing{display:flex;align-items:center;gap:4px;padding:14px 16px;}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--text-muted);animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+
+/* INPUT */
+.input-area{padding:12px 18px;border-top:1px solid var(--border);background:var(--page-bg);flex-shrink:0;}
+.input-bar{display:flex;align-items:flex-end;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 12px;transition:border-color 0.2s;box-shadow:0 1px 4px rgba(27,43,75,0.06);}
+.input-bar:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-bg);}
+.input-field{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;resize:none;max-height:120px;min-height:24px;line-height:1.5;padding:3px 0;}
+.input-field::placeholder{color:var(--text-muted);}
+.send-btn{width:34px;height:34px;background:var(--teal);border:none;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s;}
+.send-btn:hover{background:#135f49;}
+.send-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.2;}
+.input-hint{font-size:11px;color:var(--text-muted);margin-top:6px;text-align:center;line-height:1.5;}
+.input-hint strong{color:var(--navy);font-weight:600;}
+
+/* JOURNAL PANEL (RIGHT) */
+.journal-panel{width:var(--journal-w);border-left:1px solid var(--border);background:var(--navy-mid);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0;transition:width 0.25s,opacity 0.25s;}
+.journal-panel.collapsed{width:0;opacity:0;overflow:hidden;}
+
+.journal-topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.journal-tabs{display:flex;gap:2px;background:var(--border-mid);border-radius:8px;padding:3px;}
+.journal-tab{padding:5px 11px;border-radius:6px;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;border:none;background:transparent;color:var(--text-muted);transition:background 0.15s,color 0.15s;font-weight:500;}
+.journal-tab.active{background:var(--card);color:var(--navy);box-shadow:0 1px 3px rgba(27,43,75,0.08);}
+.export-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;background:var(--teal);border:none;border-radius:8px;color:#fff;font-size:11.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+.export-btn:hover{background:#135f49;}
+.export-btn svg{width:11px;height:11px;}
+
+/* INSIGHTS TAB */
+.insights-list{flex:1;overflow-y:auto;padding:14px;}
+.insights-list::-webkit-scrollbar{width:3px;}
+.insights-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+.insight-card{background:var(--card);border:1px solid var(--border);border-radius:11px;margin-bottom:10px;overflow:hidden;transition:box-shadow 0.15s;}
+.insight-card:hover{box-shadow:0 3px 12px rgba(27,43,75,0.08);}
+.insight-card-header{padding:10px 14px 8px;border-bottom:1px solid var(--border-mid);display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.insight-ref{display:flex;align-items:center;gap:6px;}
+.insight-ref-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--gold-glow);border:1px solid var(--gold-border);color:var(--gold-dim);}
+.insight-ref-unconfirmed{background:var(--border-mid);border-color:var(--border);color:var(--text-muted);}
+.insight-pending{font-size:10px;color:var(--text-muted);font-style:italic;}
+.insight-actions{display:flex;gap:4px;}
+.insight-action-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.15s;}
+.insight-action-btn:hover{color:var(--navy);border-color:rgba(27,43,75,0.2);}
+.insight-action-btn svg{width:11px;height:11px;}
+.insight-body{padding:10px 14px;}
+.insight-text{font-size:13px;color:var(--text-sec);line-height:1.7;margin-bottom:8px;}
+.insight-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.insight-date{font-size:10.5px;color:var(--text-muted);}
+
+/* HEBREW/GREEK TAGS */
+.lang-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;cursor:pointer;transition:opacity 0.15s;}
+.lang-tag:hover{opacity:0.8;}
+.lang-tag.hebrew{background:rgba(97,85,201,0.08);border:1px solid rgba(97,85,201,0.2);color:var(--purple);}
+.lang-tag.greek{background:rgba(26,122,94,0.08);border:1px solid var(--teal-border);color:var(--teal);}
+.lang-tag svg{width:9px;height:9px;}
+
+/* LOOKUP TAB */
+.lookup-panel{flex:1;overflow-y:auto;padding:14px;display:none;}
+.lookup-search{display:flex;gap:8px;margin-bottom:16px;}
+.lookup-input{flex:1;padding:9px 13px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:var(--card);outline:none;transition:border-color 0.2s;}
+.lookup-input:focus{border-color:var(--teal);}
+.lookup-input::placeholder{color:var(--text-muted);}
+.lookup-lang-tabs{display:flex;gap:4px;margin-bottom:14px;}
+.lookup-lang-tab{padding:5px 14px;border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;border:none;background:var(--border-mid);color:var(--text-muted);transition:background 0.15s,color 0.15s;font-weight:500;}
+.lookup-lang-tab.active.heb{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(97,85,201,0.2);}
+.lookup-lang-tab.active.grk{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border);}
+
+.lookup-result{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+.lookup-word{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.lookup-transliteration{font-size:12px;color:var(--text-muted);margin-bottom:2px;font-style:italic;}
+.lookup-strongs{font-size:11px;font-weight:700;letter-spacing:0.5px;color:var(--purple);margin-bottom:8px;}
+.lookup-definition{font-size:13px;color:var(--text-sec);line-height:1.7;margin-bottom:10px;}
+.lookup-usage{font-size:12px;color:var(--text-muted);margin-bottom:12px;}
+.lookup-usage strong{color:var(--text-sec);font-weight:600;}
+.attach-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:8px;color:var(--teal);font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.15s;}
+.attach-btn:hover{background:rgba(26,122,94,0.15);}
+.attach-btn svg{width:12px;height:12px;}
+.attach-note{font-size:11px;color:var(--text-muted);margin-top:6px;font-style:italic;}
+
+/* SCHEDULE TAB */
+.schedule-tab-content{flex:1;overflow-y:auto;padding:14px;display:none;}
+.setup-form-section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.setup-section-title{font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;}
+.form-group{margin-bottom:12px;}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-sec);margin-bottom:5px;}
+.form-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:var(--page-bg);outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--teal);}
+.form-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:var(--page-bg);outline:none;cursor:pointer;}
+.save-plan-btn{width:100%;padding:10px;background:var(--teal);border:none;border-radius:9px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:4px;}
+.save-plan-btn:hover{background:#135f49;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,30,54,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--card);border-radius:14px;width:100%;max-width:420px;overflow:hidden;}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);}
+.modal-close{width:28px;height:28px;border-radius:7px;background:var(--border-mid);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.modal-close svg{width:13px;height:13px;}
+.modal-body{padding:20px;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+.modal-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;border:none;}
+.modal-btn.cancel{background:var(--border-mid);color:var(--text-sec);}
+.modal-btn.save{background:var(--teal);color:#fff;}
+.modal-btn.save:hover{background:#135f49;}
+
+/* MOBILE */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--card);border-top:1px solid var(--border);z-index:30;padding:0 8px;padding-bottom:env(safe-area-inset-bottom);}
+.bottom-nav-inner{display:flex;align-items:center;justify-content:space-around;height:100%;}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;cursor:pointer;text-decoration:none;color:var(--text-muted);font-size:10px;font-weight:500;transition:color 0.15s;flex:1;text-align:center;border:none;background:transparent;font-family:'Inter',sans-serif;}
+.bottom-nav-item svg{width:22px;height:22px;}
+.bottom-nav-item.active{color:var(--teal);}
+.bottom-nav-item.active svg{stroke:var(--teal);}
+
+@media(max-width:1200px){.schedule-panel{display:none;}}
+@media(max-width:1024px){.journal-panel{display:none;}}
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.drawer-overlay{display:block;}.bottom-nav{display:flex;}
+  .chat-topbar{padding:10px 14px;}.messages{padding:14px;}
+  .input-area{padding:10px 14px;padding-bottom:calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom));}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Reading Plan Setup</div>
+      <button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Bible version</label>
+        <select class="form-select" id="setupVersion">
+          <option>ESV — English Standard Version</option>
+          <option>NIV — New International Version</option>
+          <option>KJV — King James Version</option>
+          <option>NKJV — New King James Version</option>
+          <option>NLT — New Living Translation</option>
+          <option>NASB — New American Standard</option>
+          <option>AMP — Amplified Bible</option>
+          <option>MSG — The Message</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Starting book</label>
+        <select class="form-select" id="setupBook">
+          <option>Genesis</option><option>Exodus</option><option>Leviticus</option>
+          <option>Numbers</option><option>Deuteronomy</option><option>Joshua</option>
+          <option>Psalms</option><option>Proverbs</option><option>Isaiah</option>
+          <option selected>Romans</option><option>John</option><option>Acts</option>
+          <option>Revelation</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Chapters per day</label>
+        <select class="form-select" id="setupChapters">
+          <option>1 chapter per day</option>
+          <option selected>2 chapters per day</option>
+          <option>3 chapters per day</option>
+          <option>4 chapters per day</option>
+          <option>5 chapters per day</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Starting chapter</label>
+        <input class="form-input" type="number" value="1" min="1" id="setupStartChapter">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn save" onclick="savePlan()">Save plan</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item bible active" href="bible-study.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bible Study Companion</a>
+    <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
+  </div>
+</div>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item bible active" href="bible-study.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bible Study Companion</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
+    </div>
+  </aside>
+
+  <div class="main-area">
+
+    <!-- SCHEDULE PANEL -->
+    <aside class="schedule-panel">
+      <div class="schedule-header">
+        <div class="schedule-title">Reading Plan</div>
+        <button class="setup-btn" onclick="openModal()">Edit plan</button>
+      </div>
+      <div class="schedule-body">
+
+        <div class="plan-version-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:11px;height:11px;"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          ESV · 2 chapters/day
+        </div>
+
+        <div class="plan-summary">
+          <div class="plan-book">Romans</div>
+          <div class="plan-meta">16 chapters · Day 7 of 8</div>
+          <div class="plan-progress-bar"><div class="plan-progress-fill" style="width:82%"></div></div>
+          <div class="plan-progress-label"><strong>13 of 16 chapters read</strong><span>82%</span></div>
+        </div>
+
+        <div class="today-label">Today — Romans 15 & 16</div>
+
+        <div class="today-chapter read" onclick="toggleRead(this)">
+          <div class="chapter-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="chapter-name">Romans 15</div>
+          <div class="chapter-verse-count">33 vv.</div>
+        </div>
+        <div class="today-chapter" onclick="toggleRead(this)">
+          <div class="chapter-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="chapter-name">Romans 16</div>
+          <div class="chapter-verse-count">27 vv.</div>
+        </div>
+
+        <div style="height:16px;"></div>
+        <div class="today-label">Upcoming</div>
+        <div class="upcoming-item"><div class="upcoming-day">Day 8</div><div class="upcoming-chapters">Romans 15–16 (complete)</div></div>
+        <div class="upcoming-item"><div class="upcoming-day">Next</div><div class="upcoming-chapters">1 Corinthians 1–2</div></div>
+        <div class="upcoming-item"><div class="upcoming-day">+2</div><div class="upcoming-chapters">1 Corinthians 3–4</div></div>
+        <div class="upcoming-item"><div class="upcoming-day">+3</div><div class="upcoming-chapters">1 Corinthians 5–6</div></div>
+        <div class="upcoming-item"><div class="upcoming-day">+4</div><div class="upcoming-chapters">1 Corinthians 7–8</div></div>
+
+        <div style="height:16px;"></div>
+        <div class="today-label">Already read</div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 1–2</div></div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 3–4</div></div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 5–6</div></div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 7–8</div></div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 9–10</div></div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 11–12</div></div>
+        <div class="upcoming-item" style="opacity:0.5;"><div class="upcoming-day" style="color:var(--teal);">✓</div><div class="upcoming-chapters" style="text-decoration:line-through;">Romans 13–14</div></div>
+
+      </div>
+    </aside>
+
+    <!-- CHAT AREA -->
+    <div class="chat-area">
+      <div class="chat-topbar">
+        <div class="chat-topbar-left">
+          <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+          <div class="agent-chip"><div class="agent-chip-dot"></div><span class="agent-chip-name">Bible Study Companion</span></div>
+          <div class="session-label">Romans — Personal Study Journal</div>
+        </div>
+        <div class="chat-topbar-right">
+          <button class="topbar-icon-btn" title="New session" onclick="window.location.href='bible-study.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <button class="topbar-icon-btn journal-toggle active" id="journalToggle" onclick="toggleJournal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></button>
+        </div>
+      </div>
+
+      <div class="messages" id="messages">
+
+        <div class="principle-banner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="principle-text"><strong>Your insights, your words.</strong> Share what you received from your reading and I will help you document, organise, and tag it. I will always ask before making any change. Every scripture reference will be confirmed by you before it is saved.</div>
+        </div>
+
+        <div class="msg assistant">
+          <div class="msg-avatar">B</div>
+          <div>
+            <div class="msg-bubble">
+              <p>Welcome, Elijah. Your reading plan shows Romans 15 is read and Romans 16 is today's remaining chapter.</p>
+              <p>Whenever you're ready, share what stood out to you from your reading — a truth you received, a question the Spirit raised, or an insight you want to hold onto. I'm here to help you capture it exactly as you mean it.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg user">
+          <div class="msg-avatar">EN</div>
+          <div class="msg-bubble">In Romans 8, I received a revelation that the phrase "no condemnation" is not just about forgiveness. It's about the complete removal of the legal standing of sin over a believer. The court has closed the case entirely.</div>
+        </div>
+
+        <div class="msg assistant">
+          <div class="msg-avatar">B</div>
+          <div>
+            <div class="msg-bubble">
+              <p>That is a powerful insight. I have captured it in your journal exactly as you shared it. Before I tag it to a scripture, please confirm — which verse or verses does this insight belong to?</p>
+            </div>
+            <div class="scripture-confirm-card">
+              <div class="scripture-confirm-header">
+                <div class="scripture-confirm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+                <div class="scripture-confirm-title">Confirm scripture reference</div>
+              </div>
+              <div class="scripture-confirm-body">Please type the exact verse(s) you want this insight tagged to. I will not assume or add any reference without your confirmation.</div>
+              <div class="scripture-input-row">
+                <input class="scripture-ref-input" type="text" placeholder="e.g. Romans 8:1" id="scriptureInput">
+                <button class="scripture-confirm-btn" onclick="confirmScripture()">Confirm & tag</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg user">
+          <div class="msg-avatar">EN</div>
+          <div class="msg-bubble">Romans 8:1. Also verse 2 connects to this — the law of the Spirit of life sets free from the law of sin and death. It's the legal mechanism behind verse 1.</div>
+        </div>
+
+        <div class="msg assistant">
+          <div class="msg-avatar">B</div>
+          <div>
+            <div class="msg-bubble">
+              <p>Tagged to Romans 8:1–2. Your insight is saved in the journal.</p>
+              <p>I also noticed a small grammar point in what you shared. May I suggest a correction? Your meaning and revelation are completely unchanged — only the grammar.</p>
+            </div>
+            <div class="grammar-card">
+              <div class="grammar-card-header">
+                <div class="grammar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+                <div class="grammar-title">Grammar suggestion — may I correct this?</div>
+              </div>
+              <div class="grammar-body">A small grammar adjustment only. The meaning, theology, and insight are entirely yours and will not be touched.</div>
+              <div class="grammar-diff">
+                <div><div class="grammar-label before">Your words</div><div class="grammar-before">"The court has close the case entirely."</div></div>
+                <div><div class="grammar-label after">Grammar correction</div><div class="grammar-after">"The court has closed the case entirely."</div></div>
+              </div>
+              <div class="grammar-note">Only the verb form has been corrected. Nothing else is changed.</div>
+              <div class="permission-actions">
+                <button class="perm-btn approve" onclick="approveGrammar()">Yes, apply correction</button>
+                <button class="perm-btn dismiss" onclick="dismissGrammar()">No, keep as I wrote it</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg user">
+          <div class="msg-avatar">EN</div>
+          <div class="msg-bubble">Yes apply it. Also I want to explore the Greek word for "condemnation" in verse 1.</div>
+        </div>
+
+        <div class="msg assistant">
+          <div class="msg-avatar">B</div>
+          <div>
+            <div class="msg-bubble">
+              <p>Grammar applied. The word for "condemnation" in Romans 8:1 is <strong>κατάκριμα</strong> (katakrima). I have surfaced the full reference below. Review it, and let me know if you want to attach it to your insight on Romans 8:1–2. I will only attach it if you confirm.</p>
+            </div>
+            <div class="permission-card">
+              <div class="permission-card-header">
+                <div class="permission-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                <div class="permission-title">Greek reference — awaiting your confirmation</div>
+              </div>
+              <div class="permission-body">
+                <strong style="font-size:18px;font-family:'DM Sans',sans-serif;">κατάκριμα</strong> (katakrima)<br>
+                <span style="font-size:11px;color:var(--teal);font-weight:600;">Strong's G2631</span><br><br>
+                <strong>Definition:</strong> The judicial sentence of condemnation; the punishment following a verdict of guilty. Not merely the act of condemning, but the result — the penalty and legal standing that follows.<br><br>
+                <strong>Usage in Romans:</strong> Appears 3 times — Romans 5:16, 5:18, and 8:1. Each use carries the weight of a legal verdict being either pronounced or annulled.<br><br>
+                <strong>Your insight connection:</strong> This directly supports your revelation — κατάκριμα is specifically the legal consequence, the penalty-verdict, which Paul declares is entirely removed in Christ.
+              </div>
+              <div class="permission-actions">
+                <button class="perm-btn approve" onclick="attachGreek()">Yes, attach to my insight</button>
+                <button class="perm-btn dismiss" onclick="dismissGreek()">No, noted but don't attach</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="input-area">
+        <div class="input-bar">
+          <textarea class="input-field" id="inputField" placeholder="Share what you received from your reading…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        </div>
+        <div class="input-hint"><strong>You lead.</strong> Share your insight and I will document it. I ask before every change. Scripture references are confirmed by you only.</div>
+      </div>
+    </div>
+
+    <!-- JOURNAL PANEL -->
+    <aside class="journal-panel" id="journalPanel">
+      <div class="journal-topbar">
+        <div class="journal-tabs">
+          <button class="journal-tab active" onclick="switchJournalTab('insights', this)">Insights</button>
+          <button class="journal-tab" onclick="switchJournalTab('lookup', this)">Heb / Grk</button>
+          <button class="journal-tab" onclick="switchJournalTab('schedule', this)">Plan</button>
+        </div>
+        <button class="export-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export</button>
+      </div>
+
+      <!-- INSIGHTS LIST -->
+      <div class="insights-list" id="insightsPanel">
+
+        <div style="font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:10px;">Romans · 3 insights captured</div>
+
+        <div class="insight-card">
+          <div class="insight-card-header">
+            <div class="insight-ref">
+              <span class="insight-ref-tag">Romans 8:1–2</span>
+            </div>
+            <div class="insight-actions">
+              <button class="insight-action-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button class="insight-action-btn" title="Delete" onclick="if(confirm('Remove this insight?'))this.closest('.insight-card').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+            </div>
+          </div>
+          <div class="insight-body">
+            <div class="insight-text">"No condemnation" is not just about forgiveness. It is the complete removal of the legal standing of sin over a believer. The court has closed the case entirely. The law of the Spirit of life is the legal mechanism behind this — it sets free from the law of sin and death.</div>
+            <div class="insight-footer">
+              <span class="insight-date">Today, 9:14 AM</span>
+              <span class="lang-tag greek" onclick="switchJournalTab('lookup', document.querySelector('.journal-tab:nth-child(2)'))">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                κατάκριμα G2631
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-card-header">
+            <div class="insight-ref">
+              <span class="insight-ref-tag">Romans 8:14</span>
+            </div>
+            <div class="insight-actions">
+              <button class="insight-action-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button class="insight-action-btn" title="Delete" onclick="if(confirm('Remove this insight?'))this.closest('.insight-card').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+            </div>
+          </div>
+          <div class="insight-body">
+            <div class="insight-text">Being "led by the Spirit" is the marker of sonship — not sinlessness. The leading is the evidence, not the perfection. A son is not one who never stumbles but one who is being led.</div>
+            <div class="insight-footer">
+              <span class="insight-date">Yesterday, 7:40 AM</span>
+              <span class="lang-tag greek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>ἄγονται G71</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-card-header">
+            <div class="insight-ref">
+              <span class="insight-ref-tag insight-ref-unconfirmed">Unconfirmed ref</span>
+              <span class="insight-pending">awaiting your confirmation</span>
+            </div>
+            <div class="insight-actions">
+              <button class="insight-action-btn" title="Delete" onclick="if(confirm('Remove this insight?'))this.closest('.insight-card').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+            </div>
+          </div>
+          <div class="insight-body">
+            <div class="insight-text">The "hope" in Romans 8:24 is not wishful thinking — it is confident expectation rooted in what has already been done. We do not hope for what we have not seen because we doubt, but because we trust the One who promised.</div>
+            <div class="insight-footer">
+              <span class="insight-date">2 days ago, 8:05 AM</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LOOKUP PANEL -->
+      <div class="lookup-panel" id="lookupPanel">
+        <div class="lookup-lang-tabs">
+          <button class="lookup-lang-tab active grk" onclick="setLookupLang('grk', this)">Greek (NT)</button>
+          <button class="lookup-lang-tab" onclick="setLookupLang('heb', this)">Hebrew (OT)</button>
+        </div>
+        <div class="lookup-search">
+          <input class="lookup-input" type="text" placeholder="Word or Strong's number…" id="lookupInput">
+          <button class="scripture-confirm-btn" onclick="doLookup()" style="padding:9px 14px;font-size:12px;">Look up</button>
+        </div>
+
+        <div class="lookup-result">
+          <div class="lookup-word">κατάκριμα</div>
+          <div class="lookup-transliteration">katakrima · kat-ak'-ree-mah</div>
+          <div class="lookup-strongs">Strong's G2631 · Greek (NT)</div>
+          <div class="lookup-definition">The judicial sentence of condemnation; the punishment or penalty following a verdict of guilty. Not merely the act of judging but the resulting legal status — the condemnation that rests upon one found guilty.</div>
+          <div class="lookup-usage"><strong>Appears 3 times:</strong> Romans 5:16, 5:18, 8:1. Used exclusively by Paul in the context of sin's legal consequence and its removal in Christ.</div>
+          <button class="attach-btn" onclick="attachToInsight()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            Attach to an insight
+          </button>
+          <div class="attach-note">You will be asked which insight to attach this to, and you confirm before it is saved.</div>
+        </div>
+
+        <div class="lookup-result">
+          <div class="lookup-word">πνεῦμα</div>
+          <div class="lookup-transliteration">pneuma · pnyoo'-mah</div>
+          <div class="lookup-strongs">Strong's G4151 · Greek (NT)</div>
+          <div class="lookup-definition">Spirit; breath; wind. In Pauline usage, specifically the Holy Spirit as the divine presence and power active in believers. The word carries the sense of the animating, life-giving breath of God.</div>
+          <div class="lookup-usage"><strong>Appears 385 times in NT.</strong> Dominant in Romans 8 — referenced 21 times in this chapter alone.</div>
+          <button class="attach-btn" onclick="attachToInsight()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            Attach to an insight
+          </button>
+          <div class="attach-note">You will be asked which insight to attach this to, and you confirm before it is saved.</div>
+        </div>
+      </div>
+
+      <!-- PLAN SETTINGS TAB -->
+      <div class="schedule-tab-content" id="planPanel">
+        <div class="setup-form-section">
+          <div class="setup-section-title">Bible version</div>
+          <div class="form-group"><select class="form-select"><option selected>ESV — English Standard Version</option><option>NIV</option><option>KJV</option><option>NKJV</option><option>NLT</option><option>NASB</option><option>AMP</option></select></div>
+        </div>
+        <div class="setup-form-section">
+          <div class="setup-section-title">Reading pace</div>
+          <div class="form-group"><label class="form-label">Chapters per day</label><select class="form-select"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></div>
+          <div class="form-group"><label class="form-label">Reading days</label><select class="form-select"><option>Every day</option><option>Weekdays only</option><option>Mon, Wed, Fri</option></select></div>
+        </div>
+        <div class="setup-form-section">
+          <div class="setup-section-title">Current book</div>
+          <div class="form-group"><label class="form-label">Book</label><select class="form-select"><option>Romans</option><option>1 Corinthians</option><option>John</option><option>Genesis</option></select></div>
+          <div class="form-group"><label class="form-label">Current chapter</label><input class="form-input" type="number" value="15"></div>
+        </div>
+        <button class="save-plan-btn" onclick="alert('Plan updated.')">Save reading plan</button>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="bible-study.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Study</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+let journalOpen = true;
+
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
+
+function toggleJournal(){
+  journalOpen=!journalOpen;
+  document.getElementById('journalPanel').classList.toggle('collapsed',!journalOpen);
+  document.getElementById('journalToggle').classList.toggle('active',journalOpen);
+}
+
+function switchJournalTab(tab, btn){
+  document.querySelectorAll('.journal-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('insightsPanel').style.display = tab==='insights'?'block':'none';
+  document.getElementById('lookupPanel').style.display = tab==='lookup'?'block':'none';
+  document.getElementById('planPanel').style.display = tab==='schedule'?'block':'none';
+}
+
+function setLookupLang(lang, btn){
+  document.querySelectorAll('.lookup-lang-tab').forEach(t=>{t.classList.remove('active','heb','grk');});
+  btn.classList.add('active', lang);
+}
+
+function doLookup(){
+  const val = document.getElementById('lookupInput').value.trim();
+  if(!val) return;
+  alert('Lookup: "' + val + '" — connect your lexicon API (e.g. Logos, Blue Letter Bible) here.');
+}
+
+function attachToInsight(){
+  alert('Which insight would you like to attach this reference to?\n\nPlease confirm by selecting from your journal entries. This will only be saved with your explicit confirmation.');
+}
+
+function toggleRead(el){
+  el.classList.toggle('read');
+}
+
+function confirmScripture(){
+  const val = document.getElementById('scriptureInput').value.trim();
+  if(!val){ alert('Please enter a scripture reference first.'); return; }
+  alert('Scripture reference "' + val + '" confirmed and tagged to your insight.');
+  document.getElementById('scriptureInput').value='';
+}
+
+function approveGrammar(){ addSystemMsg('Grammar correction applied. Your insight is unchanged in meaning.'); }
+function dismissGrammar(){ addSystemMsg('Understood. Your words are kept exactly as you wrote them.'); }
+function attachGreek(){ addSystemMsg('κατάκριμα (G2631) has been attached to your Romans 8:1–2 insight. You can view it in the journal.'); }
+function dismissGreek(){ addSystemMsg('Noted. The reference will not be attached. It remains available in the Heb/Grk lookup tab if you change your mind.'); }
+
+function addSystemMsg(text){
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = `<div class="msg-avatar">B</div><div><div class="msg-bubble"><p>${text}</p></div></div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function openModal(){ document.getElementById('setupModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(){ document.getElementById('setupModal').classList.remove('open'); document.body.style.overflow=''; }
+function savePlan(){
+  const version = document.getElementById('setupVersion').value.split('—')[0].trim();
+  const chapters = document.getElementById('setupChapters').value.split(' ')[0];
+  const book = document.getElementById('setupBook').value;
+  closeModal();
+  alert('Reading plan saved: ' + version + ' · ' + book + ' · ' + chapters + ' chapters/day');
+}
+
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+
+function sendMessage(){
+  const f=document.getElementById('inputField');
+  const text=f.value.trim();
+  if(!text)return;
+  const msgs=document.getElementById('messages');
+  const u=document.createElement('div');
+  u.className='msg user';
+  u.innerHTML=`<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(u);
+  f.value='';f.style.height='auto';
+  const t=document.createElement('div');t.className='msg assistant';t.id='typing';
+  t.innerHTML=`<div class="msg-avatar">B</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    t.remove();
+    const r=document.createElement('div');r.className='msg assistant';
+    r.innerHTML=`<div class="msg-avatar">B</div><div><div class="msg-bubble"><p>I have received your insight. Before I document it, please confirm — is there a specific scripture you want this tagged to? Type the reference and I will confirm with you before saving anything.</p></div></div>`;
+    msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
+  },1200);
+}
+</script>
+</body>
+</html>
