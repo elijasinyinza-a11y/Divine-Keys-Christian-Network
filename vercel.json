@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/", "dest": "/landing.html" },
+    { "src": "/404", "dest": "/landing.html" }
+  ]
+}

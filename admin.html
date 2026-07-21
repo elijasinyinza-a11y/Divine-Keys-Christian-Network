@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>DKCN – Admin</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -530,6 +531,20 @@ function confirmDelete(type) {
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', function(e) { if (e.target === this) closeModal(this.id); });
 });
+</script>
+<script>
+(function(){
+  var ADMIN_PASS = 'dkcn-admin-2026';
+  var stored = sessionStorage.getItem('dkcn_admin_auth');
+  if(stored !== ADMIN_PASS){
+    var entered = prompt('Admin access — enter password:');
+    if(entered !== ADMIN_PASS){
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:12px;background:#F7F4EF;"><div style="font-size:15px;color:#1B2B4B;font-weight:600;">Access denied.</div><a href="landing.html" style="font-size:13px;color:#C4922A;">Return to site →</a></div>';
+      return;
+    }
+    sessionStorage.setItem('dkcn_admin_auth', ADMIN_PASS);
+  }
+})();
 </script>
 </body>
 </html>
