@@ -313,13 +313,13 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
         <div class="msg-avatar">S</div>
         <div>
           <div class="msg-bubble">
-            <p>Devotional generation is a Pro feature. Upgrade to unlock daily devotionals, full teaching paths, business coaching, missions intelligence, and more.</p>
+            <p>Upgrade to Pro to unlock full teaching paths, in-depth business coaching, and unlimited scripture study sessions.</p>
           </div>
           <div class="paywall-card">
             <div class="paywall-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
             <div class="paywall-info">
               <div class="paywall-title">Unlock your full calling</div>
-              <div class="paywall-sub">Teaching paths, devotionals, business coaching & missions intelligence</div>
+              <div class="paywall-sub">Teaching paths, scripture depth & Kingdom business coaching</div>
             </div>
             <button class="paywall-btn" onclick="window.location.href='upgrade.html'">Upgrade to Pro</button>
           </div>
@@ -352,10 +352,8 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
         <button class="cap-chip" onclick="insertPrompt('Create a teaching path for this topic: ')">Teaching path</button>
         <button class="cap-chip" onclick="insertPrompt('Explain the theological significance of ')">Q & A</button>
         <button class="cap-chip" onclick="insertPrompt('Give me the historical and cultural context of ')">Context</button>
-        <button class="cap-chip locked">Devotional</button>
         <button class="cap-chip locked">Business coaching</button>
-        <button class="cap-chip locked">Missions intel</button>
-        <button class="cap-chip locked">Accountability prompts</button>
+        <button class="cap-chip" onclick="insertPrompt('Help me find my way around the platform — ')">Platform guide</button>
       </div>
     </div>
     <div class="panel-section">
@@ -372,8 +370,8 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
     <div class="panel-section">
       <div class="panel-section-title">Session history</div>
       <a class="history-item" href="sessions.html"><div class="history-dot"></div><div class="history-title">Romans 8 — deep-dive study</div><div class="history-time">Now</div></a>
-      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">City Builders accountability</div><div class="history-time">Today</div></a>
-      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">Missions intel — East Africa</div><div class="history-time">Yesterday</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">Kingdom Wealth — Proverbs 13</div><div class="history-time">Today</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">Joseph principle — business margins</div><div class="history-time">Yesterday</div></a>
       <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">The Bible on wealth</div><div class="history-time">Thu</div></a>
     </div>
   </aside>
