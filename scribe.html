@@ -343,7 +343,7 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
           <div class="msg-avatar">SC</div>
           <div class="msg-bubble">
             <p>Welcome back, Elijah. Your manuscript <strong>Kingdom Wealth Principles</strong> is at 6 of 9 chapters — 18,400 words. Chapter 7 is open and ready.</p>
-            <p>Tell me what you want to write next, give me your raw thoughts, or say "continue chapter 7" and I'll pick up from the last paragraph.</p>
+            <p>Scribe handles any work that aligns with Kingdom values — books, journals, academic papers, business reports, or fiction. Tell me what you're working on and we'll continue.</p>
           </div>
         </div>
 
@@ -374,14 +374,14 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
           <div class="msg-avatar">SC</div>
           <div class="msg-bubble">
             <p>Building all three now — drafting into the manuscript panel. The section structure will be: opening narrative → Principle 1 (posture) → Principle 2 (trust) → Principle 3 (return) → closing application. I'll flag each transition for your review.</p>
-            <p>Also — when you're ready, open the <strong>Cover Studio</strong> tab to start building your eBook and paperback covers. I've pre-filled the title and author from your manuscript.</p>
+            <p>Also — when you're ready, open the <strong>Cover Studio</strong> tab to design your eBook and paperback covers for any format.</p>
           </div>
         </div>
       </div>
 
       <div class="input-area">
         <div class="input-bar">
-          <textarea class="input-field" id="inputField" placeholder="Continue writing, give raw notes, or ask Scribe to draft…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <textarea class="input-field" id="inputField" placeholder="Continue writing, give raw notes, or start a new project — books, reports, journals, papers, fiction…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
           <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
         </div>
       </div>
@@ -500,11 +500,15 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
             <div class="form-section-title">Genre / Tone</div>
             <div class="form-group">
               <select class="form-select" id="coverGenre" onchange="updatePreview()">
-                <option>Theological</option>
+                <option>Theological / Scripture</option>
                 <option selected>Business / Kingdom Wealth</option>
                 <option>Devotional</option>
-                <option>Missions</option>
-                <option>Academic</option>
+                <option>Academic / Research</option>
+                <option>Journal / Memoir</option>
+                <option>Fiction — Upright</option>
+                <option>Business Report</option>
+                <option>Self-development</option>
+                <option>Missions / Ministry</option>
               </select>
             </div>
           </div>
@@ -556,7 +560,7 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
       <!-- EXPORT TAB -->
       <div class="export-panel" id="tabExport">
         <div class="kdp-note">
-          <strong>Amazon KDP ready.</strong> All exports below meet current KDP specifications. Cover files are sized to your selected trim size and page count. Upload the manuscript DOCX and cover files directly to KDP.
+          <strong>Amazon KDP ready.</strong> All exports meet current KDP specifications. Cover files are sized to your selected trim size and page count. Works for books, journals, academic publications, and any other KDP-compatible format.
         </div>
 
         <div class="export-section">
@@ -729,7 +733,7 @@ function sendMessage(){
   setTimeout(()=>{
     t.remove();
     const r=document.createElement('div');r.className='msg assistant';
-    r.innerHTML=`<div class="msg-avatar">SC</div><div class="msg-bubble"><p>Working on that now and adding it to the manuscript. Let me know when you want to review or continue.</p></div>`;
+    r.innerHTML=`<div class="msg-avatar">SC</div><div class="msg-bubble"><p>Working on that now and adding it to the manuscript. Let me know when you want to review, continue, or switch to a different section.</p></div>`;
     msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
   },1200);
 }
