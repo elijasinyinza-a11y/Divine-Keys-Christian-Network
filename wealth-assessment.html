@@ -1502,9 +1502,9 @@ function renderNav() {
   const back = document.getElementById('navBack');
   const next = document.getElementById('navNext');
   back.style.display = cur > 0 ? 'block' : 'none';
-  if (SCREENS[cur] === 's6') {
-    next.textContent = 'Generate My Plan →';
-    next.className = 'btn btn-generate';
+  if (SCREENS[cur] === 's6' || SCREENS[cur] === 's7') {
+    next.textContent = SCREENS[cur] === 's7' ? 'Generate My Plan →' : 'Continue →';
+    next.className = SCREENS[cur] === 's7' ? 'btn btn-generate' : 'btn btn-next';
   } else {
     next.textContent = 'Continue →';
     next.className = 'btn btn-next';
@@ -1522,15 +1522,16 @@ function renderNav() {
 }
 
 function navNext() {
-  if (SCREENS[cur] === 's6') { buildResults(); return; }
   if (SCREENS[cur] === 's-results') return;
-  // skip s7 if derived level < 3
-  if (SCREENS[cur] === 's6') { buildResults(); return; }
-  let next = cur + 1;
-  if (SCREENS[next] === 's7' && (S.derivedLevel || 1) < 3) {
-    next++;
+  if (SCREENS[cur] === 's6') {
+    // Derive level now: Level 3+ sees the Investments section, others go straight to results
+    const lvl = deriveLevel();
+    if (lvl >= 3) { goTo(SCREENS.indexOf('s7')); }
+    else { buildResults(); }
+    return;
   }
-  goTo(next);
+  if (SCREENS[cur] === 's7') { buildResults(); return; }
+  goTo(cur + 1);
 }
 
 function navBack() {

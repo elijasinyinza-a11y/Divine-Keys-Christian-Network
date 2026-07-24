@@ -523,6 +523,10 @@ const responses = {
 };
 
 
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 // ── ASSESSMENT GATE ────────────────────────────────────────────────────────
 const levelNames = ['','Personal','Family','Community','National','Continental','Global'];
 const trackLabels = { stabilise:'Stabilisation', growth:'Growth', steward:'Stewardship & Legacy' };
@@ -569,7 +573,7 @@ function beginCoachingWithResults() {
   msgs.innerHTML = '';
   const el = document.createElement('div');
   el.className = 'msg assistant';
-  el.innerHTML = \`<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>\${openingMsg}</p></div></div>\`;
+  el.innerHTML = `<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>${openingMsg}</p></div></div>`;
   msgs.appendChild(el);
   msgs.scrollTop = 0;
   document.getElementById('inputField').focus();
@@ -581,7 +585,7 @@ function checkAssessmentReturn() {
     const level = parseInt(params.get('level')) || 1;
     const track = params.get('track') || 'growth';
     const fiq = parseInt(params.get('fiq')) || 0;
-    const name = params.get('name') || '';
+    const name = escHtml(params.get('name') || '').slice(0, 60);
     window._assessmentResults = { level, track, fiq, name };
     const recap = document.getElementById('assessmentRecap');
     const resultCard = document.getElementById('gateResultCard');
@@ -590,10 +594,10 @@ function checkAssessmentReturn() {
     if (selector) selector.style.display = 'none';
     recap.classList.add('visible');
     resultCard.innerHTML =
-      \`<div class="gate-result-row"><span>Derived Level</span><span class="gate-result-val">Level \${level} — \${levelNames[level]||''} Stage</span></div>\` +
-      \`<div class="gate-result-row"><span>Coaching Track</span><span class="gate-result-val">\${trackLabels[track]||track}</span></div>\` +
-      \`<div class="gate-result-row"><span>Financial Behaviour IQ</span><span class="gate-result-val">\${fiq}%</span></div>\` +
-      (name ? \`<div class="gate-result-row"><span>Name</span><span class="gate-result-val">\${name}</span></div>\` : '');
+      `<div class="gate-result-row"><span>Derived Level</span><span class="gate-result-val">Level ${level} — ${levelNames[level]||''} Stage</span></div>` +
+      `<div class="gate-result-row"><span>Coaching Track</span><span class="gate-result-val">${trackLabels[track]||track}</span></div>` +
+      `<div class="gate-result-row"><span>Financial Behaviour IQ</span><span class="gate-result-val">${fiq}%</span></div>` +
+      (name ? `<div class="gate-result-row"><span>Name</span><span class="gate-result-val">${name}</span></div>` : '');
   }
 }
 
