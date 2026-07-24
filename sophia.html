@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DKCN – Sophia</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#1B2B4B; --navy-deep:#0F1E36; --navy-mid:#F5F3EE; --card:#ffffff;
+  --gold:#C4922A; --gold-dim:#A8792A; --gold-light:#F5D78E; --gold-glow:rgba(196,146,42,0.10); --gold-border:rgba(196,146,42,0.22);
+  --purple:#6155C9; --purple-bg:rgba(97,85,201,0.09); --purple-border:rgba(97,85,201,0.2);
+  --amber:#9A5E18; --amber-bg:rgba(154,94,24,0.09);
+  --text:#191714; --text-sec:#5C584F; --text-muted:#9C9890;
+  --border:#E8E3DA; --border-mid:#F0EDE6; --radius:10px;
+  --sidebar-w:240px; --panel-w:280px; --page-bg:#F7F4EF; --bottom-nav-h:64px;
+}
+html,body{height:100%;}
+body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.7;overflow:hidden;}
+.shell{display:flex;height:100vh;overflow:hidden;}
+
+.sidebar{width:var(--sidebar-w);background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto;z-index:20;}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid var(--border);}
+.logo-mark{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo-icon svg{width:16px;height:16px;}
+.logo-text{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--navy);letter-spacing:-0.2px;line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-top:2px;font-weight:500;}
+.sidebar-section{padding:18px 12px 6px;}
+.sidebar-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);font-weight:500;padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--text-sec);font-size:13px;font-weight:450;transition:background 0.15s,color 0.15s;text-decoration:none;margin-bottom:1px;border:none;background:transparent;font-family:'Inter',sans-serif;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(27,43,75,0.06);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:var(--gold-light);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:0.65;}
+.nav-item.active svg{opacity:1;}
+.nav-item.sophia svg{stroke:var(--purple)!important;opacity:1;}
+.nav-item.sophia.active svg{stroke:var(--gold-light)!important;}
+.nav-item.scribe svg{stroke:var(--amber)!important;opacity:1;}
+.sidebar-divider{height:1px;background:var(--border);margin:8px 12px;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;transition:background 0.15s;}
+.user-row:hover{background:rgba(27,43,75,0.06);}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold-light);flex-shrink:0;font-family:'DM Sans',sans-serif;}
+.user-name{font-size:13px;font-weight:500;color:var(--navy);}
+.user-role{font-size:11px;color:var(--text-muted);}
+
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(27,43,75,0.45);z-index:40;opacity:0;transition:opacity 0.25s;pointer-events:none;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:50;transform:translateX(-100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;}
+.drawer.open{transform:translateX(0);}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 16px;border-bottom:1px solid var(--border);}
+.drawer-close{width:32px;height:32px;border-radius:8px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.drawer-close svg{width:18px;height:18px;}
+
+.chat-area{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--page-bg);}
+.chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--page-bg);flex-shrink:0;gap:12px;}
+.chat-topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.menu-btn{display:none;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;align-items:center;justify-content:center;color:var(--text-sec);flex-shrink:0;}
+.menu-btn svg{width:17px;height:17px;}
+.agent-chip{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--purple-bg);border:1px solid var(--purple-border);border-radius:20px;flex-shrink:0;}
+.agent-chip-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);}
+.agent-chip-name{font-size:13px;font-weight:600;color:var(--purple);font-family:'DM Sans',sans-serif;}
+.session-name-input{font-size:14px;font-weight:500;color:var(--navy);background:transparent;border:none;outline:none;font-family:'DM Sans',sans-serif;min-width:0;flex:1;}
+.session-name-input::placeholder{color:var(--text-muted);font-weight:400;}
+.chat-topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.topbar-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background 0.15s,color 0.15s;}
+.topbar-icon-btn:hover{background:rgba(27,43,75,0.05);color:var(--navy);}
+.topbar-icon-btn svg{width:14px;height:14px;}
+.panel-toggle{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple);}
+.panel-toggle.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+.messages{flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:20px;}
+.messages::-webkit-scrollbar{width:4px;}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+.msg{display:flex;gap:10px;max-width:720px;}
+.msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.msg.assistant{align-self:flex-start;}
+.msg-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.msg.assistant .msg-avatar{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple);}
+.msg.user .msg-avatar{background:var(--navy);color:var(--gold-light);font-family:'DM Sans',sans-serif;}
+.msg-bubble{padding:12px 16px;border-radius:14px;font-size:13.5px;line-height:1.7;max-width:100%;}
+.msg.assistant .msg-bubble{background:var(--card);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px;}
+.msg.user .msg-bubble{background:var(--navy);color:rgba(255,255,255,0.92);border-bottom-right-radius:4px;}
+.msg-bubble p{margin-bottom:10px;}
+.msg-bubble p:last-child{margin-bottom:0;}
+.msg-bubble strong{font-weight:600;color:var(--navy);}
+.msg.user .msg-bubble strong{color:var(--gold-light);}
+.msg-bubble em{color:var(--purple);font-style:italic;}
+
+.verse-block{background:var(--purple-bg);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-style:italic;color:var(--text-sec);font-size:13px;}
+.verse-ref{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--purple);margin-top:6px;font-style:normal;}
+
+.msg-actions{display:flex;gap:6px;margin-top:6px;opacity:0;transition:opacity 0.15s;}
+.msg:hover .msg-actions{opacity:1;}
+.msg-action{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.msg-action:hover{color:var(--navy);}
+.msg-action svg{width:12px;height:12px;}
+
+.output-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:10px;}
+.output-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.output-card-title{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;}
+.output-card-action{font-size:11.5px;color:var(--gold-dim);cursor:pointer;text-decoration:none;}
+
+.teaching-path{display:flex;flex-direction:column;gap:8px;}
+.path-step{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--page-bg);border:1px solid var(--border-mid);}
+.path-step.done{background:var(--purple-bg);border-color:var(--purple-border);}
+.path-step.active{background:var(--purple-bg);border-color:var(--purple);}
+.path-num{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-muted);flex-shrink:0;}
+.path-step.done .path-num,.path-step.active .path-num{background:var(--purple);color:#fff;}
+.path-text{font-size:12.5px;color:var(--text-sec);flex:1;}
+.path-step.done .path-text{color:var(--purple);}
+.path-step.active .path-text{color:var(--navy);font-weight:500;}
+
+.paywall-card{background:var(--navy);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:14px;margin-top:10px;}
+.paywall-icon{width:36px;height:36px;border-radius:8px;background:rgba(245,215,142,0.12);border:1px solid rgba(245,215,142,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.paywall-icon svg{width:15px;height:15px;color:var(--gold-light);}
+.paywall-info{flex:1;}
+.paywall-title{font-size:13px;font-weight:600;color:var(--gold-light);}
+.paywall-sub{font-size:11.5px;color:rgba(255,255,255,0.45);margin-top:2px;}
+.paywall-btn{font-size:12px;font-weight:600;color:var(--navy);background:var(--gold-light);border:none;padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}
+.paywall-btn:hover{opacity:0.88;}
+
+.typing{display:flex;align-items:center;gap:4px;padding:14px 16px;}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--text-muted);animation:bounce 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+
+.input-area{padding:14px 20px;border-top:1px solid var(--border);background:var(--page-bg);flex-shrink:0;}
+
+/* MODE BADGE in topbar */
+.mode-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;}
+.mode-badge.scripture{background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple);}
+.mode-badge.business{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber);}
+.mode-badge.navigate{background:var(--teal-bg);border:1px solid var(--teal-border);color:var(--teal);}
+
+/* MODE SELECTOR SCREEN */
+.mode-selector{flex:1;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:32px 20px;}
+.mode-selector-inner{width:100%;max-width:720px;text-align:center;}
+.mode-logo-icon{width:52px;height:52px;background:var(--navy);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 16px rgba(27,43,75,0.15);}
+.mode-logo-icon svg{width:24px;height:24px;}
+.mode-selector-greeting{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px;letter-spacing:-0.3px;}
+.mode-selector-question{font-size:15px;color:var(--text-muted);margin-bottom:36px;}
+.mode-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.mode-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:24px 20px;cursor:pointer;text-align:left;transition:border-color 0.2s,box-shadow 0.2s,transform 0.15s;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:0;}
+.mode-card:hover{box-shadow:0 6px 24px rgba(27,43,75,0.1);transform:translateY(-2px);}
+.mode-card:hover.scripture-hover{border-color:var(--purple);}
+.mode-card:active{transform:translateY(0);}
+.mode-card-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;flex-shrink:0;}
+.mode-card-icon svg{width:20px;height:20px;}
+.mode-card-icon.scripture{background:var(--purple-bg);border:1px solid var(--purple-border);}
+.mode-card-icon.scripture svg{stroke:var(--purple);}
+.mode-card:hover .mode-card-icon.scripture{background:var(--purple);border-color:var(--purple);}
+.mode-card:hover .mode-card-icon.scripture svg{stroke:#fff;}
+.mode-card-icon.business{background:var(--amber-bg);border:1px solid var(--amber-border);}
+.mode-card-icon.business svg{stroke:var(--amber);}
+.mode-card:hover .mode-card-icon.business{background:var(--amber);border-color:var(--amber);}
+.mode-card:hover .mode-card-icon.business svg{stroke:#fff;}
+.mode-card-icon.navigate{background:var(--teal-bg);border:1px solid var(--teal-border);}
+.mode-card-icon.navigate svg{stroke:var(--teal);}
+.mode-card:hover .mode-card-icon.navigate{background:var(--teal);border-color:var(--teal);}
+.mode-card:hover .mode-card-icon.navigate svg{stroke:#fff;}
+.mode-card-title{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.mode-card-desc{font-size:13px;color:var(--text-sec);line-height:1.65;margin-bottom:14px;flex:1;}
+.mode-card-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.mode-card-chips span{font-size:10.5px;padding:3px 9px;border-radius:20px;background:var(--border-mid);color:var(--text-muted);font-weight:500;}
+@media(max-width:640px){.mode-cards{grid-template-columns:1fr;}.mode-card{flex-direction:row;align-items:flex-start;gap:14px;}.mode-card-icon{flex-shrink:0;margin-bottom:0;}.mode-card-body{flex:1;}}
+.input-bar{display:flex;align-items:flex-end;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px 12px;transition:border-color 0.2s;box-shadow:0 1px 4px rgba(27,43,75,0.06);}
+.input-bar:focus-within{border-color:var(--purple);box-shadow:0 0 0 3px rgba(97,85,201,0.08);}
+.input-tool{width:30px;height:30px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background 0.15s;}
+.input-tool:hover{background:var(--page-bg);color:var(--navy);}
+.input-tool svg{width:15px;height:15px;}
+.input-field{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;resize:none;max-height:120px;min-height:24px;line-height:1.5;padding:3px 0;}
+.input-field::placeholder{color:var(--text-muted);}
+.send-btn{width:34px;height:34px;background:var(--purple);border:none;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s;}
+.send-btn:hover{background:#4f44b3;}
+.send-btn svg{width:14px;height:14px;stroke:#fff;stroke-width:2.2;}
+.input-hint{font-size:11px;color:var(--text-muted);margin-top:7px;text-align:center;}
+.input-hint span{color:var(--amber);font-weight:500;cursor:pointer;}
+
+.right-panel{width:var(--panel-w);border-left:1px solid var(--border);background:var(--navy-mid);display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0;transition:width 0.25s,opacity 0.25s;}
+.right-panel.collapsed{width:0;opacity:0;overflow:hidden;}
+.panel-header{padding:16px 16px 12px;border-bottom:1px solid var(--border);}
+.panel-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.panel-sub{font-size:11px;color:var(--text-muted);}
+.panel-section{padding:14px 16px;border-bottom:1px solid var(--border-mid);}
+.panel-section-title{font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--text-muted);font-weight:600;margin-bottom:10px;}
+
+.cap-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.cap-chip{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--purple-bg);border:1px solid var(--purple-border);color:var(--purple);cursor:pointer;transition:background 0.15s;font-family:'Inter',sans-serif;}
+.cap-chip:hover{background:rgba(97,85,201,0.15);}
+.cap-chip.locked{background:var(--border-mid);border-color:var(--border);color:var(--text-muted);cursor:default;}
+.cap-chip.locked::after{content:' 🔒';font-size:9px;}
+
+.episode-card{display:flex;gap:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s;text-decoration:none;}
+.episode-card:hover{border-color:rgba(27,43,75,0.15);}
+.episode-thumb{width:44px;height:44px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.episode-thumb svg{width:16px;height:16px;color:var(--gold-light);}
+.episode-body{flex:1;min-width:0;}
+.episode-title{font-size:12px;font-weight:600;color:var(--navy);line-height:1.3;margin-bottom:3px;}
+.episode-meta{font-size:11px;color:var(--text-muted);}
+
+.history-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:background 0.15s;text-decoration:none;}
+.history-item:hover{background:rgba(27,43,75,0.05);}
+.history-dot{width:7px;height:7px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+.history-title{font-size:12px;color:var(--text-sec);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.history-time{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--card);border-top:1px solid var(--border);z-index:30;padding:0 8px;padding-bottom:env(safe-area-inset-bottom);}
+.bottom-nav-inner{display:flex;align-items:center;justify-content:space-around;height:100%;}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;cursor:pointer;text-decoration:none;color:var(--text-muted);font-size:10px;font-weight:500;transition:color 0.15s;flex:1;text-align:center;border:none;background:transparent;font-family:'Inter',sans-serif;}
+.bottom-nav-item svg{width:22px;height:22px;}
+.bottom-nav-item.active{color:var(--purple);}
+.bottom-nav-item.active svg{stroke:var(--purple);}
+
+@media(max-width:1024px){.right-panel{display:none;}}
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.drawer-overlay{display:block;}.bottom-nav{display:flex;}
+  .chat-topbar{padding:10px 14px;}.messages{padding:16px 14px;}
+  .input-area{padding:10px 14px;padding-bottom:calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom));}
+}
+
+/* ── ASSESSMENT GATE ── */
+.assessment-gate {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 40px 24px;
+  text-align: center;
+  gap: 0;
+  overflow-y: auto;
+}
+.assessment-gate.visible { display: flex; }
+.gate-icon {
+  width: 64px; height: 64px;
+  background: rgba(97,85,201,0.1);
+  border: 1px solid rgba(97,85,201,0.2);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.gate-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+.gate-desc {
+  font-size: 13.5px;
+  color: var(--text-sec);
+  line-height: 1.7;
+  max-width: 380px;
+  margin: 0 auto 28px;
+}
+.gate-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.gate-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.gate-card:hover { border-color: var(--purple); background: var(--purple-bg); }
+.gate-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 5px; }
+.gate-card-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 3px; font-family: 'DM Sans', sans-serif; }
+.gate-card-desc { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
+.gate-skip {
+  margin-top: 16px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+}
+.gate-skip:hover { color: var(--text-sec); }
+.gate-result-card {
+  background: rgba(97,85,201,0.06);
+  border: 1px solid rgba(97,85,201,0.2);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto 12px;
+  text-align: left;
+}
+.gate-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13px;
+  color: var(--text-sec);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-mid);
+}
+.gate-result-row:last-child { border-bottom: none; }
+.gate-result-val { font-weight: 700; color: var(--navy); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">AI Agents</div>
+    <a class="nav-item sophia active" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="logo-mark"><div class="logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#f5d78e" stroke="#f5d78e" stroke-width="0.4" stroke-linejoin="round"/></svg></div><div><div class="logo-text">Divine Keys</div><div class="logo-sub">Christian Network</div></div></div></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Workspace</div>
+      <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+      <a class="nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Platform</div>
+      <a class="nav-item" href="vod.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>Moments of Wisdom</a>
+      <a class="nav-item" href="city-builders.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>City Builders</a>
+      <a class="nav-item" href="bookstore.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Bookstore</a>
+      <a class="nav-item" href="missions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Global Missions</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">AI Agents</div>
+      <a class="nav-item sophia active" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+      <a class="nav-item scribe" href="scribe.html"><svg viewBox="0 0 24 24" fill="none" stroke="#9A5E18" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Scribe</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+      <a class="nav-item" href="upgrade.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row"><div class="user-avatar">EN</div><div><div class="user-name">Elijah Nchelenge</div><div class="user-role">Free Member</div></div></div>
+    </div>
+  </aside>
+
+  <div class="chat-area">
+    <div class="chat-topbar">
+      <div class="chat-topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="agent-chip"><div class="agent-chip-dot"></div><span class="agent-chip-name">Sophia</span></div>
+        <div class="mode-badge" id="modeBadge" style="display:none;"></div>
+        <input class="session-name-input" id="sessionNameInput" type="text" placeholder="Name this session..." style="display:none;">
+      </div>
+      <div class="chat-topbar-right">
+        <button class="topbar-icon-btn" title="Export session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        <button class="topbar-icon-btn" title="New session" onclick="resetMode()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()" title="Toggle panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg></button>
+      </div>
+    </div>
+
+    <!-- MODE SELECTOR SCREEN -->
+    <div class="mode-selector" id="modeSelector">
+      <div class="mode-selector-inner">
+        <div class="mode-selector-logo">
+          <div class="mode-logo-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 1.5L12.8 7H18.5L14 10.5L16 16.5L10 13L4 16.5L6 10.5L1.5 7H7.2L10 1.5Z" fill="#F5D78E" stroke="#F5D78E" stroke-width="0.4" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="mode-selector-greeting" id="modeGreeting">Peace to you, Elijah.</div>
+        <div class="mode-selector-question">What would you like to do today?</div>
+        <div class="mode-cards">
+          <button class="mode-card" onclick="selectMode('scripture')">
+            <div class="mode-card-icon scripture">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            </div>
+            <div class="mode-card-title">Scripture study</div>
+            <div class="mode-card-desc">Explore the Word verse by verse, build a teaching path, or go deep on a theological topic.</div>
+            <div class="mode-card-chips">
+              <span>Verse study</span><span>Teaching path</span><span>Greek / Hebrew</span>
+            </div>
+          </button>
+          <button class="mode-card" onclick="showBusinessGate()">
+            <div class="mode-card-icon business">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="mode-card-title">Business coaching</div>
+            <div class="mode-card-desc">Apply Kingdom wealth principles to your business — pricing, leadership, stewardship, and growth.</div>
+            <div class="mode-card-chips">
+              <span>Proverbs</span><span>Joseph principle</span><span>Stewardship</span>
+            </div>
+          </button>
+          <button class="mode-card" onclick="selectMode('navigate')">
+            <div class="mode-card-icon navigate">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </div>
+            <div class="mode-card-title">Navigate the platform</div>
+            <div class="mode-card-desc">Find features, understand what each tool does, or get help getting started on DKCN.</div>
+            <div class="mode-card-chips">
+              <span>Find a feature</span><span>Get oriented</span><span>How it works</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT (hidden until mode selected) -->
+    <div class="messages" id="messages" style="display:none;"></div>
+
+    <div class="input-area" id="inputArea" style="display:none;">
+      <div class="input-bar">
+        <button class="input-tool" title="Attach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
+        <textarea class="input-field" id="inputField" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+      <div class="input-hint" id="inputHint"></div>
+    </div>
+  </div>
+
+  <aside class="right-panel" id="rightPanel">
+    <div class="panel-header">
+      <div class="panel-title">Session tools</div>
+      <div class="panel-sub">Sophia · Romans 8 study</div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Capabilities</div>
+      <div class="cap-chips">
+        <button class="cap-chip" onclick="insertPrompt('Give me a verse-by-verse breakdown of ')">Scripture study</button>
+        <button class="cap-chip" onclick="insertPrompt('Create a teaching path for this topic: ')">Teaching path</button>
+        <button class="cap-chip" onclick="insertPrompt('Explain the theological significance of ')">Q & A</button>
+        <button class="cap-chip" onclick="insertPrompt('Give me the historical and cultural context of ')">Context</button>
+        <button class="cap-chip locked">Business coaching</button>
+        <button class="cap-chip" onclick="insertPrompt('Help me find my way around the platform — ')">Platform guide</button>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Related episodes</div>
+      <a class="episode-card" href="vod.html">
+        <div class="episode-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <div class="episode-body"><div class="episode-title">Walking in the Spirit — Romans 8 Unpacked</div><div class="episode-meta">Moments of Wisdom · 42 min</div></div>
+      </a>
+      <a class="episode-card" href="vod.html">
+        <div class="episode-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <div class="episode-body"><div class="episode-title">No Condemnation — The Foundation of Grace</div><div class="episode-meta">Moments of Wisdom · 38 min</div></div>
+      </a>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Session history</div>
+      <a class="history-item" href="sessions.html"><div class="history-dot"></div><div class="history-title">Romans 8 — deep-dive study</div><div class="history-time">Now</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">Kingdom Wealth — Proverbs 13</div><div class="history-time">Today</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">Joseph principle — business margins</div><div class="history-time">Yesterday</div></a>
+      <a class="history-item" href="sessions.html"><div class="history-dot" style="background:var(--border)"></div><div class="history-title">The Bible on wealth</div><div class="history-time">Thu</div></a>
+    </div>
+  </aside>
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bottom-nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a class="bottom-nav-item active" href="sophia.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Sophia</a>
+    <a class="bottom-nav-item" href="sessions.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Sessions</a>
+    <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  </div>
+</nav>
+
+<script>
+let panelOpen = true;
+let currentMode = null;
+
+const modeConfig = {
+  scripture: {
+    label: 'Scripture study',
+    badgeClass: 'scripture',
+    sessionName: 'Scripture study session',
+    placeholder: 'Ask about a passage, book, theological topic, or request a teaching path…',
+    hint: 'Sophia will study the Word with you — verse by verse, topically, or by teaching path.',
+    openingMsg: 'Peace to you, Elijah. What would you like to study today? You can give me a passage, a book of the Bible, a theological question, or ask me to build a teaching path on a topic.',
+    panelSub: 'Sophia · Scripture study'
+  },
+  business: {
+    label: 'Business coaching',
+    badgeClass: 'business',
+    sessionName: 'Business coaching session',
+    placeholder: 'Describe your business situation or ask about a Kingdom wealth principle…',
+    hint: 'Sophia will walk you through biblical principles for business — Proverbs, Joseph, stewardship, and more.',
+    openingMsg: 'Peace to you, Elijah. What business situation would you like to bring to the Word today? You can describe a challenge you\'re facing, ask about a specific Kingdom wealth principle, or ask Sophia to walk you through a biblical framework for a decision.',
+    panelSub: 'Sophia · Business coaching'
+  },
+  navigate: {
+    label: 'Platform navigation',
+    badgeClass: 'navigate',
+    sessionName: 'Platform guide session',
+    placeholder: 'Ask about any feature, page, or how to get started…',
+    hint: 'Sophia will help you find what you need on DKCN.',
+    openingMsg: 'Peace to you, Elijah. What would you like to find or understand on DKCN? I can walk you through any feature — the agents, the Bible Study Companion, City Builders, the bookstore, missions giving, or anything else.',
+    panelSub: 'Sophia · Platform guide'
+  }
+};
+
+const responses = {
+  scripture: 'That\'s a rich question. Let me walk you through what scripture says — rooted in context and cross-referenced with the broader counsel of God\'s Word.',
+  business: 'Good question. Let me bring the biblical framework to bear on this — starting with the principle in Proverbs and connecting it to your situation.',
+  navigate: 'Happy to help you find that. Here\'s where to go and what to expect when you get there.'
+};
+
+
+// ── ASSESSMENT GATE LOGIC ──────────────────────────────────────────────────
+const levelNames = ['','Personal','Family','Community','National','Continental','Global'];
+const trackLabels = { stabilise: 'Stabilisation', growth: 'Growth', steward: 'Stewardship & Legacy' };
+
+function checkAssessmentReturn() {
+  // Called on page load — check if returning from assessment with results
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') === 'business' && params.get('level')) {
+    const level = parseInt(params.get('level')) || 1;
+    const track = params.get('track') || 'growth';
+    const fiq = parseInt(params.get('fiq')) || 0;
+    const name = params.get('name') || '';
+    // Show recap screen
+    document.getElementById('assessmentRecap').classList.add('visible');
+    document.getElementById('gateResultCard').innerHTML = `
+      <div class="gate-result-row"><span>Derived Level</span><span class="gate-result-val">Level ${level} — ${levelNames[level]} Stage</span></div>
+      <div class="gate-result-row"><span>Coaching Track</span><span class="gate-result-val">${trackLabels[track] || track}</span></div>
+      <div class="gate-result-row"><span>Financial Behaviour IQ</span><span class="gate-result-val">${fiq}%</span></div>
+      ${name ? `<div class="gate-result-row"><span>Name</span><span class="gate-result-val">${name}</span></div>` : ''}
+    `;
+    // Store for use in openingMsg
+    window._assessmentResults = { level, track, fiq, name };
+    return true;
+  }
+  return false;
+}
+
+function beginCoachingWithResults() {
+  const r = window._assessmentResults || {};
+  document.getElementById('assessmentRecap').classList.remove('visible');
+  currentMode = 'business';
+  const cfg = modeConfig.business;
+  document.getElementById('modeSelector').style.display = 'none';
+  document.getElementById('messages').style.display = 'flex';
+  document.getElementById('inputArea').style.display = 'block';
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = cfg.label;
+  badge.className = 'mode-badge ' + cfg.badgeClass;
+  badge.style.display = 'inline-flex';
+  const nameInput = document.getElementById('sessionNameInput');
+  nameInput.value = cfg.sessionName;
+  nameInput.style.display = 'block';
+  document.querySelector('.panel-sub').textContent = cfg.panelSub;
+  document.getElementById('inputField').placeholder = cfg.placeholder;
+  document.getElementById('inputHint').textContent = cfg.hint;
+  const trackLabels2 = { stabilise: 'Stabilisation Track', growth: 'Growth Track', steward: 'Stewardship Track' };
+  const openingMsg = r.name
+    ? `Peace to you, ${r.name}. I have your assessment results — you are at Level ${r.level} (${levelNames[r.level]} Stage), on the ${trackLabels2[r.track] || 'Growth Track'}, with a Financial Behaviour IQ of ${r.fiq}%. I can see your context. Where would you like to begin today — your plan, a specific challenge you are facing, or a biblical principle to explore?`
+    : `Peace to you. I have your assessment results — Level ${r.level||1}, ${trackLabels2[r.track||'growth']}. Where would you like to begin?`;
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = `<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>${openingMsg}</p></div><div class="msg-actions"><button class="msg-action" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = 0;
+  document.getElementById('inputField').focus();
+}
+
+function startAssessment() {
+  window.location.href = '/wealth-assessment.html';
+}
+
+function skipAssessment() {
+  document.getElementById('assessmentGate').classList.remove('visible');
+  selectMode('business');
+}
+
+function selectMode(mode) {
+  currentMode = mode;
+  const cfg = modeConfig[mode];
+
+  // Hide selector, show chat
+  document.getElementById('modeSelector').style.display = 'none';
+  document.getElementById('messages').style.display = 'flex';
+  document.getElementById('inputArea').style.display = 'block';
+
+  // Update topbar
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = cfg.label;
+  badge.className = 'mode-badge ' + cfg.badgeClass;
+  badge.style.display = 'inline-flex';
+  const nameInput = document.getElementById('sessionNameInput');
+  nameInput.value = cfg.sessionName;
+  nameInput.style.display = 'block';
+
+  // Update panel
+  document.querySelector('.panel-sub').textContent = cfg.panelSub;
+
+  // Update input
+  document.getElementById('inputField').placeholder = cfg.placeholder;
+  document.getElementById('inputHint').textContent = cfg.hint;
+
+  // Post opening message
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = `<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>${cfg.openingMsg}</p></div><div class="msg-actions"><button class="msg-action" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = 0;
+  document.getElementById('inputField').focus();
+}
+
+
+function showBusinessGate() {
+  // If already has assessment results from URL, show recap; else show gate
+  if (window._assessmentResults) {
+    document.getElementById('modeSelector').style.display = 'none';
+    document.getElementById('assessmentRecap').classList.add('visible');
+    return;
+  }
+  document.getElementById('modeSelector').style.display = 'none';
+  document.getElementById('assessmentGate').classList.add('visible');
+}
+
+function resetMode() {
+  currentMode = null;
+  document.getElementById('modeSelector').style.display = 'flex';
+  document.getElementById('messages').style.display = 'none';
+  document.getElementById('inputArea').style.display = 'none';
+  document.getElementById('modeBadge').style.display = 'none';
+  document.getElementById('sessionNameInput').style.display = 'none';
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('assessmentGate').classList.remove('visible');
+  document.getElementById('assessmentRecap').classList.remove('visible');
+}
+
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawerOverlay').classList.remove('open');document.body.style.overflow='';}
+function togglePanel(){panelOpen=!panelOpen;document.getElementById('rightPanel').classList.toggle('collapsed',!panelOpen);document.getElementById('panelToggle').classList.toggle('active',panelOpen);}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function insertPrompt(text){
+  if(!currentMode){selectMode('scripture');}
+  const f=document.getElementById('inputField');f.value=text;f.focus();autoResize(f);
+}
+function sendMessage(){
+  const f=document.getElementById('inputField');
+  const text=f.value.trim();if(!text)return;
+  const msgs=document.getElementById('messages');
+  const u=document.createElement('div');u.className='msg user';
+  u.innerHTML=`<div class="msg-avatar">EN</div><div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(u);f.value='';f.style.height='auto';
+  const t=document.createElement('div');t.className='msg assistant';t.id='typing-ind';
+  t.innerHTML=`<div class="msg-avatar">S</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;
+  const reply = responses[currentMode] || responses.scripture;
+  setTimeout(()=>{
+    t.remove();
+    const r=document.createElement('div');r.className='msg assistant';
+    r.innerHTML=`<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>${reply}</p></div><div class="msg-actions"><button class="msg-action" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div>`;
+    msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
+  },1400);
+}
+
+// Auto-check on load
+checkAssessmentReturn();
+</script>
+</body>
+</html>
