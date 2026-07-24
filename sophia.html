@@ -223,6 +223,98 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
   .chat-topbar{padding:10px 14px;}.messages{padding:16px 14px;}
   .input-area{padding:10px 14px;padding-bottom:calc(10px + var(--bottom-nav-h) + env(safe-area-inset-bottom));}
 }
+
+/* ── ASSESSMENT GATE ── */
+.assessment-gate {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 40px 24px;
+  text-align: center;
+  gap: 0;
+  overflow-y: auto;
+}
+.assessment-gate.visible { display: flex; }
+.gate-icon {
+  width: 64px; height: 64px;
+  background: rgba(97,85,201,0.1);
+  border: 1px solid rgba(97,85,201,0.2);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.gate-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+.gate-desc {
+  font-size: 13.5px;
+  color: var(--text-sec);
+  line-height: 1.7;
+  max-width: 380px;
+  margin: 0 auto 28px;
+}
+.gate-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.gate-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.gate-card:hover { border-color: var(--purple); background: var(--purple-bg); }
+.gate-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 5px; }
+.gate-card-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 3px; font-family: 'DM Sans', sans-serif; }
+.gate-card-desc { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
+.gate-skip {
+  margin-top: 16px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+}
+.gate-skip:hover { color: var(--text-sec); }
+.gate-result-card {
+  background: rgba(97,85,201,0.06);
+  border: 1px solid rgba(97,85,201,0.2);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto 12px;
+  text-align: left;
+}
+.gate-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13px;
+  color: var(--text-sec);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-mid);
+}
+.gate-result-row:last-child { border-bottom: none; }
+.gate-result-val { font-weight: 700; color: var(--navy); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -315,7 +407,7 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
               <span>Verse study</span><span>Teaching path</span><span>Greek / Hebrew</span>
             </div>
           </button>
-          <button class="mode-card" onclick="selectMode('business')">
+          <button class="mode-card" onclick="showBusinessGate()">
             <div class="mode-card-icon business">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
             </div>
@@ -438,6 +530,75 @@ const responses = {
   navigate: 'Happy to help you find that. Here\'s where to go and what to expect when you get there.'
 };
 
+
+// ── ASSESSMENT GATE LOGIC ──────────────────────────────────────────────────
+const levelNames = ['','Personal','Family','Community','National','Continental','Global'];
+const trackLabels = { stabilise: 'Stabilisation', growth: 'Growth', steward: 'Stewardship & Legacy' };
+
+function checkAssessmentReturn() {
+  // Called on page load — check if returning from assessment with results
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') === 'business' && params.get('level')) {
+    const level = parseInt(params.get('level')) || 1;
+    const track = params.get('track') || 'growth';
+    const fiq = parseInt(params.get('fiq')) || 0;
+    const name = params.get('name') || '';
+    // Show recap screen
+    document.getElementById('assessmentRecap').classList.add('visible');
+    document.getElementById('gateResultCard').innerHTML = `
+      <div class="gate-result-row"><span>Derived Level</span><span class="gate-result-val">Level ${level} — ${levelNames[level]} Stage</span></div>
+      <div class="gate-result-row"><span>Coaching Track</span><span class="gate-result-val">${trackLabels[track] || track}</span></div>
+      <div class="gate-result-row"><span>Financial Behaviour IQ</span><span class="gate-result-val">${fiq}%</span></div>
+      ${name ? `<div class="gate-result-row"><span>Name</span><span class="gate-result-val">${name}</span></div>` : ''}
+    `;
+    // Store for use in openingMsg
+    window._assessmentResults = { level, track, fiq, name };
+    return true;
+  }
+  return false;
+}
+
+function beginCoachingWithResults() {
+  const r = window._assessmentResults || {};
+  document.getElementById('assessmentRecap').classList.remove('visible');
+  currentMode = 'business';
+  const cfg = modeConfig.business;
+  document.getElementById('modeSelector').style.display = 'none';
+  document.getElementById('messages').style.display = 'flex';
+  document.getElementById('inputArea').style.display = 'block';
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = cfg.label;
+  badge.className = 'mode-badge ' + cfg.badgeClass;
+  badge.style.display = 'inline-flex';
+  const nameInput = document.getElementById('sessionNameInput');
+  nameInput.value = cfg.sessionName;
+  nameInput.style.display = 'block';
+  document.querySelector('.panel-sub').textContent = cfg.panelSub;
+  document.getElementById('inputField').placeholder = cfg.placeholder;
+  document.getElementById('inputHint').textContent = cfg.hint;
+  const trackLabels2 = { stabilise: 'Stabilisation Track', growth: 'Growth Track', steward: 'Stewardship Track' };
+  const openingMsg = r.name
+    ? `Peace to you, ${r.name}. I have your assessment results — you are at Level ${r.level} (${levelNames[r.level]} Stage), on the ${trackLabels2[r.track] || 'Growth Track'}, with a Financial Behaviour IQ of ${r.fiq}%. I can see your context. Where would you like to begin today — your plan, a specific challenge you are facing, or a biblical principle to explore?`
+    : `Peace to you. I have your assessment results — Level ${r.level||1}, ${trackLabels2[r.track||'growth']}. Where would you like to begin?`;
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = `<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>${openingMsg}</p></div><div class="msg-actions"><button class="msg-action" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = 0;
+  document.getElementById('inputField').focus();
+}
+
+function startAssessment() {
+  window.location.href = '/wealth-assessment.html';
+}
+
+function skipAssessment() {
+  document.getElementById('assessmentGate').classList.remove('visible');
+  selectMode('business');
+}
+
 function selectMode(mode) {
   currentMode = mode;
   const cfg = modeConfig[mode];
@@ -474,6 +635,18 @@ function selectMode(mode) {
   document.getElementById('inputField').focus();
 }
 
+
+function showBusinessGate() {
+  // If already has assessment results from URL, show recap; else show gate
+  if (window._assessmentResults) {
+    document.getElementById('modeSelector').style.display = 'none';
+    document.getElementById('assessmentRecap').classList.add('visible');
+    return;
+  }
+  document.getElementById('modeSelector').style.display = 'none';
+  document.getElementById('assessmentGate').classList.add('visible');
+}
+
 function resetMode() {
   currentMode = null;
   document.getElementById('modeSelector').style.display = 'flex';
@@ -482,6 +655,8 @@ function resetMode() {
   document.getElementById('modeBadge').style.display = 'none';
   document.getElementById('sessionNameInput').style.display = 'none';
   document.getElementById('messages').innerHTML = '';
+  document.getElementById('assessmentGate').classList.remove('visible');
+  document.getElementById('assessmentRecap').classList.remove('visible');
 }
 
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
@@ -511,6 +686,9 @@ function sendMessage(){
     msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
   },1400);
 }
+
+// Auto-check on load
+checkAssessmentReturn();
 </script>
 </body>
 </html>
