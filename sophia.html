@@ -233,7 +233,6 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
   flex: 1;
   padding: 40px 24px;
   text-align: center;
-  gap: 0;
   overflow-y: auto;
 }
 .assessment-gate.visible { display: flex; }
@@ -247,72 +246,32 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
 }
 .gate-title {
   font-family: 'DM Sans', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 10px;
-  line-height: 1.25;
+  font-size: 20px; font-weight: 700;
+  color: var(--navy); margin-bottom: 10px; line-height: 1.25;
 }
 .gate-desc {
-  font-size: 13.5px;
-  color: var(--text-sec);
-  line-height: 1.7;
-  max-width: 380px;
-  margin: 0 auto 28px;
+  font-size: 13.5px; color: var(--text-sec); line-height: 1.7;
+  max-width: 380px; margin: 0 auto 28px;
 }
-.gate-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 460px;
-  margin: 0 auto;
-}
+.gate-cards { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 460px; margin: 0 auto; }
 .gate-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  cursor: pointer;
-  text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px; cursor: pointer;
+  text-align: left; transition: border-color 0.15s, background 0.15s;
   font-family: 'Inter', sans-serif;
 }
 .gate-card:hover { border-color: var(--purple); background: var(--purple-bg); }
 .gate-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 5px; }
 .gate-card-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 3px; font-family: 'DM Sans', sans-serif; }
 .gate-card-desc { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
-.gate-skip {
-  margin-top: 16px;
-  font-size: 12.5px;
-  color: var(--text-muted);
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  background: none;
-  border: none;
-  font-family: 'Inter', sans-serif;
-}
+.gate-skip { margin-top: 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; background: none; border: none; font-family: 'Inter', sans-serif; }
 .gate-skip:hover { color: var(--text-sec); }
 .gate-result-card {
-  background: rgba(97,85,201,0.06);
-  border: 1px solid rgba(97,85,201,0.2);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  width: 100%;
-  max-width: 460px;
-  margin: 0 auto 12px;
-  text-align: left;
+  background: rgba(97,85,201,0.06); border: 1px solid rgba(97,85,201,0.2);
+  border-radius: var(--radius); padding: 16px 18px;
+  width: 100%; max-width: 460px; margin: 0 auto 12px; text-align: left;
 }
-.gate-result-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 13px;
-  color: var(--text-sec);
-  padding: 5px 0;
-  border-bottom: 1px solid var(--border-mid);
-}
+.gate-result-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--text-sec); padding: 5px 0; border-bottom: 1px solid var(--border-mid); }
 .gate-result-row:last-child { border-bottom: none; }
 .gate-result-val { font-weight: 700; color: var(--navy); font-size: 13px; }
 </style>
@@ -385,6 +344,39 @@ body{background:var(--page-bg);color:var(--text);font-family:'Inter',sans-serif;
         <button class="topbar-icon-btn" title="Export session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
         <button class="topbar-icon-btn" title="New session" onclick="resetMode()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
         <button class="topbar-icon-btn panel-toggle active" id="panelToggle" onclick="togglePanel()" title="Toggle panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg></button>
+      </div>
+    </div>
+
+    <!-- ASSESSMENT GATE -->
+    <div class="assessment-gate" id="assessmentGate">
+      <div class="gate-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.6"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="gate-title">Before we begin coaching</div>
+      <div class="gate-desc">Sophia coaches you most effectively when she knows where you are. The Wealth Mindset Assessment takes 8–10 minutes and gives her the context to start from your exact position.</div>
+      <div class="gate-cards">
+        <div class="gate-card" onclick="startAssessment()">
+          <div class="gate-card-label">Recommended</div>
+          <div class="gate-card-title">Take the Wealth Mindset Assessment first</div>
+          <div class="gate-card-desc">Sophia will receive your level, track, and financial behaviour score and open your session already knowing your context.</div>
+        </div>
+      </div>
+      <button class="gate-skip" onclick="skipAssessment()">Skip — jump straight into coaching</button>
+    </div>
+
+    <!-- ASSESSMENT RECAP -->
+    <div class="assessment-gate" id="assessmentRecap">
+      <div class="gate-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6155C9" stroke-width="1.6"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="gate-title">Assessment complete</div>
+      <div class="gate-desc">Sophia has your results. Your coaching session will start from exactly where you are.</div>
+      <div class="gate-result-card" id="gateResultCard"></div>
+      <div class="gate-cards">
+        <div class="gate-card" onclick="beginCoachingWithResults()" style="border-color:var(--purple);background:var(--purple-bg);">
+          <div class="gate-card-title" style="color:var(--purple);">Begin coaching with Sophia →</div>
+          <div class="gate-card-desc">Sophia will open with a message tailored to your results.</div>
+        </div>
       </div>
     </div>
 
@@ -531,63 +523,18 @@ const responses = {
 };
 
 
-// ── ASSESSMENT GATE LOGIC ──────────────────────────────────────────────────
+// ── ASSESSMENT GATE ────────────────────────────────────────────────────────
 const levelNames = ['','Personal','Family','Community','National','Continental','Global'];
-const trackLabels = { stabilise: 'Stabilisation', growth: 'Growth', steward: 'Stewardship & Legacy' };
+const trackLabels = { stabilise:'Stabilisation', growth:'Growth', steward:'Stewardship & Legacy' };
 
-function checkAssessmentReturn() {
-  // Called on page load — check if returning from assessment with results
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('mode') === 'business' && params.get('level')) {
-    const level = parseInt(params.get('level')) || 1;
-    const track = params.get('track') || 'growth';
-    const fiq = parseInt(params.get('fiq')) || 0;
-    const name = params.get('name') || '';
-    // Show recap screen
+function showBusinessGate() {
+  if (window._assessmentResults) {
+    document.getElementById('modeSelector').style.display = 'none';
     document.getElementById('assessmentRecap').classList.add('visible');
-    document.getElementById('gateResultCard').innerHTML = `
-      <div class="gate-result-row"><span>Derived Level</span><span class="gate-result-val">Level ${level} — ${levelNames[level]} Stage</span></div>
-      <div class="gate-result-row"><span>Coaching Track</span><span class="gate-result-val">${trackLabels[track] || track}</span></div>
-      <div class="gate-result-row"><span>Financial Behaviour IQ</span><span class="gate-result-val">${fiq}%</span></div>
-      ${name ? `<div class="gate-result-row"><span>Name</span><span class="gate-result-val">${name}</span></div>` : ''}
-    `;
-    // Store for use in openingMsg
-    window._assessmentResults = { level, track, fiq, name };
-    return true;
+    return;
   }
-  return false;
-}
-
-function beginCoachingWithResults() {
-  const r = window._assessmentResults || {};
-  document.getElementById('assessmentRecap').classList.remove('visible');
-  currentMode = 'business';
-  const cfg = modeConfig.business;
   document.getElementById('modeSelector').style.display = 'none';
-  document.getElementById('messages').style.display = 'flex';
-  document.getElementById('inputArea').style.display = 'block';
-  const badge = document.getElementById('modeBadge');
-  badge.textContent = cfg.label;
-  badge.className = 'mode-badge ' + cfg.badgeClass;
-  badge.style.display = 'inline-flex';
-  const nameInput = document.getElementById('sessionNameInput');
-  nameInput.value = cfg.sessionName;
-  nameInput.style.display = 'block';
-  document.querySelector('.panel-sub').textContent = cfg.panelSub;
-  document.getElementById('inputField').placeholder = cfg.placeholder;
-  document.getElementById('inputHint').textContent = cfg.hint;
-  const trackLabels2 = { stabilise: 'Stabilisation Track', growth: 'Growth Track', steward: 'Stewardship Track' };
-  const openingMsg = r.name
-    ? `Peace to you, ${r.name}. I have your assessment results — you are at Level ${r.level} (${levelNames[r.level]} Stage), on the ${trackLabels2[r.track] || 'Growth Track'}, with a Financial Behaviour IQ of ${r.fiq}%. I can see your context. Where would you like to begin today — your plan, a specific challenge you are facing, or a biblical principle to explore?`
-    : `Peace to you. I have your assessment results — Level ${r.level||1}, ${trackLabels2[r.track||'growth']}. Where would you like to begin?`;
-  const msgs = document.getElementById('messages');
-  msgs.innerHTML = '';
-  const el = document.createElement('div');
-  el.className = 'msg assistant';
-  el.innerHTML = `<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>${openingMsg}</p></div><div class="msg-actions"><button class="msg-action" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div></div>`;
-  msgs.appendChild(el);
-  msgs.scrollTop = 0;
-  document.getElementById('inputField').focus();
+  document.getElementById('assessmentGate').classList.add('visible');
 }
 
 function startAssessment() {
@@ -597,6 +544,57 @@ function startAssessment() {
 function skipAssessment() {
   document.getElementById('assessmentGate').classList.remove('visible');
   selectMode('business');
+}
+
+function beginCoachingWithResults() {
+  const r = window._assessmentResults || {};
+  document.getElementById('assessmentRecap').classList.remove('visible');
+  currentMode = 'business';
+  const cfg = modeConfig['business'];
+  document.getElementById('modeSelector').style.display = 'none';
+  document.getElementById('messages').style.display = 'flex';
+  document.getElementById('inputArea').style.display = 'block';
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = cfg.label; badge.className = 'mode-badge ' + cfg.badgeClass; badge.style.display = 'inline-flex';
+  const nameInput = document.getElementById('sessionNameInput');
+  nameInput.value = cfg.sessionName; nameInput.style.display = 'block';
+  document.querySelector('.panel-sub').textContent = cfg.panelSub;
+  document.getElementById('inputField').placeholder = cfg.placeholder;
+  document.getElementById('inputHint').textContent = cfg.hint;
+  const trackLabel2 = { stabilise:'Stabilisation Track', growth:'Growth Track', steward:'Stewardship Track' };
+  const openingMsg = r.name
+    ? `Peace to you, ${r.name}. I have your assessment results — you are at Level ${r.level} (${levelNames[r.level]||''} Stage), on the ${trackLabel2[r.track]||'Growth Track'}, with a Financial Behaviour IQ of ${r.fiq}%. Where would you like to begin — your plan, a specific challenge, or a biblical principle to explore?`
+    : `Peace to you. I have your assessment — Level ${r.level||1}, ${trackLabel2[r.track||'growth']}. Where would you like to begin?`;
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  el.innerHTML = \`<div class="msg-avatar">S</div><div><div class="msg-bubble"><p>\${openingMsg}</p></div></div>\`;
+  msgs.appendChild(el);
+  msgs.scrollTop = 0;
+  document.getElementById('inputField').focus();
+}
+
+function checkAssessmentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') === 'business' && params.get('level')) {
+    const level = parseInt(params.get('level')) || 1;
+    const track = params.get('track') || 'growth';
+    const fiq = parseInt(params.get('fiq')) || 0;
+    const name = params.get('name') || '';
+    window._assessmentResults = { level, track, fiq, name };
+    const recap = document.getElementById('assessmentRecap');
+    const resultCard = document.getElementById('gateResultCard');
+    const selector = document.getElementById('modeSelector');
+    if (!recap || !resultCard) return;
+    if (selector) selector.style.display = 'none';
+    recap.classList.add('visible');
+    resultCard.innerHTML =
+      \`<div class="gate-result-row"><span>Derived Level</span><span class="gate-result-val">Level \${level} — \${levelNames[level]||''} Stage</span></div>\` +
+      \`<div class="gate-result-row"><span>Coaching Track</span><span class="gate-result-val">\${trackLabels[track]||track}</span></div>\` +
+      \`<div class="gate-result-row"><span>Financial Behaviour IQ</span><span class="gate-result-val">\${fiq}%</span></div>\` +
+      (name ? \`<div class="gate-result-row"><span>Name</span><span class="gate-result-val">\${name}</span></div>\` : '');
+  }
 }
 
 function selectMode(mode) {
@@ -635,18 +633,6 @@ function selectMode(mode) {
   document.getElementById('inputField').focus();
 }
 
-
-function showBusinessGate() {
-  // If already has assessment results from URL, show recap; else show gate
-  if (window._assessmentResults) {
-    document.getElementById('modeSelector').style.display = 'none';
-    document.getElementById('assessmentRecap').classList.add('visible');
-    return;
-  }
-  document.getElementById('modeSelector').style.display = 'none';
-  document.getElementById('assessmentGate').classList.add('visible');
-}
-
 function resetMode() {
   currentMode = null;
   document.getElementById('modeSelector').style.display = 'flex';
@@ -655,8 +641,9 @@ function resetMode() {
   document.getElementById('modeBadge').style.display = 'none';
   document.getElementById('sessionNameInput').style.display = 'none';
   document.getElementById('messages').innerHTML = '';
-  document.getElementById('assessmentGate').classList.remove('visible');
-  document.getElementById('assessmentRecap').classList.remove('visible');
+  const ag = document.getElementById('assessmentGate'); if(ag) ag.classList.remove('visible');
+  const ar = document.getElementById('assessmentRecap'); if(ar) ar.classList.remove('visible');
+  window._assessmentResults = null;
 }
 
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('drawerOverlay').classList.add('open');document.body.style.overflow='hidden';}
@@ -687,8 +674,7 @@ function sendMessage(){
   },1400);
 }
 
-// Auto-check on load
-checkAssessmentReturn();
+document.addEventListener("DOMContentLoaded", checkAssessmentReturn);
 </script>
 </body>
 </html>
